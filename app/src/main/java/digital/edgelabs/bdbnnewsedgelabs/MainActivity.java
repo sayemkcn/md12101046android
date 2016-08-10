@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.events.NewsFetchEvent;
+import digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers.MainFragmentHelper;
 import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
 import rx.Observable;
 import rx.Observer;
@@ -59,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         // init ButterKnife
         ButterKnife.bind(this);
-        // register eventbus
-        EventBus.getDefault().register(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,13 +83,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new NewsProvider(this).fetchNews(getResources().getString(R.string.newsUrl));
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewsFetched(NewsFetchEvent newsFetchEvent) {
-        Log.d("FETCHED",newsFetchEvent.getResponse());
     }
 
     @Override
@@ -149,9 +141,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            View rootView = null;
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                case 1:
+                    rootView = inflater.inflate(R.layout.fragment_main, container, false);
+                    MainFragmentHelper featuredFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
+                    featuredFragmentHelper.exec();
+                    break;
+
+            }
             return rootView;
         }
     }
