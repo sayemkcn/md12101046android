@@ -1,26 +1,36 @@
 package digital.edgelabs.bdbnnewsedgelabs;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import digital.edgelabs.bdbnnewsedgelabs.events.NewsFetchEvent;
+import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         // init ButterKnife
         ButterKnife.bind(this);
+        // register eventbus
+        EventBus.getDefault().register(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,8 +84,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        new NewsProvider(this).fetchNews(getResources().getString(R.string.newsUrl));
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewsFetched(NewsFetchEvent newsFetchEvent) {
+        Log.d("FETCHED",newsFetchEvent.getResponse());
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
