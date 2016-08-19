@@ -1,7 +1,10 @@
 <resources>
-    <string name="app_name">BdbnnewsEdgelabs</string>
+    <string name="app_name">BDBN News</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="navigation_drawer_open">ড্রয়ার ওপেন করুন</string>
+    <string name="navigation_drawer_close">ড্রয়ার বন্ধ করুন</string>
 
     <string-array name="categories">
         <item>Highlight</item>

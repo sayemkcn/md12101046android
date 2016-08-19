@@ -82,6 +82,7 @@ public class MainFragmentHelper {
             recyclerView.setAdapter(new RecyclerAdapter(context, categoryEntity));
             recyclerView.stopNestedScroll();
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setNestedScrollingEnabled(false);
 //            textView.setText(categoryEntity.toString());
         } catch (JSONException e) {
             Log.d("JSON_EX", e.toString());
