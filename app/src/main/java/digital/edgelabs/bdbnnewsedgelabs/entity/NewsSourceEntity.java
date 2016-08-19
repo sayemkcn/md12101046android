@@ -11,7 +11,7 @@ public class NewsSourceEntity {
     private Long id;
     private String name;
     private String iconUrl;
-    private List<NewsEntity> newsList;
+    private String accentColorCode;
 
     public Long getId() {
         return id;
@@ -37,12 +37,12 @@ public class NewsSourceEntity {
         this.iconUrl = iconUrl;
     }
 
-    public List<NewsEntity> getNewsList() {
-        return newsList;
+    public String getAccentColorCode() {
+        return accentColorCode;
     }
 
-    public void setNewsList(List<NewsEntity> newsList) {
-        this.newsList = newsList;
+    public void setAccentColorCode(String accentColorCode) {
+        this.accentColorCode = accentColorCode;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class NewsSourceEntity {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", iconUrl='" + iconUrl + '\'' +
-                ", newsList=" + newsList +
+                ", accentColorCode='" + accentColorCode + '\'' +
                 '}';
     }
 }

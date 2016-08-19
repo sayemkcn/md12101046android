@@ -13,15 +13,9 @@ public class NewsEntity {
     private String imageUrl;
     private String author;
     private Date lastUpdated;
+    private NewsSourceEntity newsSourceEntity;
 
     public NewsEntity() {
-    }
-
-    public NewsEntity(Long id, String title, String details, Date lastUpdated) {
-        this.id = id;
-        this.title = title;
-        this.details = details;
-        this.lastUpdated = lastUpdated;
     }
 
     public Long getId() {
@@ -80,6 +74,14 @@ public class NewsEntity {
         this.author = author;
     }
 
+    public NewsSourceEntity getNewsSourceEntity() {
+        return newsSourceEntity;
+    }
+
+    public void setNewsSourceEntity(NewsSourceEntity newsSourceEntity) {
+        this.newsSourceEntity = newsSourceEntity;
+    }
+
     @Override
     public String toString() {
         return "NewsEntity{" +
@@ -90,6 +92,7 @@ public class NewsEntity {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", author='" + author + '\'' +
                 ", lastUpdated=" + lastUpdated +
+                ", newsSourceEntity=" + newsSourceEntity +
                 '}';
     }
 }

@@ -10,7 +10,7 @@ public class CategoryEntity {
     private String name;
     private String iconUrl;
     private String accentColorCode;
-    List<NewsSourceEntity> newsSourceList;
+    private List<NewsEntity> newsEntityList;
 
     public Long getId() {
         return id;
@@ -26,15 +26,6 @@ public class CategoryEntity {
 
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
-    }
-
-
-    public List<NewsSourceEntity> getNewsSourceList() {
-        return newsSourceList;
-    }
-
-    public void setNewsSourceList(List<NewsSourceEntity> newsSourceList) {
-        this.newsSourceList = newsSourceList;
     }
 
     public String getName() {
@@ -53,6 +44,15 @@ public class CategoryEntity {
         this.accentColorCode = accentColorCode;
     }
 
+
+    public List<NewsEntity> getNewsEntityList() {
+        return newsEntityList;
+    }
+
+    public void setNewsEntityList(List<NewsEntity> newsEntityList) {
+        this.newsEntityList = newsEntityList;
+    }
+
     @Override
     public String toString() {
         return "CategoryEntity{" +
@@ -60,7 +60,7 @@ public class CategoryEntity {
                 ", name='" + name + '\'' +
                 ", iconUrl='" + iconUrl + '\'' +
                 ", accentColorCode='" + accentColorCode + '\'' +
-                ", newsSourceList=" + newsSourceList +
+                ", newsEntityList=" + newsEntityList +
                 '}';
     }
 }
