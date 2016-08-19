@@ -3,13 +3,8 @@ package digital.edgelabs.bdbnnewsedgelabs.service;
 import android.app.Activity;
 
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.io.IOException;
 
-import digital.edgelabs.bdbnnewsedgelabs.events.NewsFetchEvent;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -31,7 +26,7 @@ public class NewsProvider {
 //        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 //            @Override
 //            public void onResponse(String response) {
-////                EventBus.getDefault().post(new NewsFetchEvent(response));
+////                EventBus.getDefault().post(new UserCategoryLoadEvent(response));
 //                NewsProvider.this.response = response;
 //            }
 //        }, new Response.ErrorListener() {

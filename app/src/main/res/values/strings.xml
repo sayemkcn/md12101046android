@@ -12,4 +12,13 @@
         <item>Technology</item>
         <item>World</item>
     </string-array>
+    <string-array name="colors">
+        <item>#23FFFF</item>
+        <item>#4D4D4D</item>
+        <item>#A2A2A2</item>
+        <item>#D9D900</item>
+        <item>#A1A900</item>
+        <item>#BBBBBB</item>
+        <item>#451246</item>
+    </string-array>
 </resources>

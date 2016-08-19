@@ -1,6 +1,8 @@
 package digital.edgelabs.bdbnnewsedgelabs;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -18,16 +20,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
+import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
 import digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers.MainFragmentHelper;
+import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindArray(R.array.categories)
     String[] categories;
+    @BindArray(R.array.colors)
+    String[] colors;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -46,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
+    @BindView(R.id.collapsingBarlayout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    private List<CategoryEntity> categoryList;
+
+    private boolean isUserRegistered = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
 
         // init ButterKnife
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
+
+        // load user custom CategoryList
+        if (this.isUserRegistered)
+            Commons.loadUserCategoryList("http://ekushay.com/picosoft/bdbn/category/list.json");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,11 +87,30 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(0);
+
 
         // setup tablayout with viewpager
         this.mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
+                if (isUserRegistered && categoryList != null)
+                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
+                else
+                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(colors[mTabLayout.getSelectedTabPosition()]));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +120,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUserCategoryListLoaded(UserCategoryLoadEvent e) {
+        this.mTabLayout.removeAllTabs();
+        this.categoryList = e.getCategoryList();
+        for (int i = 0; i < e.getCategoryList().size(); i++) {
+            TabLayout.Tab tab = this.mTabLayout.newTab();
+            tab.setText(e.getCategoryList().get(i).getName());
+            this.mTabLayout.addTab(tab);
+        }
     }
 
     @Override
@@ -139,9 +192,9 @@ public class MainActivity extends AppCompatActivity {
             View rootView = null;
 //            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
 //                case 1:
-                    rootView = inflater.inflate(R.layout.fragment_main, container, false);
-                    MainFragmentHelper mainFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
-                    mainFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
+            rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            MainFragmentHelper mainFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
+            mainFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
 //                    break;
 
 //            }
@@ -182,7 +235,11 @@ public class MainActivity extends AppCompatActivity {
 //                case 2:
 //                    return "SECTION 3";
 //            }
-            return MainActivity.this.categories[position];
+            if (isUserRegistered && categoryList != null)
+                return categoryList.get(position).getName();
+            else
+                return MainActivity.this.categories[position];
+
 
         }
     }
