@@ -44,4 +44,5 @@ dependencies {
 // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 }

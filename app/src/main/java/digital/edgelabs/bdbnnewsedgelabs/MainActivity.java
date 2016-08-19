@@ -16,24 +16,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import digital.edgelabs.bdbnnewsedgelabs.events.NewsFetchEvent;
 import digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers.MainFragmentHelper;
-import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
+
+    @BindArray(R.array.categories)
+    String[] categories;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -70,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(0);
 
         // setup tablayout with viewpager
         this.mTabLayout.setupWithViewPager(mViewPager);
@@ -142,14 +137,14 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = null;
-            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
-                case 1:
+//            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+//                case 1:
                     rootView = inflater.inflate(R.layout.fragment_main, container, false);
-                    MainFragmentHelper featuredFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
-                    featuredFragmentHelper.exec();
-                    break;
+                    MainFragmentHelper mainFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
+                    mainFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
+//                    break;
 
-            }
+//            }
             return rootView;
         }
     }
@@ -174,20 +169,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return MainActivity.this.categories.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
+//            switch (position) {
+//                case 0:
+//                    return "SECTION 1";
+//                case 1:
+//                    return "SECTION 2";
+//                case 2:
+//                    return "SECTION 3";
+//            }
+            return MainActivity.this.categories[position];
+
         }
     }
 }
