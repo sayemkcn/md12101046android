@@ -21,7 +21,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -65,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TabLayout mTabLayout;
     @BindView(R.id.collapsingBarlayout)
     CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.appBarImageView)
+    ImageView appBarImageViw;
+
     private List<CategoryEntity> categoryList;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
@@ -115,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onPageSelected(int position) {
                 collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
                 if (isUserRegistered && categoryList != null)
-                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
+                    Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.mipmap.ic_launcher).into(appBarImageViw);
+//                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
                 else
                     collapsingToolbarLayout.setBackgroundColor(Color.parseColor(colors[mTabLayout.getSelectedTabPosition()]));
             }
