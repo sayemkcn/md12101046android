@@ -1,6 +1,7 @@
 package digital.edgelabs.bdbnnewsedgelabs;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -15,13 +16,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -30,8 +31,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindArray;
@@ -42,7 +41,7 @@ import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
 import digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers.MainFragmentHelper;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindArray(R.array.categories)
     String[] categories;
@@ -120,10 +119,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onPageSelected(int position) {
                 collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
-                if (isUserRegistered && categoryList != null)
+                if (isUserRegistered && categoryList != null) {
                     Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.mipmap.ic_launcher).into(appBarImageViw);
-//                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
-                else
+                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
+                } else
                     collapsingToolbarLayout.setBackgroundColor(Color.parseColor(colors[mTabLayout.getSelectedTabPosition()]));
             }
 
@@ -132,14 +131,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
     }
 
@@ -151,6 +150,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TabLayout.Tab tab = this.mTabLayout.newTab();
             tab.setText(e.getCategoryList().get(i).getName());
             this.mTabLayout.addTab(tab);
+        }
+        this.changeTabsFont(this.mTabLayout);
+    }
+
+    private void changeTabsFont(TabLayout tabLayout) {
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(),"fonts/SolaimanLipi.ttf");
+
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(typeface,Typeface.BOLD);
+                }
+            }
         }
     }
 
@@ -185,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Toast.makeText(getApplicationContext(),id+" Selected",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), id + " Selected", Toast.LENGTH_SHORT).show();
         return false;
     }
 
