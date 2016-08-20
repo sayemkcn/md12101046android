@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -34,16 +36,14 @@ import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
  */
 public class MainFragmentHelper {
     private Activity context;
-    private View rootView;
     private RecyclerView recyclerView;
     private static int PAGE_NUMBER = 0;
-
-    private TextView textView;
+    private ProgressBar progressBar;
 
     public MainFragmentHelper(Activity context, View rootView) {
         this.context = context;
-        this.rootView = rootView;
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        this.progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         // register eventbus
 //        EventBus.getDefault().register(this);
     }
@@ -83,6 +83,9 @@ public class MainFragmentHelper {
             recyclerView.stopNestedScroll();
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setNestedScrollingEnabled(false);
+            recyclerView.setVisibility(View.VISIBLE);
+            this.progressBar.setVisibility(View.GONE);
+
 //            textView.setText(categoryEntity.toString());
         } catch (JSONException e) {
             Log.d("JSON_EX", e.toString());

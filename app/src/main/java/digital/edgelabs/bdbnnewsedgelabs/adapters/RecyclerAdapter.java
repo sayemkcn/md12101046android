@@ -1,6 +1,7 @@
 package digital.edgelabs.bdbnnewsedgelabs.adapters;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         NewsEntity news = categoryEntity.getNewsEntityList().get(position);
-        Glide.with(context).load(news.getImageUrl()).placeholder(R.mipmap.ic_launcher).into(myViewHolder.newsImageView);
+        Glide.with(context).load(news.getImageUrl()).into(myViewHolder.newsImageView);
         myViewHolder.titleTextView.setText(news.getTitle());
         myViewHolder.summaryTextView.setText(news.getDetails());
         Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
@@ -65,6 +66,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             sourceLogoImageView = (ImageView) itemView.findViewById(R.id.sourceLogoImageView);
             sourceNameTextView = (TextView) itemView.findViewById(R.id.sourceNameTextView);
             newsTimeTextView = (TextView) itemView.findViewById(R.id.timeTextView);
+
+            Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/SolaimanLipi.ttf");
+            titleTextView.setTypeface(typeface);
+            summaryTextView.setTypeface(typeface);
+            sourceNameTextView.setTypeface(typeface);
+
 
         }
     }
