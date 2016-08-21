@@ -1,12 +1,11 @@
 package digital.edgelabs.bdbnnewsedgelabs;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // load user custom CategoryList
         if (this.isUserRegistered)
-            Commons.loadUserCategoryList("http://ekushay.com/picosoft/bdbn/category/list.json");
+            Commons.loadUserCategoryList(getResources().getString(R.string.categoryUrl));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void changeTabsFont(TabLayout tabLayout) {
-        Typeface typeface = Typeface.createFromAsset(this.getAssets(),"fonts/SolaimanLipi.ttf");
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "fonts/SolaimanLipi.ttf");
 
         ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             for (int i = 0; i < tabChildsCount; i++) {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(typeface,Typeface.BOLD);
+                    ((TextView) tabViewChild).setTypeface(typeface, Typeface.BOLD);
                 }
             }
         }
@@ -193,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            this.startActivity(new Intent(this, PreferenceActivity.class));
             return true;
         }
 

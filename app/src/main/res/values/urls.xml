@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="baseUrl">http://ekushay.com/picosoft/bdbn</string>
+    <string name="baseUrl">http://blog.toracode.net/bdbn</string>
+    <string name="categoryUrl">http://blog.toracode.net/bdbn/category/list.json</string>
     <string name="newsUrl">https://gist.githubusercontent.com/sayemkcn/b59b889c75e459f09ae419c6a98a6640/raw/a18ba177eb4586b6c49671e13f327890001a0485/test.json</string>
 
 </resources>

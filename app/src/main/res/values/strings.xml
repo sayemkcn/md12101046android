@@ -24,4 +24,5 @@
         <item>#BBBBBB</item>
         <item>#451246</item>
     </string-array>
+    <string name="title_activity_preference">Preference</string>
 </resources>
