@@ -6,6 +6,8 @@
     <string name="navigation_drawer_open">ড্রয়ার ওপেন করুন</string>
     <string name="navigation_drawer_close">ড্রয়ার বন্ধ করুন</string>
 
+    <string name="hourBefore"> ঘন্টা পূর্বে</string>
+
     <string-array name="categories">
         <item>Highlight</item>
         <item>News</item>

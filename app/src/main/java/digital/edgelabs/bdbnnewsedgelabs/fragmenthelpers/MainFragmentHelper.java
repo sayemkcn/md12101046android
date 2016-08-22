@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -19,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +72,7 @@ public class MainFragmentHelper {
 //        Log.i("url",urlBuilder.toString());
         final String url = urlBuilder.toString().replaceAll(",$","");
         Log.d("URL", url);
+        Toast.makeText(context,url,Toast.LENGTH_LONG).show();
 
         new Thread(new Runnable() {
             @Override
@@ -103,10 +107,12 @@ public class MainFragmentHelper {
 //            textView.setText(categoryEntity.toString());
         } catch (JSONException e) {
             Log.d("JSON_EX", e.toString());
+        } catch (ParseException e) {
+            Log.e("PARSE_DATE_SDF",e.toString());
         }
     }
 
-    private CategoryEntity parseJson(String response) throws JSONException {
+    private CategoryEntity parseJson(String response) throws JSONException, ParseException {
         JSONObject catJsonObject = new JSONObject(response);
         CategoryEntity category = new CategoryEntity();
         category.setId(catJsonObject.getLong("categoryId"));
@@ -125,6 +131,9 @@ public class MainFragmentHelper {
             news.setDetails(newsJsonObject.getString("details"));
             news.setImageUrl(newsJsonObject.getString("imageUrl"));
             news.setAuthor(newsJsonObject.getString("author"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            news.setLastUpdated(sdf.parse(newsJsonObject.getString("timestamp")));
+//            Log.i("DATE",news.getLastUpdated().toString());
 
             JSONObject sourceJsonObject = newsJsonObject.getJSONObject("source");
             NewsSourceEntity source = new NewsSourceEntity();

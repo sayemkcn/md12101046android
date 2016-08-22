@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
@@ -41,7 +44,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         myViewHolder.summaryTextView.setText(news.getDetails());
         Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
         myViewHolder.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
-        myViewHolder.newsTimeTextView.setText(news.getLastUpdated()+"");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(news.getLastUpdated());
+        myViewHolder.newsTimeTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US) + ", " + calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + " " + calendar.get(Calendar.DAY_OF_MONTH));
 
     }
 
@@ -67,7 +72,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             sourceNameTextView = (TextView) itemView.findViewById(R.id.sourceNameTextView);
             newsTimeTextView = (TextView) itemView.findViewById(R.id.timeTextView);
 
-            Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/SolaimanLipi.ttf");
+            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
             titleTextView.setTypeface(typeface);
             summaryTextView.setTypeface(typeface);
             sourceNameTextView.setTypeface(typeface);
