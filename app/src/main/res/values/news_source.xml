@@ -5,6 +5,7 @@
         <item>Banglanews24.com</item>
         <item>Kalerkantho</item>
         <item>Bdnews24.com</item>
+        <item>ntvbd.com</item>
     </array>
 
     <array name="sourceIds">
@@ -12,5 +13,6 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>5</item>
     </array>
 </resources>

@@ -39,17 +39,24 @@ public class PreferenceActivity extends AppCompatActivity {
         // setup recycler view
         this.recyclerView.setAdapter(new PreferenceAdapter(this, this.getPreferenceItemList()));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // save the preference list size for later use
+        Pref.savePreference(this,Pref.PREF_SIZE,this.getPreferenceItemList().size());
     }
 
     @NonNull
     private List<PreferenceSingleItem> getPreferenceItemList() {
+        // get source name and id from resources array
         String[] sourceNames = getResources().getStringArray(R.array.sourceNames);
         int[] sourceIds = getResources().getIntArray(R.array.sourceIds);
+        // make them list of preference objects
         List<PreferenceSingleItem> prefItemList = new ArrayList();
         for (int i = 0; i < sourceNames.length && i < sourceIds.length; i++) {
             PreferenceSingleItem prefItem = new PreferenceSingleItem();
             prefItem.setName(sourceNames[i]);
             if (Pref.isNull(this, "source" + (i + 1))) {
+                // save preference by default true all if no preference is set yet
+                Pref.savePreference(this,"source" + (i + 1),true);
                 prefItem.setActivated(true);
             } else {
                 prefItem.setActivated(Pref.getPreference(this, "source" + (i + 1)));
@@ -67,6 +74,7 @@ public class PreferenceActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Receive click event from adapter and apply action
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrefChange(PrefChangeEvent event) {
         Pref.savePreference(this, "source" + event.getSourceId(), event.isChecked());

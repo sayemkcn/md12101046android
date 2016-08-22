@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
@@ -51,9 +52,22 @@ public class MainFragmentHelper {
     public void exec(int pageNumber) {
         this.PAGE_NUMBER = pageNumber;
 
-//        this.textView = (TextView) rootView.findViewById(R.id.textView);
-
-        final String url = context.getResources().getString(R.string.baseUrl) + "/category/" + PAGE_NUMBER + ".json";
+        // Build request url with filter
+        // get news source url from sharedpref and send them as param
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder
+                .append(context.getResources().getString(R.string.baseUrl))
+                .append("/category/")
+                .append(PAGE_NUMBER)
+                .append(".json")
+                .append("?sources=");
+        for(int i=0;i< Pref.getPreferenceInt(context,Pref.PREF_SIZE);i++){
+            if (Pref.getPreference(context,"source"+(i+1))){
+                urlBuilder.append((i+1)+",");
+            }
+        }
+//        Log.i("url",urlBuilder.toString());
+        final String url = urlBuilder.toString().replaceAll(",$","");
         Log.d("URL", url);
 
         new Thread(new Runnable() {
