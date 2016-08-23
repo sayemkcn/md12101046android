@@ -1,20 +1,13 @@
 package digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,8 +24,6 @@ import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
-import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
-import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
 
 /**
@@ -64,15 +55,16 @@ public class MainFragmentHelper {
                 .append(PAGE_NUMBER)
                 .append(".json")
                 .append("?sources=");
-        for(int i=0;i< Pref.getPreferenceInt(context,Pref.PREF_SIZE);i++){
-            if (Pref.getPreference(context,"source"+(i+1))){
-                urlBuilder.append((i+1)+",");
+        for (int i = 0; i < Pref.getPreferenceInt(context, Pref.PREF_SIZE); i++) {
+            if (Pref.getPreference(context, "source" + (i + 1))) {
+                urlBuilder.append((i + 1) + ",");
             }
         }
 //        Log.i("url",urlBuilder.toString());
-        final String url = urlBuilder.toString().replaceAll(",$","");
+        String tempUrl = this.concatAllSourceIdIfNone(urlBuilder.toString(),context.getResources().getStringArray(R.array.sourceNames).length);
+        final String url = tempUrl.replaceAll(",$", "");
         Log.d("URL", url);
-        Toast.makeText(context,url,Toast.LENGTH_LONG).show();
+        Toast.makeText(context, url, Toast.LENGTH_LONG).show();
 
         new Thread(new Runnable() {
             @Override
@@ -94,6 +86,15 @@ public class MainFragmentHelper {
         }).start();
     }
 
+    private String concatAllSourceIdIfNone(String url, int prefSize) {
+        if (url.split("=").length<2){
+            for (int i=0;i<prefSize;i++){
+                url+=i+1+",";
+            }
+        }
+        return url;
+    }
+
     private void onResponse(String response, int categoryId) {
         try {
             CategoryEntity categoryEntity = this.parseJson(response);
@@ -108,7 +109,7 @@ public class MainFragmentHelper {
         } catch (JSONException e) {
             Log.d("JSON_EX", e.toString());
         } catch (ParseException e) {
-            Log.e("PARSE_DATE_SDF",e.toString());
+            Log.e("PARSE_DATE_SDF", e.toString());
         }
     }
 
