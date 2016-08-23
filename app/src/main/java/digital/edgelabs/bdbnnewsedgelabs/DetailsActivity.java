@@ -1,31 +1,37 @@
 package digital.edgelabs.bdbnnewsedgelabs;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
-import digital.edgelabs.bdbnnewsedgelabs.events.NewsItemClickEvent;
+import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -44,19 +50,30 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.newsDetailsTextView)
     TextView detailsTextView;
 
+    @BindView(R.id.detailsScrollView)
+    ScrollView scrollView;
+
+    private Typeface typeface;
+    private float mTouchPosition;
+    private float mReleasePosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().hide();
 
         // register eventbus
         ButterKnife.bind(this);
 
-        Long newsId = getIntent().getLongExtra("newsId",0);
+        this.typeface = typeface.createFromAsset(getAssets(),"fonts/SolaimanLipi.ttf");
 
-        Log.d("NEWS_ID",newsId+"");
+        Long newsId = getIntent().getLongExtra("newsId", 0);
+
+        Log.d("NEWS_ID", newsId + "");
 
         final String url = getResources().getString(R.string.newsDetailsUrl);
         new Thread(new Runnable() {
@@ -78,16 +95,34 @@ public class DetailsActivity extends AppCompatActivity {
             }
         }).start();
 
-
     }
 
-    private void onResponse(String response){
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            mTouchPosition = event.getY();
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            mReleasePosition = event.getY();
+
+            if (mTouchPosition - mReleasePosition > 0) {
+                Toast.makeText(this,"DOWN",Toast.LENGTH_SHORT).show();
+            } else {
+                //user scroll up
+                Toast.makeText(this,"UP",Toast.LENGTH_SHORT).show();
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
+    private void onResponse(String response) {
         try {
             this.updateViews(this.parseNewsEntity(response));
         } catch (JSONException e) {
-            Log.d("JSON_EX",e.toString());
+            Log.d("JSON_EX", e.toString());
         } catch (ParseException e) {
-            Log.d("PARSE_EX",e.toString());
+            Log.d("PARSE_EX", e.toString());
         }
     }
 
@@ -96,11 +131,18 @@ public class DetailsActivity extends AppCompatActivity {
         Glide.with(this).load(news.getNewsSourceEntity().getIconUrl()).into(this.sourceIconImageView);
         this.titleTextView.setText(news.getTitle());
         this.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
-        this.authorTextView.setText(news.getAuthor());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(news.getLastUpdated());
-        this.timeTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US) + ", " + calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + " " + calendar.get(Calendar.DAY_OF_MONTH));
+        this.authorTextView.setText(news.getAuthor()+" * ");
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(news.getLastUpdated());
+        this.timeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + getResources().getString(R.string.hourBefore));
         this.detailsTextView.setText(news.getDetails());
+
+        // set typeface
+        this.titleTextView.setTypeface(typeface);
+        this.sourceNameTextView.setTypeface(typeface);
+        this.authorTextView.setTypeface(typeface);
+        this.timeTextView.setTypeface(typeface);
+        this.detailsTextView.setTypeface(typeface);
     }
 
     private NewsEntity parseNewsEntity(String response) throws JSONException, ParseException {
@@ -124,10 +166,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         news.setNewsSourceEntity(source);
         return news;
-    }
-
-    private void setNews() {
-
     }
 
 

@@ -12,13 +12,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
+import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
@@ -46,9 +47,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         myViewHolder.summaryTextView.setText(news.getDetails());
         Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
         myViewHolder.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(news.getLastUpdated());
-        myViewHolder.newsTimeTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US) + ", " + calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + " " + calendar.get(Calendar.DAY_OF_MONTH));
+        myViewHolder.newsTimeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + context.getResources().getString(R.string.hourBefore));
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(news.getLastUpdated());
+//        myViewHolder.newsTimeTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US) + ", " + calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US) + " " + calendar.get(Calendar.DAY_OF_MONTH));
 
     }
 
