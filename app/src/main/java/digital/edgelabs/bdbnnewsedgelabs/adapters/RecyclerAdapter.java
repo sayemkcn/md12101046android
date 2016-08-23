@@ -1,6 +1,7 @@
 package digital.edgelabs.bdbnnewsedgelabs.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.Calendar;
 import java.util.Locale;
 
+import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
@@ -77,7 +79,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             summaryTextView.setTypeface(typeface);
             sourceNameTextView.setTypeface(typeface);
 
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", categoryEntity.getNewsEntityList().get(getAdapterPosition()).getId())
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                }
+            });
         }
     }
 }
