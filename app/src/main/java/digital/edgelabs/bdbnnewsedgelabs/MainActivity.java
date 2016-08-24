@@ -35,6 +35,7 @@ import java.util.List;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
 import digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers.MainFragmentHelper;
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPageSelected(int position) {
+                Pref.savePreference(MainActivity.this,"page_number",position);
+
                 collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
                 if (isUserRegistered && categoryList != null) {
                     Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.mipmap.ic_launcher).into(appBarImageViw);
@@ -130,14 +133,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
     }
 
@@ -234,10 +229,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = null;
+//            View rootView = null;
 //            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
 //                case 1:
-            rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             MainFragmentHelper mainFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
             mainFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
 //                    break;

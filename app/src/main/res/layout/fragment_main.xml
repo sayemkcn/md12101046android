@@ -19,12 +19,21 @@
             android:scrollbars="vertical"
             android:visibility="gone" />
 
+        <Button
+            android:id="@+id/moreButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="@android:color/white"
+            android:text="@string/btn_see_more"
+            android:visibility="gone" />
+
         <ProgressBar
-            android:layout_marginTop="150dp"
-            android:layout_gravity="center"
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="150dp" />
     </LinearLayout>
 
 

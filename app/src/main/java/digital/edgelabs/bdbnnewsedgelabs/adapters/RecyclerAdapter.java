@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
@@ -23,12 +24,12 @@ import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
-    private CategoryEntity categoryEntity;
+    private List<NewsEntity> newsList;
     private Activity context;
 
-    public RecyclerAdapter(Activity context, CategoryEntity categoryEntity) {
+    public RecyclerAdapter(Activity context, List<NewsEntity> newsList) {
         this.inflater = LayoutInflater.from(context);
-        this.categoryEntity = categoryEntity;
+        this.newsList = newsList;
         this.context = context;
     }
 
@@ -41,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
-        NewsEntity news = categoryEntity.getNewsEntityList().get(position);
+        NewsEntity news = this.newsList.get(position);
         Glide.with(context).load(news.getImageUrl()).into(myViewHolder.newsImageView);
         myViewHolder.titleTextView.setText(news.getTitle());
         myViewHolder.summaryTextView.setText(news.getDetails());
@@ -56,7 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return categoryEntity.getNewsEntityList().size();
+        return this.newsList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -84,7 +85,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", categoryEntity.getNewsEntityList().get(getAdapterPosition()).getId())
+                    context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", newsList.get(getAdapterPosition()).getId())
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 }
             });

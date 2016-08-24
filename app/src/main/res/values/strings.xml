@@ -30,4 +30,5 @@
     <string name="title_activity_details"></string>
     <string name="action_share">Share</string>
     <string name="action_bookmark_this">Bookmark this</string>
+    <string name="btn_see_more">..আরো দেখুন..</string>
 </resources>
