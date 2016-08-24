@@ -1,20 +1,14 @@
 package digital.edgelabs.bdbnnewsedgelabs;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -50,12 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.newsDetailsTextView)
     TextView detailsTextView;
 
-    @BindView(R.id.detailsScrollView)
-    ScrollView scrollView;
-
     private Typeface typeface;
-    private float mTouchPosition;
-    private float mReleasePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +58,7 @@ public class DetailsActivity extends AppCompatActivity {
         // register eventbus
         ButterKnife.bind(this);
 
-        this.typeface = typeface.createFromAsset(getAssets(),"fonts/SolaimanLipi.ttf");
+        this.typeface = typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
 
         Long newsId = getIntent().getLongExtra("newsId", 0);
 
@@ -97,23 +86,20 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
+
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            mTouchPosition = event.getY();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
         }
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            mReleasePosition = event.getY();
-
-            if (mTouchPosition - mReleasePosition > 0) {
-                Toast.makeText(this,"DOWN",Toast.LENGTH_SHORT).show();
-            } else {
-                //user scroll up
-                Toast.makeText(this,"UP",Toast.LENGTH_SHORT).show();
-            }
-        }
-        return super.onTouchEvent(event);
+        return super.onOptionsItemSelected(item);
     }
 
     private void onResponse(String response) {
@@ -131,7 +117,7 @@ public class DetailsActivity extends AppCompatActivity {
         Glide.with(this).load(news.getNewsSourceEntity().getIconUrl()).into(this.sourceIconImageView);
         this.titleTextView.setText(news.getTitle());
         this.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
-        this.authorTextView.setText(news.getAuthor()+" * ");
+        this.authorTextView.setText(news.getAuthor() + " * ");
 //        Calendar calendar = Calendar.getInstance();
 //        calendar.setTime(news.getLastUpdated());
         this.timeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + getResources().getString(R.string.hourBefore));

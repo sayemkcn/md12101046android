@@ -28,4 +28,6 @@
     </string-array>
     <string name="title_activity_preference">Preference</string>
     <string name="title_activity_details"></string>
+    <string name="action_share">Share</string>
+    <string name="action_bookmark_this">Bookmark this</string>
 </resources>
