@@ -33,6 +33,9 @@ public class PreferenceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_preference);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
 
@@ -41,7 +44,7 @@ public class PreferenceActivity extends AppCompatActivity {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // save the preference list size for later use
-        Pref.savePreference(this,Pref.PREF_SIZE,this.getPreferenceItemList().size());
+        Pref.savePreference(this, Pref.PREF_SIZE, this.getPreferenceItemList().size());
     }
 
     @NonNull
@@ -56,7 +59,7 @@ public class PreferenceActivity extends AppCompatActivity {
             prefItem.setName(sourceNames[i]);
             if (Pref.isNull(this, "source" + (i + 1))) {
                 // save preference by default true all if no preference is set yet
-                Pref.savePreference(this,"source" + (i + 1),true);
+                Pref.savePreference(this, "source" + (i + 1), true);
                 prefItem.setActivated(true);
             } else {
                 prefItem.setActivated(Pref.getPreference(this, "source" + (i + 1)));

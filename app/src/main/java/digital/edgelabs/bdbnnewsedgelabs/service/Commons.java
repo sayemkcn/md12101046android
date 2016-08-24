@@ -2,6 +2,10 @@ package digital.edgelabs.bdbnnewsedgelabs.service;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -18,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
 import okhttp3.OkHttpClient;
@@ -74,5 +79,36 @@ public class Commons {
             result.put(unit, diff);
         }
         return result;
+    }
+
+    public static void showDialog(final Activity context, String title, String message) {
+        final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(context);
+
+        int dividerColor = context.getResources().getColor(R.color.colorPrimaryDark);
+        int dialogColor = context.getResources().getColor(R.color.colorPrimary);
+        int buttonBackgroundColor = context.getResources().getColor(R.color.colorAccent);
+        Effectstype effect = Effectstype.Shake;
+
+        dialogBuilder
+                .withTitle(title)
+                .withTitleColor(context.getResources().getColor(android.R.color.white))
+                .withDividerColor(dividerColor)
+                .withMessage(message)
+                .withMessageColor(context.getResources().getColor(android.R.color.white))
+                .withDialogColor(dialogColor)
+                .withEffect(effect)
+                .withDuration(1000)
+                .withIcon(R.mipmap.ic_launcher)
+                .withButton1Text("Okay")
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder.cancel();
+                        context.finish();
+                    }
+                })
+                .isCancelableOnTouchOutside(false)
+                .show();
+
     }
 }

@@ -1,99 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/detailsScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="digital.edgelabs.bdbnnewsedgelabs.DetailsActivity"
+    tools:showIn="@layout/activity_details">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="digital.edgelabs.bdbnnewsedgelabs.DetailsActivity"
-        tools:showIn="@layout/activity_details">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/newsDetailsImageView"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <ImageView
-                android:id="@+id/newsSourceIconTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/newsDetailsImageView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/sourceLogoMargin"
+                android:scaleType="fitXY"
                 android:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/newsTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="@dimen/newsTitlePadding"
-                android:paddingLeft="@dimen/newsTitlePadding"
-                android:paddingRight="@dimen/newsTitlePadding"
-                android:paddingStart="@dimen/newsTitlePadding"
-                android:text="News Title"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="50dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:background="@android:color/black" />
-
-            <TextView
-                android:id="@+id/newsSourceNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Source Name"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/newsAuthorTextView"
+                <ImageView
+                    android:id="@+id/newsSourceIconTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Stuff Correspondent"
-                    android:textSize="12sp" />
+                    android:layout_margin="@dimen/sourceLogoMargin"
+                    android:src="@mipmap/ic_launcher" />
 
                 <TextView
-                    android:id="@+id/newsTimeTextView"
+                    android:id="@+id/newsTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="*6 Hours before"
-                    android:textSize="12sp" />
+                    android:paddingEnd="@dimen/newsTitlePadding"
+                    android:paddingLeft="@dimen/newsTitlePadding"
+                    android:paddingRight="@dimen/newsTitlePadding"
+                    android:paddingStart="@dimen/newsTitlePadding"
+                    android:text="News Title"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:background="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/newsSourceNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Source Name"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/newsAuthorTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Stuff Correspondent"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/newsTimeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*6 Hours before"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/newsDetailsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/detailsTextLeftRightPadding"
+                android:paddingLeft="@dimen/detailsTextLeftRightPadding"
+                android:paddingRight="@dimen/detailsTextLeftRightPadding"
+                android:paddingStart="@dimen/detailsTextLeftRightPadding"
+                android:paddingTop="@dimen/detailsTextTopPadding"
+                android:text="The command below will open a Secure Shell (SSH) session to your application on most operating systems. See our SSH help page for information about connecting with Windows, Mac, and Linux computers."
+                android:textSize="15sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/newsDetailsTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/detailsTextLeftRightPadding"
-            android:paddingLeft="@dimen/detailsTextLeftRightPadding"
-            android:paddingRight="@dimen/detailsTextLeftRightPadding"
-            android:paddingStart="@dimen/detailsTextLeftRightPadding"
-            android:paddingTop="@dimen/detailsTextTopPadding"
-            android:text="The command below will open a Secure Shell (SSH) session to your application on most operating systems. See our SSH help page for information about connecting with Windows, Mac, and Linux computers."
-            android:textSize="15sp" />
-    </LinearLayout>
+        <ProgressBar
+            android:layout_marginTop="200dp"
+            android:id="@+id/detailsProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 </ScrollView>

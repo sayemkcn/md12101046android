@@ -25,6 +25,7 @@ import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
+import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
 
 /**
@@ -80,7 +81,12 @@ public class MainFragmentHelper {
                             }
                         });
                     } catch (IOException e) {
-                        Log.d("HTTP_EX", e.toString());
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Commons.showDialog(context, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!");
+                            }
+                        });
                     }
                 }
             }

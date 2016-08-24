@@ -7,7 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +46,11 @@ public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.newsDetailsTextView)
     TextView detailsTextView;
 
+    @BindView(R.id.contentLayout)
+    View contentLayout;
+    @BindView(R.id.detailsProgressBar)
+    ProgressBar progressBar;
+
     private Typeface typeface;
 
     @Override
@@ -52,7 +59,8 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().hide();
 
         // register eventbus
@@ -78,7 +86,12 @@ public class DetailsActivity extends AppCompatActivity {
                             }
                         });
                     } catch (IOException e) {
-                        Log.d("HTTP_EX", e.toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Commons.showDialog(DetailsActivity.this, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!");
+                            }
+                        });
                     }
                 }
             }
@@ -104,9 +117,13 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void onResponse(String response) {
         try {
+            if (this.progressBar.isShown()) {
+                this.contentLayout.setVisibility(View.VISIBLE);
+                this.progressBar.setVisibility(View.GONE);
+            }
             this.updateViews(this.parseNewsEntity(response));
         } catch (JSONException e) {
-            Log.d("JSON_EX", e.toString());
+            Commons.showDialog(this, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet connection at all! Please connect to the internet first!");
         } catch (ParseException e) {
             Log.d("PARSE_EX", e.toString());
         }
