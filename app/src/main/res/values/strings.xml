@@ -31,4 +31,5 @@
     <string name="action_share">Share</string>
     <string name="action_bookmark_this">Bookmark this</string>
     <string name="btn_see_more">..আরো দেখুন..</string>
+    <string name="message_loading">লোড হচ্ছে...</string>
 </resources>

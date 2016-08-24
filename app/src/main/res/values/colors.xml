@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorAccent">#00BCD4</color>
 
-    <color name="loadToastBackgroundColor">#536DFE</color>
+    <color name="loadToastBackgroundColor">#009688</color>
     <color name="loadProgressColor">#FF4081</color>
     <color name="loadToastTextColor">@android:color/white</color>
 

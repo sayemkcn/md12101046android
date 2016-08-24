@@ -1,6 +1,7 @@
 package digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import net.steamcrafted.loadtoast.LoadToast;
+import com.github.johnpersano.supertoasts.library.Style;
+import com.github.johnpersano.supertoasts.library.SuperActivityToast;
+import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,14 +68,7 @@ public class MainFragmentHelper {
     }
 
     private void fetchNews(final int vpPageNumber, final int startIndex, final int pageSize) {
-        final LoadToast loadToast = new LoadToast(context);
-        loadToast.setText("লোড হচ্ছে..");
-        loadToast.setTranslationY(500);
-        loadToast.setTextColor(context.getResources().getColor(R.color.loadToastTextColor));
-        loadToast.setBackgroundColor(context.getResources().getColor(R.color.loadToastBackgroundColor));
-        loadToast.setProgressColor(context.getResources().getColor(R.color.loadProgressColor));
-
-        loadToast.show();
+        this.showLoadingToast();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,7 +81,6 @@ public class MainFragmentHelper {
                             @Override
                             public void run() {
                                 onResponse(response, vpPageNumber);
-                                loadToast.success();
                             }
                         });
                     } catch (IOException e) {
@@ -93,13 +88,22 @@ public class MainFragmentHelper {
                             @Override
                             public void run() {
                                 Commons.showDialog(context, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!");
-                                loadToast.error();
                             }
                         });
                     }
                 }
             }
         }).start();
+    }
+
+    private void showLoadingToast() {
+        SuperActivityToast.create(context, new Style(), Style.TYPE_PROGRESS_BAR)
+                .setProgressBarColor(Color.WHITE)
+                .setText(context.getResources().getString(R.string.message_loading))
+                .setDuration(Style.DURATION_LONG)
+                .setFrame(Style.FRAME_KITKAT)
+                .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_TEAL))
+                .setAnimations(Style.ANIMATIONS_FLY).show();
     }
 
     private String buildUrl(Activity context, int vpPageNumber, int startIndex, int pageSize) {
@@ -133,7 +137,14 @@ public class MainFragmentHelper {
     private void onResponse(String response, final int vpPageNumber) {
         try {
             this.newsList = this.parseJson(response);
+//            if (this.newsList.size()>pageSize){
+//                RecyclerAdapter adapter = new RecyclerAdapter(context,this.newsList);
+//                adapter.notifyDataSetChanged();
+//                recyclerView.setAdapter(adapter);
+//            }else {
             this.setUpRecyclerView(context, newsList, vpPageNumber);
+//            }
+
             this.progressBar.setVisibility(View.GONE);
             this.moreButton.setVisibility(View.VISIBLE);
             this.moreButton.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +165,10 @@ public class MainFragmentHelper {
 
     private void setUpRecyclerView(final Activity context, List<NewsEntity> newsList, final int vpPageNumber) {
         final RecyclerAdapter adapter = new RecyclerAdapter(context, this.newsList);
-        recyclerView.setAdapter(new RecyclerAdapter(context, newsList));
+        if (this.newsList.size() > pageSize) {
+            adapter.notifyDataSetChanged();
+        }
+        recyclerView.setAdapter(adapter);
         recyclerView.stopNestedScroll();
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -221,7 +235,6 @@ public class MainFragmentHelper {
 
         return this.newsList;
     }
-
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onNewsFetched(UserCategoryLoadEvent newsFetchEvent) {
