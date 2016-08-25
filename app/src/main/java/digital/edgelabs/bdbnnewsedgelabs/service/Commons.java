@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
@@ -104,7 +105,8 @@ public class Commons {
                     @Override
                     public void onClick(View v) {
                         dialogBuilder.cancel();
-                        context.finish();
+                        if (!(context instanceof DetailsActivity))
+                            context.finish();
                     }
                 })
                 .isCancelableOnTouchOutside(false)

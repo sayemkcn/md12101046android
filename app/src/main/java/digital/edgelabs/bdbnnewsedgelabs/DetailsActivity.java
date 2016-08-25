@@ -11,8 +11,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,11 +23,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
@@ -50,6 +56,8 @@ public class DetailsActivity extends AppCompatActivity {
     View contentLayout;
     @BindView(R.id.detailsProgressBar)
     ProgressBar progressBar;
+
+    private NewsEntity news;
 
     private Typeface typeface;
 
@@ -111,8 +119,38 @@ public class DetailsActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             this.finish();
+        } else if (id == R.id.action_bookmark) {
+            if (this.news == null) {
+                Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
+            } else {
+                Gson gson = new Gson();
+                String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
+                List<NewsEntity> newsList;
+                if (newsListJson == null || newsListJson.equals("")) {
+                    newsList = new ArrayList<>();
+                    Log.d("EXECUTED", "FUCK! " + newsListJson);
+                } else {
+                    newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+                    }.getType());
+//                    Log.d("EXECUTED", newsListJson);
+                }
+
+                this.news.setDetails(this.news.getDetails().substring(0, 100));
+                newsList.add(this.news);
+                newsListJson = gson.toJson(newsList);
+                Pref.savePreference(this, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
+                this.showToast("Bookmark Added!");
+//                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showToast(String message) {
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.getView().setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        toast.getView().setPadding(20, 20, 20, 20);
+        toast.show();
     }
 
     private void onResponse(String response) {
@@ -121,7 +159,8 @@ public class DetailsActivity extends AppCompatActivity {
                 this.contentLayout.setVisibility(View.VISIBLE);
                 this.progressBar.setVisibility(View.GONE);
             }
-            this.updateViews(this.parseNewsEntity(response));
+            this.news = this.parseNewsEntity(response);
+            this.updateViews(this.news);
         } catch (JSONException e) {
             Commons.showDialog(this, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet connection at all! Please connect to the internet first!");
         } catch (ParseException e) {

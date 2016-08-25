@@ -1,8 +1,10 @@
 package digital.edgelabs.bdbnnewsedgelabs.adapters;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import digital.edgelabs.bdbnnewsedgelabs.BookmarkActivity;
+import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
-import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
@@ -60,6 +65,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         return this.newsList.size();
     }
 
+    public void remove(int position) {
+        if (position < 0 || position >= newsList.size()) {
+            return;
+        }
+        newsList.remove(position);
+        notifyItemRemoved(position);
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView newsImageView;
         TextView titleTextView;
@@ -89,6 +102,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 }
             });
+
+            if (context instanceof BookmarkActivity) {
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        new AlertDialog.Builder(context)
+                                .setIcon(R.mipmap.ic_launcher)
+                                .setTitle("Delete Bookmark")
+                                .setMessage("Are you sure you want to remove this item from your bookmark list?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Gson gson = new Gson();
+                                        String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_BOOKMARK_LIST);
+                                        List<NewsEntity> newsList;
+                                        if (newsListJson != null && !newsListJson.equals("")) {
+                                            newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+                                            }.getType());
+                                            newsList.remove(getAdapterPosition());
+                                            newsListJson = gson.toJson(newsList);
+                                            Pref.savePreference(context, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
+                                        }
+                                        remove(getAdapterPosition());
+                                    }
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+                        return false;
+                    }
+                });
+            }
         }
     }
 }

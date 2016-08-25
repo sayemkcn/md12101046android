@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 public class Pref {
     public static final String PREF_NAME = "BDBNNEWSEDGELABS";
     public static final String PREF_SIZE = "prefSize";
+    public static final String PREF_KEY_BOOKMARK_LIST = "bookmark_list";
 
     public static void savePreference(Context context, String key, boolean value) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -37,6 +38,19 @@ public class Pref {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return sharedPref.getInt(key,0);
     }
+
+    public static void savePreference(Context context,String key,String value){
+        SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = sharedPref.edit();
+
+        prefEditor.putString(key, value);
+        prefEditor.apply();
+    }
+    public static String getPreferenceString(Context context, String key) {
+        SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPref.getString(key,"");
+    }
+
 
     public static boolean isNull(Context context, String key) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
