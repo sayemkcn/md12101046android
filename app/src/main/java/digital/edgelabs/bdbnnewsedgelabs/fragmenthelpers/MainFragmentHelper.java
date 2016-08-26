@@ -1,7 +1,6 @@
 package digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.github.johnpersano.supertoasts.library.Style;
-import com.github.johnpersano.supertoasts.library.SuperActivityToast;
-import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
+import com.github.johnpersano.supertoasts.library.SuperToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,9 +43,11 @@ public class MainFragmentHelper {
     private int startIndex = 1;
     private int pageSize = 10;
     private List<NewsEntity> newsList = new ArrayList<>();
+    private SuperToast toast;
 
     public MainFragmentHelper(Activity context, View rootView) {
         this.context = context;
+        this.toast = Commons.getLoadingToast(context);
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         this.progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         this.moreButton = (Button) rootView.findViewById(R.id.moreButton);
@@ -68,7 +67,7 @@ public class MainFragmentHelper {
     }
 
     private void fetchNews(final int vpPageNumber, final int startIndex, final int pageSize) {
-        this.showLoadingToast();
+        this.toast.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -81,12 +80,14 @@ public class MainFragmentHelper {
                             @Override
                             public void run() {
                                 onResponse(response, vpPageNumber);
+                                if (toast.isShowing()) toast.dismiss();
                             }
                         });
                     } catch (IOException e) {
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                if (toast.isShowing()) toast.dismiss();
                                 Commons.showDialog(context, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!");
                             }
                         });
@@ -94,16 +95,6 @@ public class MainFragmentHelper {
                 }
             }
         }).start();
-    }
-
-    private void showLoadingToast() {
-        SuperActivityToast.create(context, new Style(), Style.TYPE_PROGRESS_BAR)
-                .setProgressBarColor(Color.WHITE)
-                .setText(context.getResources().getString(R.string.message_loading))
-                .setDuration(Style.DURATION_LONG)
-                .setFrame(Style.FRAME_KITKAT)
-                .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_TEAL))
-                .setAnimations(Style.ANIMATIONS_FLY).show();
     }
 
     private String buildUrl(Activity context, int vpPageNumber, int startIndex, int pageSize) {
@@ -174,37 +165,10 @@ public class MainFragmentHelper {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setVisibility(View.VISIBLE);
-//        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
-//            @Override
-//            public void onLoadMore(int current_page) {
-////                if(vpPageNumber!=2){
-//                    startIndex = getStartIndex(current_page);
-//                    fetchNews(vpPageNumber,startIndex,pageSize);
-//                    adapter.notifyDataSetChanged();
-//                    LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-//                    recyclerView.setLayoutManager(layoutManager);
-////                }
-//
-////                if (flag){
-////                    if (VP_PAGE_NUMBER==2){
-//                        Log.d("PAGE", current_page +" "+ vpPageNumber);
-////                    }
-////                }
-////                int currentPageNumber = Pref.getPreferenceInt(context, "page_number");
-////                if (Pref.getPreferenceInt(context, "page_number") != PAGE_NUMBER)
-////                    Log.d("PAGE", current_page + " " + currentPageNumber + " " + PAGE_NUMBER);
-//            }
-//        });
-
     }
 
     private List<NewsEntity> parseJson(String response) throws JSONException, ParseException {
         JSONObject catJsonObject = new JSONObject(response);
-//        CategoryEntity category = new CategoryEntity();
-//        category.setId(catJsonObject.getLong("categoryId"));
-//        category.setName(catJsonObject.getString("categoryName"));
-//        category.setAccentColorCode(catJsonObject.getString("accentColorCode"));
-//        category.setIconUrl(catJsonObject.getString("iconUrl"));
 
         JSONArray newsJsonArray = catJsonObject.getJSONArray("newsList");
         for (int i = 0; i < newsJsonArray.length(); i++) {
@@ -231,15 +195,9 @@ public class MainFragmentHelper {
 
         }
 
-//        category.setNewsEntityList(newsList);
-
         return this.newsList;
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onNewsFetched(UserCategoryLoadEvent newsFetchEvent) {
-//            this.textView.setText(newsFetchEvent.getResponse());
-//    }
 
     public int getStartIndex(int pageNumber) {
         return pageNumber * this.pageSize - this.pageSize + 1;

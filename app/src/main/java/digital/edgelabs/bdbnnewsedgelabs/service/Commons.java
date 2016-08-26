@@ -1,9 +1,15 @@
 package digital.edgelabs.bdbnnewsedgelabs.service;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 
+import com.github.johnpersano.supertoasts.library.Style;
+import com.github.johnpersano.supertoasts.library.SuperActivityToast;
+import com.github.johnpersano.supertoasts.library.SuperToast;
+import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
@@ -112,5 +118,16 @@ public class Commons {
                 .isCancelableOnTouchOutside(false)
                 .show();
 
+    }
+
+    public static SuperToast getLoadingToast(Context context) {
+        SuperToast toast = SuperActivityToast.create(context, new Style(), Style.TYPE_PROGRESS_BAR)
+                .setProgressBarColor(Color.WHITE)
+                .setText(context.getResources().getString(R.string.message_loading))
+                .setDuration(Style.DURATION_LONG)
+                .setFrame(Style.FRAME_KITKAT)
+                .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_TEAL))
+                .setAnimations(Style.ANIMATIONS_FLY);
+        return toast;
     }
 }
