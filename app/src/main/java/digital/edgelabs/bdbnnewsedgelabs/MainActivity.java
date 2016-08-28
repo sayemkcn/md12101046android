@@ -132,8 +132,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
 //                if (isUserRegistered && categoryList != null) {
+                if (categoryList != null) {
                     Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.mipmap.ic_launcher).into(appBarImageViw);
                     collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
+                }
 //                } else
 //                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(colors[mTabLayout.getSelectedTabPosition()]));
             }

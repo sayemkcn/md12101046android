@@ -48,7 +48,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         NewsEntity news = this.newsList.get(position);
-        Glide.with(context).load(news.getImageUrl()).into(myViewHolder.newsImageView);
+        Glide.with(context).load(news.getImageUrl()).centerCrop().into(myViewHolder.newsImageView);
         myViewHolder.titleTextView.setText(news.getTitle());
         myViewHolder.summaryTextView.setText(news.getDetails());
         Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
