@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
+import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
@@ -169,8 +169,14 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void updateViews(NewsEntity news) {
-        Glide.with(this).load(news.getImageUrl()).into(this.detailsImageView);
-        Glide.with(this).load(news.getNewsSourceEntity().getIconUrl()).into(this.sourceIconImageView);
+        try {
+            Glide.with(this.getApplicationContext()).load(news.getImageUrl()).into(this.detailsImageView);
+            Glide.with(this.getApplicationContext()).load(news.getNewsSourceEntity().getIconUrl()).into(this.sourceIconImageView);
+        } catch (IllegalArgumentException e) {
+            Log.d("EX_GLIDE", e.toString());
+        }
+//        this.detailsImageView.setImageURI(Uri.parse(news.getImageUrl()));
+//        this.sourceIconImageView.setImageURI(Uri.parse(news.getNewsSourceEntity().getIconUrl()));
         this.titleTextView.setText(news.getTitle());
         this.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
         this.authorTextView.setText(news.getAuthor() + " * ");

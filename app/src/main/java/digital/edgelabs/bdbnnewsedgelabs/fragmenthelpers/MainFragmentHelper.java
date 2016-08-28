@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
+import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
@@ -176,7 +176,7 @@ public class MainFragmentHelper {
             NewsEntity news = new NewsEntity();
             news.setId(newsJsonObject.getLong("id"));
             news.setTitle(newsJsonObject.getString("title"));
-            news.setDetails(newsJsonObject.getString("details"));
+            news.setDetails(newsJsonObject.getString("details").substring(0,100));
             news.setImageUrl(newsJsonObject.getString("imageUrl"));
             news.setAuthor(newsJsonObject.getString("author"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

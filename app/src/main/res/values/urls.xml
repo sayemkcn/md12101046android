@@ -2,7 +2,7 @@
 <resources>
 
     <string name="baseUrl">http://blog.toracode.net/bdbn</string>
-    <string name="newsDetailsUrl">https://gist.githubusercontent.com/sayemkcn/74b4042ac9c9014d46b36c221af32977/raw/6d1f270b4626ee9c6aab940f689de4002a987080/details.json</string>
+    <string name="newsDetailsUrl">https://gist.githubusercontent.com/sayemkcn/74b4042ac9c9014d46b36c221af32977/raw/96e848177a2d00cd08f8ed85887150196b52c961/details.json</string>
     <string name="categoryUrl">http://blog.toracode.net/bdbn/category/list.json</string>
     <string name="newsUrl">https://gist.githubusercontent.com/sayemkcn/b59b889c75e459f09ae419c6a98a6640/raw/a18ba177eb4586b6c49671e13f327890001a0485/test.json</string>
 

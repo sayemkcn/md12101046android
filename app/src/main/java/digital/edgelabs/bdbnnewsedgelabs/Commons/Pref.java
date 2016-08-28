@@ -1,4 +1,4 @@
-package digital.edgelabs.bdbnnewsedgelabs.Commons;
+package digital.edgelabs.bdbnnewsedgelabs.commons;
 
 import android.content.Context;
 import android.content.SharedPreferences;

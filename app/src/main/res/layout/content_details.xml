@@ -38,8 +38,9 @@
 
                 <ImageView
                     android:id="@+id/newsSourceIconTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerCrop"
                     android:layout_margin="@dimen/sourceLogoMargin"
                     android:src="@mipmap/ic_launcher" />
 

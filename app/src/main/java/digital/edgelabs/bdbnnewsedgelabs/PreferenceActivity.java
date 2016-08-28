@@ -17,7 +17,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
+import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.PreferenceAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.entity.PreferenceSingleItem;
 import digital.edgelabs.bdbnnewsedgelabs.events.PrefChangeEvent;

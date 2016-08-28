@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import digital.edgelabs.bdbnnewsedgelabs.BookmarkActivity;
-import digital.edgelabs.bdbnnewsedgelabs.Commons.Pref;
+import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
@@ -94,6 +94,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             titleTextView.setTypeface(typeface);
             summaryTextView.setTypeface(typeface);
             sourceNameTextView.setTypeface(typeface);
+            newsTimeTextView.setTypeface(typeface);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
