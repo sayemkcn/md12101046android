@@ -10,6 +10,7 @@ public class Pref {
     public static final String PREF_NAME = "BDBNNEWSEDGELABS";
     public static final String PREF_SIZE = "prefSize";
     public static final String PREF_KEY_BOOKMARK_LIST = "bookmark_list";
+    public static final String PREF_KEY_OFFLINE_NEWS_LIST = "offline_news_list";
 
     public static void savePreference(Context context, String key, boolean value) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);

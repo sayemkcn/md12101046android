@@ -2,10 +2,12 @@ package digital.edgelabs.bdbnnewsedgelabs.service;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.johnpersano.supertoasts.library.Style;
 import com.github.johnpersano.supertoasts.library.SuperActivityToast;
@@ -30,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
+import digital.edgelabs.bdbnnewsedgelabs.OfflineNewsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
@@ -130,7 +133,7 @@ public class Commons {
         int buttonBackgroundColor = context.getResources().getColor(R.color.colorAccent);
         Effectstype effect = Effectstype.Shake;
 
-        dialogBuilder
+        final NiftyDialogBuilder builder = dialogBuilder
                 .withTitle(title)
                 .withTitleColor(context.getResources().getColor(android.R.color.white))
                 .withDividerColor(dividerColor)
@@ -139,18 +142,32 @@ public class Commons {
                 .withDialogColor(dialogColor)
                 .withEffect(effect)
                 .withDuration(1000)
-                .withIcon(R.mipmap.ic_launcher)
-                .withButton1Text("Okay")
-                .setButton1Click(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogBuilder.cancel();
-                        if (!(context instanceof DetailsActivity))
-                            context.finish();
-                    }
-                })
-                .isCancelableOnTouchOutside(false)
-                .show();
+                .withIcon(R.mipmap.ic_launcher);
+        builder.withButton2Text("Yes");
+        builder.setButton2Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (builder.isShowing())
+                    builder.cancel();
+                if (!(context instanceof DetailsActivity)) {
+                    context.finish();
+                    context.startActivity(new Intent(context, OfflineNewsActivity.class));
+                }
+
+            }
+        });
+        builder.withButton1Text("No");
+        builder.setButton1Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (builder.isShowing())
+                    builder.cancel();
+                if (!(context instanceof DetailsActivity))
+                    context.finish();
+            }
+        });
+        builder.isCancelableOnTouchOutside(false);
+        builder.show();
 
     }
 
@@ -165,5 +182,11 @@ public class Commons {
         return toast;
     }
 
+    public static void showSimpleToast(Context context, String message) {
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        toast.getView().setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+        toast.getView().setPadding(20, 20, 20, 20);
+        toast.show();
+    }
 
 }

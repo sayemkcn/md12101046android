@@ -1,13 +1,11 @@
 package digital.edgelabs.bdbnnewsedgelabs.entity;
 
-import android.graphics.Bitmap;
-
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * Created by SAyEM on 19-Aug-16.
  */
-public class NewsSourceEntity {
+public class NewsSourceEntity implements Serializable {
     private Long id;
     private String name;
     private String iconUrl;

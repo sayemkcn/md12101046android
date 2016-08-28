@@ -1,11 +1,12 @@
 package digital.edgelabs.bdbnnewsedgelabs.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by sayemkcn on 8/10/16.
  */
-public class NewsEntity {
+public class NewsEntity implements Serializable {
     private Long id;
     private Long sourceId;
     private String title;

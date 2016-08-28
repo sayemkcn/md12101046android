@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import digital.edgelabs.bdbnnewsedgelabs.BookmarkActivity;
+import digital.edgelabs.bdbnnewsedgelabs.MainActivity;
+import digital.edgelabs.bdbnnewsedgelabs.OfflineNewsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
@@ -50,7 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         NewsEntity news = this.newsList.get(position);
         Glide.with(context).load(news.getImageUrl()).centerCrop().into(myViewHolder.newsImageView);
         myViewHolder.titleTextView.setText(news.getTitle());
-        myViewHolder.summaryTextView.setText(news.getDetails());
+        myViewHolder.summaryTextView.setText(news.getDetails().substring(0, 100) + "..");
         Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
         myViewHolder.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
         myViewHolder.newsTimeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + context.getResources().getString(R.string.hourBefore));
@@ -99,12 +103,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (!(context instanceof OfflineNewsActivity))
                     context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", newsList.get(getAdapterPosition()).getId())
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    else if (context instanceof OfflineNewsActivity) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("offlineNewsItem",newsList.get(getAdapterPosition()));
+//                        Log.d("NEWS",newsList.get(getAdapterPosition()).toString());
+                        context.startActivity(new Intent(context, DetailsActivity.class).putExtras(bundle).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
                 }
             });
 
-            if (context instanceof BookmarkActivity) {
+            if (context instanceof BookmarkActivity || context instanceof OfflineNewsActivity) {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
@@ -115,17 +126,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        Gson gson = new Gson();
-                                        String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_BOOKMARK_LIST);
-                                        List<NewsEntity> newsList;
-                                        if (newsListJson != null && !newsListJson.equals("")) {
-                                            newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
-                                            }.getType());
-                                            newsList.remove(getAdapterPosition());
-                                            newsListJson = gson.toJson(newsList);
-                                            Pref.savePreference(context, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
-                                        }
-                                        remove(getAdapterPosition());
+                                        if (context instanceof BookmarkActivity)
+                                            removeItem(getAdapterPosition(),Pref.PREF_KEY_BOOKMARK_LIST);
+                                        else if (context instanceof OfflineNewsActivity)
+                                            removeItem(getAdapterPosition(),Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+
                                     }
                                 })
                                 .setNegativeButton("No", null)
@@ -135,5 +140,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 });
             }
         }
+    }
+
+    private void removeItem(int position,String preferenceKey) {
+        Gson gson = new Gson();
+        String newsListJson = Pref.getPreferenceString(context, preferenceKey);
+        List<NewsEntity> newsList;
+        if (newsListJson != null && !newsListJson.equals("")) {
+            newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+            }.getType());
+            newsList.remove(position);
+            newsListJson = gson.toJson(newsList);
+            Pref.savePreference(context, preferenceKey, newsListJson);
+        }
+        this.remove(position);
     }
 }

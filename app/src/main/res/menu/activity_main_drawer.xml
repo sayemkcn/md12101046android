@@ -12,6 +12,11 @@
             android:icon="@mipmap/ic_bookmark_white_24dp"
             android:title="My Bookmarks" />
         <item
+            android:id="@+id/nav_offline_news"
+            android:icon="@mipmap/ic_bookmark_white_24dp"
+            android:title="Offline News" />
+
+        <item
             android:id="@+id/nav_share"
             android:icon="@mipmap/ic_action_share"
             android:title="Share" />

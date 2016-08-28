@@ -32,6 +32,10 @@
         <activity
             android:name=".BookmarkActivity"
             android:label="@string/title_activity_bookmark"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OfflineNewsActivity"
+            android:label="@string/title_activity_offline_news"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

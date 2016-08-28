@@ -11,4 +11,9 @@
         android:icon="@mipmap/ic_bookmark_white_24dp"
         app:showAsAction="ifRoom"
         android:title="@string/action_bookmark_this" />
+    <item android:id="@+id/action_save"
+        android:icon="@mipmap/ic_save_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_save"/>
+
 </menu>

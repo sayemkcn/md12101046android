@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -76,10 +75,26 @@ public class DetailsActivity extends AppCompatActivity {
 
         this.typeface = typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
 
-        Long newsId = getIntent().getLongExtra("newsId", 0);
+        this.news = (NewsEntity) getIntent().getExtras().getSerializable("offlineNewsItem");
+        if (this.news != null) {
+            this.showOfflineNewsItem(this.news);
+        } else {
+            this.loadNewsFromServer(getIntent().getLongExtra("newsId", 0));
+        }
 
-        Log.d("NEWS_ID", newsId + "");
+    }
 
+    private void showOfflineNewsItem(NewsEntity news) {
+        if (this.progressBar.getVisibility() == View.VISIBLE) {
+            this.contentLayout.setVisibility(View.VISIBLE);
+            this.progressBar.setVisibility(View.GONE);
+        }
+        this.updateViews(news);
+    }
+
+    private void loadNewsFromServer(Long newsId) {
+        // THIS URL WILL BE CHANGED. RIGHT NOW IT's JUST MOCK URL
+        // LIKE  /details/{newsUrl}
         final String url = getResources().getString(R.string.newsDetailsUrl);
         new Thread(new Runnable() {
             @Override
@@ -104,7 +119,6 @@ public class DetailsActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
     }
 
 
@@ -120,42 +134,67 @@ public class DetailsActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             this.finish();
         } else if (id == R.id.action_bookmark) {
-            if (this.news == null) {
-                Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
-            } else {
-                Gson gson = new Gson();
-                String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
-                List<NewsEntity> newsList;
-                if (newsListJson == null || newsListJson.equals("")) {
-                    newsList = new ArrayList<>();
-                    Log.d("EXECUTED", "FUCK! " + newsListJson);
-                } else {
-                    newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
-                    }.getType());
-//                    Log.d("EXECUTED", newsListJson);
-                }
-
-                this.news.setDetails(this.news.getDetails().substring(0, 100));
-                newsList.add(this.news);
-                newsListJson = gson.toJson(newsList);
-                Pref.savePreference(this, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
-                this.showToast("Bookmark Added!");
-//                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
-            }
+            this.createBookmark();
+        } else if (id == R.id.action_save) {
+            this.saveOffline();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void showToast(String message) {
-        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        toast.getView().setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        toast.getView().setPadding(20, 20, 20, 20);
-        toast.show();
+    private void saveOffline() {
+        if (this.news == null) {
+            Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
+        } else {
+            Gson gson = new Gson();
+            String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+            List<NewsEntity> newsList;
+            if (newsListJson == null || newsListJson.equals("")) {
+                newsList = new ArrayList<>();
+                Log.d("EXECUTED", "FUCK! " + newsListJson);
+            } else {
+                newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+                }.getType());
+//                    Log.d("EXECUTED", newsListJson);
+            }
+
+            this.news.setDetails(this.news.getDetails());
+            newsList.add(this.news);
+            newsListJson = gson.toJson(newsList);
+            Pref.savePreference(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST, newsListJson);
+            Commons.showSimpleToast(this, "Item saved for offline reading..");
+//                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
+        }
     }
+
+    private void createBookmark() {
+        if (this.news == null) {
+            Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
+        } else {
+            Gson gson = new Gson();
+            String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
+            List<NewsEntity> newsList;
+            if (newsListJson == null || newsListJson.equals("")) {
+                newsList = new ArrayList<>();
+                Log.d("EXECUTED", "FUCK! " + newsListJson);
+            } else {
+                newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+                }.getType());
+//                    Log.d("EXECUTED", newsListJson);
+            }
+
+            this.news.setDetails(this.news.getDetails().substring(0, 100) + "..");
+            newsList.add(this.news);
+            newsListJson = gson.toJson(newsList);
+            Pref.savePreference(this, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
+            Commons.showSimpleToast(this, "Bookmark Added!");
+//                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
+        }
+    }
+
 
     private void onResponse(String response) {
         try {
-            if (this.progressBar.isShown()) {
+            if (this.progressBar.getVisibility() == View.VISIBLE) {
                 this.contentLayout.setVisibility(View.VISIBLE);
                 this.progressBar.setVisibility(View.GONE);
             }

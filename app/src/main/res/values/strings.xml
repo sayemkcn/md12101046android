@@ -34,4 +34,6 @@
     <string name="btn_see_more">..আরো দেখুন..</string>
     <string name="message_loading">লোড হচ্ছে...</string>
     <string name="title_activity_bookmark">আমার বুকমার্কগুলো</string>
+    <string name="action_save">Save Offline</string>
+    <string name="title_activity_offline_news">অফলাইন নিউজ</string>
 </resources>
