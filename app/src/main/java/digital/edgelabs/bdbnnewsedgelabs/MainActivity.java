@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 
 import butterknife.BindArray;
@@ -74,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-    private boolean isUserRegistered = true;
+    private boolean isUserRegistered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // load user custom CategoryList
         if (this.isUserRegistered)
             Commons.loadUserCategoryList(getResources().getString(R.string.categoryUrl));
+        else
+            Commons.loadUserCategoryListFromResource(getCategoryListFromResource());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -121,11 +131,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Pref.savePreference(MainActivity.this, "page_number", position);
 
                 collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
-                if (isUserRegistered && categoryList != null) {
+//                if (isUserRegistered && categoryList != null) {
                     Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.mipmap.ic_launcher).into(appBarImageViw);
                     collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
-                } else
-                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(colors[mTabLayout.getSelectedTabPosition()]));
+//                } else
+//                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(colors[mTabLayout.getSelectedTabPosition()]));
             }
 
             @Override
@@ -134,6 +144,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+    }
+
+    private String getCategoryListFromResource() {
+        InputStream is = getResources().openRawResource(R.raw.category_list);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.d("HELLO", writer.toString());
+        return writer.toString();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -278,12 +312,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                case 2:
 //                    return "SECTION 3";
 //            }
-            if (isUserRegistered && categoryList != null)
-                return categoryList.get(position).getName();
-            else
-                return MainActivity.this.categories[position];
 
-
+            return MainActivity.this.categories[position];
         }
     }
 }

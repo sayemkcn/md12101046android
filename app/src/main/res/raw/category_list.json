@@ -1,0 +1,33 @@
+[
+  {
+    "categoryId": 1,
+    "categoryName": "জাতীয়",
+    "iconUrl": "http://i1.wp.com/acme-ug.org/wp-content/uploads/News-categories.jpg?resize=421%2C398",
+    "accentColorCode": "#AA22CC"
+  },
+  {
+    "categoryId": 2,
+    "categoryName": "আন্তর্জাতিক",
+    "iconUrl": "http://resources.alljobopenings.com/wp-content/uploads/2013/05/social-media.jpg",
+    "accentColorCode": "#E91E63"
+  },
+  {
+    "categoryId": 3,
+    "categoryName": "রাজনীতি",
+    "iconUrl": "http://uk.dowagro.com/wp-content/uploads/2014/08/TP20487-Dow-Beating-Blackgrass-diagram-v8.jpg",
+    "accentColorCode": "#CDDC39"
+  },
+  {
+    "categoryId": 4,
+    "categoryName": "অর্থনীতি",
+    "iconUrl": "http://www.passivhaustrust.org.uk/UserFiles/Image/News/BEE%20award%20categories.jpg",
+    "accentColorCode": "#FF9800"
+  },
+  {
+    "categoryId": 5,
+    "categoryName": "খেলা",
+    "iconUrl": "http://i1.wp.com/www.themainstreetanalyst.com/wp-content/uploads/2014/06/Social-Media-And-News.jpg?resize=520%2C245",
+    "accentColorCode": "#536DFE"
+  }
+
+]

@@ -3,6 +3,7 @@ package digital.edgelabs.bdbnnewsedgelabs.service;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -51,26 +52,59 @@ public class Commons {
                             .build();
                     Response response = okHttpClient.newCall(request).execute();
 
-                    JSONArray jsonArray = new JSONArray(response.body().string());
-                    final List<CategoryEntity> categoryList = new ArrayList<>();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        CategoryEntity category = new CategoryEntity();
-                        category.setId(jsonObject.getLong("categoryId"));
-                        category.setName(jsonObject.getString("categoryName"));
-                        category.setIconUrl(jsonObject.getString("iconUrl"));
-                        category.setAccentColorCode(jsonObject.getString("accentColorCode"));
-                        categoryList.add(category);
-                    }
-                    EventBus.getDefault().post(new UserCategoryLoadEvent(categoryList));
-                } catch (JSONException e) {
-                    Log.e("JSON_EX_CAT_LIST", e.toString());
+                    List<CategoryEntity> categoryList = parseJson(response.body().string());
+//                    JSONArray jsonArray = new JSONArray(response.body().string());
+//                    final List<CategoryEntity> categoryList = new ArrayList<>();
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                        CategoryEntity category = new CategoryEntity();
+//                        category.setId(jsonObject.getLong("categoryId"));
+//                        category.setName(jsonObject.getString("categoryName"));
+//                        category.setIconUrl(jsonObject.getString("iconUrl"));
+//                        category.setAccentColorCode(jsonObject.getString("accentColorCode"));
+//                        categoryList.add(category);
+//                    }
+                    if (categoryList != null && categoryList.size() != 0)
+                        EventBus.getDefault().post(new UserCategoryLoadEvent(categoryList));
                 } catch (IOException e) {
                     Log.e("JSON_IOE", e.toString());
                 }
             }
         }).start();
 
+    }
+
+    public static void loadUserCategoryListFromResource(String categoryJson) {
+        final List<CategoryEntity> categoryList = parseJson(categoryJson);
+        if (categoryList != null && categoryList.size() != 0) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    EventBus.getDefault().post(new UserCategoryLoadEvent(categoryList));
+                }
+            }, 100);
+        }
+    }
+
+    private static List<CategoryEntity> parseJson(String response) {
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+            List<CategoryEntity> categoryList = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                CategoryEntity category = new CategoryEntity();
+                category.setId(jsonObject.getLong("categoryId"));
+                category.setName(jsonObject.getString("categoryName"));
+                category.setIconUrl(jsonObject.getString("iconUrl"));
+                category.setAccentColorCode(jsonObject.getString("accentColorCode"));
+                categoryList.add(category);
+            }
+            return categoryList;
+        } catch (JSONException e) {
+            Log.d("CAT_JSON_EX", e.toString());
+        }
+        return null;
     }
 
     public static Map<TimeUnit, Long> computeTimeDiff(Date date1, Date date2) {
@@ -130,4 +164,6 @@ public class Commons {
                 .setAnimations(Style.ANIMATIONS_FLY);
         return toast;
     }
+
+
 }
