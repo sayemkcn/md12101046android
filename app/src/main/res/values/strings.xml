@@ -36,4 +36,5 @@
     <string name="title_activity_bookmark">আমার বুকমার্কগুলো</string>
     <string name="action_save">Save Offline</string>
     <string name="title_activity_offline_news">অফলাইন নিউজ</string>
+    <string name="action_change_font_size">Change Font Size</string>
 </resources>

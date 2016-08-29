@@ -60,6 +60,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     private Typeface typeface;
 
+    int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,8 +139,23 @@ public class DetailsActivity extends AppCompatActivity {
             this.createBookmark();
         } else if (id == R.id.action_save) {
             this.saveOffline();
+        } else if (id == R.id.action_font_size) {
+            toggleFontSize();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void toggleFontSize() {
+        if (count == 0) {
+            detailsTextView.setTextSize(15);
+            count++;
+        } else if (count == 1) {
+            detailsTextView.setTextSize(17);
+            count++;
+        } else if (count == 2) {
+            detailsTextView.setTextSize(13);
+            count = 0;
+        }
     }
 
     private void saveOffline() {
