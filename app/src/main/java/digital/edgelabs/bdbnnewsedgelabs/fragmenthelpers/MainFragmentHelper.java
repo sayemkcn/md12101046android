@@ -88,7 +88,8 @@ public class MainFragmentHelper {
                             @Override
                             public void run() {
                                 if (toast.isShowing()) toast.dismiss();
-                                Commons.showDialog(context, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!");
+                                Commons.showNetworkUnavailableDialog(context, "Connection unavailable!",
+                                        "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!\nWant to read your saved news items?");
                             }
                         });
                     }
@@ -176,7 +177,7 @@ public class MainFragmentHelper {
             NewsEntity news = new NewsEntity();
             news.setId(newsJsonObject.getLong("id"));
             news.setTitle(newsJsonObject.getString("title"));
-            news.setDetails(newsJsonObject.getString("details").substring(0,100));
+            news.setDetails(newsJsonObject.getString("details").substring(0, 100));
             news.setImageUrl(newsJsonObject.getString("imageUrl"));
             news.setAuthor(newsJsonObject.getString("author"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

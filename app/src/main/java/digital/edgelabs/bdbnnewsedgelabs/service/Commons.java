@@ -143,6 +143,38 @@ public class Commons {
                 .withEffect(effect)
                 .withDuration(1000)
                 .withIcon(R.mipmap.ic_launcher);
+        builder.withButton1Text("Okay");
+        builder.setButton1Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (builder.isShowing())
+                    builder.cancel();
+                if (!(context instanceof DetailsActivity))
+                    context.finish();
+            }
+        });
+        builder.isCancelableOnTouchOutside(false);
+        builder.show();
+
+    }
+    public static void showNetworkUnavailableDialog(final Activity context, String title, String message) {
+        final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(context);
+
+        int dividerColor = context.getResources().getColor(R.color.colorPrimaryDark);
+        int dialogColor = context.getResources().getColor(R.color.colorPrimary);
+        int buttonBackgroundColor = context.getResources().getColor(R.color.colorAccent);
+        Effectstype effect = Effectstype.Shake;
+
+        final NiftyDialogBuilder builder = dialogBuilder
+                .withTitle(title)
+                .withTitleColor(context.getResources().getColor(android.R.color.white))
+                .withDividerColor(dividerColor)
+                .withMessage(message)
+                .withMessageColor(context.getResources().getColor(android.R.color.white))
+                .withDialogColor(dialogColor)
+                .withEffect(effect)
+                .withDuration(1000)
+                .withIcon(R.mipmap.ic_launcher);
         builder.withButton2Text("Yes");
         builder.setButton2Click(new View.OnClickListener() {
             @Override

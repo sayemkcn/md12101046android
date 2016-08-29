@@ -37,7 +37,7 @@ public class BookmarkActivity extends AppCompatActivity {
         if (this.getNewsList() != null)
             this.setupRecyclerView(this.getNewsList());
         else
-            Commons.showDialog(this, "It's lonely here", "Seems like your bookmark list is empty. First add some article and then proceed!");
+            Commons.showDialog(this, "It's lonely here", "Seems like your bookmark list is empty. First add some articles and then proceed!");
 
     }
 
