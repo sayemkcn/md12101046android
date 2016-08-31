@@ -21,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindArray;
+import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
@@ -45,14 +47,20 @@ public class MainFragmentHelper {
     private List<NewsEntity> newsList = new ArrayList<>();
     private SuperToast toast;
 
+    String[] categories;
+    String[] newsSourceParamValues;
+
     public MainFragmentHelper(Activity context, View rootView) {
         this.context = context;
+        ButterKnife.bind(context);
         this.toast = Commons.getLoadingToast(context);
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         this.progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         this.moreButton = (Button) rootView.findViewById(R.id.moreButton);
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
         this.moreButton.setTypeface(typeface);
+        this.categories = context.getResources().getStringArray(R.array.categories);
+        this.newsSourceParamValues = context.getResources().getStringArray(R.array.newsSourceParamValues);
         // register eventbus
 //        EventBus.getDefault().register(this);
     }
@@ -105,12 +113,13 @@ public class MainFragmentHelper {
         urlBuilder
                 .append(context.getResources().getString(R.string.baseUrl))
                 .append("/category/")
-                .append(vpPageNumber)
-                .append(".json")
+                .append(categories[vpPageNumber-1])
+//                .append(".json")
                 .append("?sources=");
         for (int i = 0; i < Pref.getPreferenceInt(context, Pref.PREF_SIZE); i++) {
             if (Pref.getPreference(context, "source" + (i + 1))) {
-                urlBuilder.append((i + 1) + ",");
+                urlBuilder.append(this.newsSourceParamValues[i] + ",");
+//                Log.d("DOURCE",this.newsSourceParamValues[i]);
             }
         }
         String tempUrl = this.concatAllSourceIdIfNone(urlBuilder.toString(), context.getResources().getStringArray(R.array.sourceNames).length);
@@ -181,7 +190,9 @@ public class MainFragmentHelper {
             news.setImageUrl(newsJsonObject.getString("imageUrl"));
             news.setAuthor(newsJsonObject.getString("author"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            news.setLastUpdated(sdf.parse(newsJsonObject.getString("timestamp")));
+//            news.setLastUpdated(sdf.parse(newsJsonObject.getString("timestamp")));
+            news.setLastUpdated(sdf.parse("2016-08-31 20:01:41"));
+
 //            Log.i("DATE",news.getLastUpdated().toString());
 
             JSONObject sourceJsonObject = newsJsonObject.getJSONObject("source");

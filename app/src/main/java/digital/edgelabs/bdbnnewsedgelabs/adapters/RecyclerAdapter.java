@@ -53,8 +53,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         NewsEntity news = this.newsList.get(position);
         Glide.with(context).load(news.getImageUrl()).centerCrop().into(myViewHolder.newsImageView);
-        myViewHolder.titleTextView.setText(news.getTitle());
-        myViewHolder.summaryTextView.setText(news.getDetails().substring(0, 100) + "..");
+        myViewHolder.titleTextView.setText(news.getTitle().replace("\n",""));
+        myViewHolder.summaryTextView.setText(news.getDetails().substring(0, 100).replace("\n","") + "..");
         Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
         myViewHolder.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
         myViewHolder.newsTimeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + context.getResources().getString(R.string.hourBefore));

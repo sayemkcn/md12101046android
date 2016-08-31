@@ -9,13 +9,13 @@
     <string name="hourBefore"> ঘন্টা পূর্বে</string>
 
     <string-array name="categories">
-        <item>Highlight</item>
-        <item>News</item>
-        <item>Business</item>
-        <item>Entertainment</item>
-        <item>Sports</item>
-        <item>Technology</item>
-        <item>World</item>
+        <item>national</item>
+        <item>international</item>
+        <item>finance</item>
+        <item>sports</item>
+        <item>entertainment</item>
+        <item>technology</item>
+        <item>lifestyle</item>
     </string-array>
     <string-array name="colors">
         <item>#23FFFF</item>

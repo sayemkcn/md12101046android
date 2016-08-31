@@ -3,16 +3,18 @@
     <array name="sourceNames">
         <item>Prothom Alo</item>
         <item>Banglanews24.com</item>
-        <item>Kalerkantho</item>
-        <item>Bdnews24.com</item>
-        <item>ntvbd.com</item>
+        <item>Bangladesh Pratidin</item>
+    </array>
+
+    <array name="newsSourceParamValues">
+        <item>palo</item>
+        <item>bn24</item>
+        <item>pratidin</item>
     </array>
 
     <array name="sourceIds">
         <item>1</item>
         <item>2</item>
         <item>3</item>
-        <item>4</item>
-        <item>5</item>
     </array>
 </resources>
