@@ -97,8 +97,8 @@ public class DetailsActivity extends AppCompatActivity {
     private void loadNewsFromServer(Long newsId) {
         // THIS URL WILL BE CHANGED. RIGHT NOW IT's JUST MOCK URL
         // LIKE  /details/{newsUrl}
-        final String url = getResources().getString(R.string.newsDetailsUrl);
-        Log.d("NEWS_IDL",newsId+"");
+        final String url = getResources().getString(R.string.baseUrl)+"/news/"+newsId;
+        Log.d("NEWS_DETAILS_URL",url);
         new Thread(new Runnable() {
             @Override
             public void run() {
