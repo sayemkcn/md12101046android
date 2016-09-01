@@ -3,37 +3,37 @@
     "categoryId": 1,
     "categoryName": "জাতীয়",
     "iconUrl": "http://i1.wp.com/acme-ug.org/wp-content/uploads/News-categories.jpg?resize=421%2C398",
-    "accentColorCode": "#AA22CC"
+    "accentColorCode": "#ac93d7"
   },
   {
     "categoryId": 2,
     "categoryName": "আন্তর্জাতিক",
     "iconUrl": "http://resources.alljobopenings.com/wp-content/uploads/2013/05/social-media.jpg",
-    "accentColorCode": "#E91E63"
+    "accentColorCode": "#bf73cd"
   },
   {
     "categoryId": 3,
     "categoryName": "অর্থনীতি",
     "iconUrl": "http://uk.dowagro.com/wp-content/uploads/2014/08/TP20487-Dow-Beating-Blackgrass-diagram-v8.jpg",
-    "accentColorCode": "#CDDC39"
+    "accentColorCode": "#74cffb"
   },
   {
     "categoryId": 4,
     "categoryName": "খেলা",
     "iconUrl": "http://www.passivhaustrust.org.uk/UserFiles/Image/News/BEE%20award%20categories.jpg",
-    "accentColorCode": "#FF9800"
+    "accentColorCode": "#5bb2a9"
   },
   {
     "categoryId": 5,
     "categoryName": "বিনোদন",
     "iconUrl": "http://i1.wp.com/www.themainstreetanalyst.com/wp-content/uploads/2014/06/Social-Media-And-News.jpg?resize=520%2C245",
-    "accentColorCode": "#536DFE"
+    "accentColorCode": "#f40057"
   },
   {
     "categoryId": 6,
     "categoryName": "তথ্যপ্রযুক্তি",
     "iconUrl": "http://i1.wp.com/www.themainstreetanalyst.com/wp-content/uploads/2014/06/Social-Media-And-News.jpg?resize=520%2C245",
-    "accentColorCode": "#536DFE"
+    "accentColorCode": "#d86793"
   },
   {
     "categoryId": 7,

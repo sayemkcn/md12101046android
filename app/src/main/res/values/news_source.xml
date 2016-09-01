@@ -2,13 +2,13 @@
 <resources>
     <array name="sourceNames">
         <item>Prothom Alo</item>
-        <item>Banglanews24.com</item>
+        <item>Ittefaq</item>
         <item>Bangladesh Pratidin</item>
     </array>
 
     <array name="newsSourceParamValues">
         <item>palo</item>
-        <item>bn24</item>
+        <item>ittefaq</item>
         <item>pratidin</item>
     </array>
 

@@ -48,7 +48,6 @@ public class MainFragmentHelper {
     private SuperToast toast;
 
     String[] categories;
-    String[] newsSourceParamValues;
 
     public MainFragmentHelper(Activity context, View rootView) {
         this.context = context;
@@ -60,7 +59,6 @@ public class MainFragmentHelper {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
         this.moreButton.setTypeface(typeface);
         this.categories = context.getResources().getStringArray(R.array.categories);
-        this.newsSourceParamValues = context.getResources().getStringArray(R.array.newsSourceParamValues);
         // register eventbus
 //        EventBus.getDefault().register(this);
     }
@@ -109,6 +107,8 @@ public class MainFragmentHelper {
     private String buildUrl(Activity context, int vpPageNumber, int startIndex, int pageSize) {
         // Build request url with filter
         // get news source url from sharedpref and send them as param
+        String[] newsSourceParamValues = context.getResources().getStringArray(R.array.newsSourceParamValues);
+        int prefSize = Pref.getPreferenceInt(context, Pref.PREF_SIZE);
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder
                 .append(context.getResources().getString(R.string.baseUrl))
@@ -116,20 +116,25 @@ public class MainFragmentHelper {
                 .append(categories[vpPageNumber-1])
 //                .append(".json")
                 .append("?sources=");
-        for (int i = 0; i < Pref.getPreferenceInt(context, Pref.PREF_SIZE); i++) {
+        for (int i = 0; i < prefSize; i++) {
             if (Pref.getPreference(context, "source" + (i + 1))) {
-                urlBuilder.append(this.newsSourceParamValues[i] + ",");
+                urlBuilder.append(newsSourceParamValues[i] + ",");
 //                Log.d("DOURCE",this.newsSourceParamValues[i]);
             }
         }
-        String tempUrl = this.concatAllSourceIdIfNone(urlBuilder.toString(), context.getResources().getStringArray(R.array.sourceNames).length);
+        String tempUrl = this.concatAllSourceIdIfNone(urlBuilder.toString(), newsSourceParamValues);
         return tempUrl.replaceAll(",$", "") + "&start=" + startIndex + "&size=" + pageSize;
     }
 
-    private String concatAllSourceIdIfNone(String url, int prefSize) {
+    private String concatAllSourceIdIfNone(String url, String[] newsSourceParamValues) {
         if (url.split("=").length < 2) {
-            for (int i = 0; i < prefSize; i++) {
-                url += i + 1 + ",";
+            // concat source id if no source is set yet
+//            for (int i = 0; i < newsSourceParamValues.length; i++) {
+//                url += i + 1 + ",";
+//            }
+            // concat source name if no source is set yet
+            for (int i = 0; i < newsSourceParamValues.length; i++) {
+                url += newsSourceParamValues[i] + ",";
             }
         }
         return url;
