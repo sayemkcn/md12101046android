@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
 //                if (isUserRegistered && categoryList != null) {
                 if (categoryList != null) {
-                    Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.mipmap.ic_launcher).into(appBarImageViw);
+                    Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.drawable.bdbn_banner).into(appBarImageViw);
                     collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
                 }
 //                } else
@@ -221,7 +221,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+            Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
+        } else if (id == R.id.action_settings) {
             this.startActivity(new Intent(this, PreferenceActivity.class));
             return true;
         }

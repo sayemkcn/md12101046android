@@ -157,6 +157,7 @@ public class Commons {
         builder.show();
 
     }
+
     public static void showNetworkUnavailableDialog(final Activity context, String title, String message) {
         final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(context);
 
@@ -221,4 +222,11 @@ public class Commons {
         toast.show();
     }
 
+    public static void share(Activity context, String title, String message) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sendIntent.setType("text/plain");
+        context.startActivity(Intent.createChooser(sendIntent, title));
+    }
 }

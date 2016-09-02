@@ -19,6 +19,7 @@
             android:id="@+id/collapsingBarlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/bdbn_banner"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="?attr/actionBarSize"
