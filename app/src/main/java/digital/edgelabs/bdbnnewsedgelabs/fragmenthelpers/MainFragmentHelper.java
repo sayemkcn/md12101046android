@@ -191,7 +191,14 @@ public class MainFragmentHelper {
             NewsEntity news = new NewsEntity();
             news.setId(newsJsonObject.getLong("id"));
             news.setTitle(newsJsonObject.getString("title"));
-            news.setDetails(newsJsonObject.getString("details").substring(0, 100));
+
+            String detailsNews = newsJsonObject.getString("details");
+            if (detailsNews.length()>100){
+                news.setDetails(detailsNews.substring(0, 100));
+            }else {
+                news.setDetails(detailsNews);
+            }
+
             news.setImageUrl(newsJsonObject.getString("imageUrl"));
             news.setAuthor(newsJsonObject.getString("author"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -53,8 +53,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         NewsEntity news = this.newsList.get(position);
         Glide.with(context).load(news.getImageUrl()).centerCrop().into(myViewHolder.newsImageView);
-        myViewHolder.titleTextView.setText(news.getTitle().replace("\n",""));
-        myViewHolder.summaryTextView.setText(news.getDetails().substring(0, 100).replace("\n","") + "..");
+        myViewHolder.titleTextView.setText(news.getTitle().replace("\n", ""));
+
+        String newsSummary = news.getDetails();
+        if (newsSummary.length() > 100)
+            myViewHolder.summaryTextView.setText(newsSummary.substring(0, 100).replace("\n", "") + "..");
+        else
+            myViewHolder.summaryTextView.setText(newsSummary.replace("\n", "") + "..");
+
         Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
         myViewHolder.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
         myViewHolder.newsTimeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + context.getResources().getString(R.string.hourBefore));
@@ -104,11 +110,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 @Override
                 public void onClick(View view) {
                     if (!(context instanceof OfflineNewsActivity))
-                    context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", newsList.get(getAdapterPosition()).getId())
-                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                        context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", newsList.get(getAdapterPosition()).getId())
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     else if (context instanceof OfflineNewsActivity) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("offlineNewsItem",newsList.get(getAdapterPosition()));
+                        bundle.putSerializable("offlineNewsItem", newsList.get(getAdapterPosition()));
 //                        Log.d("NEWS",newsList.get(getAdapterPosition()).toString());
                         context.startActivity(new Intent(context, DetailsActivity.class).putExtras(bundle).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     }
@@ -127,9 +133,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         if (context instanceof BookmarkActivity)
-                                            removeItem(getAdapterPosition(),Pref.PREF_KEY_BOOKMARK_LIST);
+                                            removeItem(getAdapterPosition(), Pref.PREF_KEY_BOOKMARK_LIST);
                                         else if (context instanceof OfflineNewsActivity)
-                                            removeItem(getAdapterPosition(),Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+                                            removeItem(getAdapterPosition(), Pref.PREF_KEY_OFFLINE_NEWS_LIST);
 
                                     }
                                 })
@@ -142,7 +148,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         }
     }
 
-    private void removeItem(int position,String preferenceKey) {
+    private void removeItem(int position, String preferenceKey) {
         Gson gson = new Gson();
         String newsListJson = Pref.getPreferenceString(context, preferenceKey);
         List<NewsEntity> newsList;

@@ -45,7 +45,7 @@
                 android:id="@+id/newsSummaryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="This is little summary about news and hope this will illustrate some bullshit."
+                android:text="News Summary."
                 android:textSize="12sp" />
 
             <LinearLayout
