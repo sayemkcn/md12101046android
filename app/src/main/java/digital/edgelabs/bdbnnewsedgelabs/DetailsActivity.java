@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -229,7 +230,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void updateViews(NewsEntity news) {
         try {
-            Glide.with(this.getApplicationContext()).load(news.getImageUrl()).into(this.detailsImageView);
+            Glide.with(this.getApplicationContext()).load(news.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).into(this.detailsImageView);
             Glide.with(this.getApplicationContext()).load(news.getNewsSourceEntity().getIconUrl()).into(this.sourceIconImageView);
         } catch (IllegalArgumentException e) {
             Log.d("EX_GLIDE", e.toString());

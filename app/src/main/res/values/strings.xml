@@ -39,4 +39,5 @@
     <string name="action_save">Save Offline</string>
     <string name="title_activity_offline_news">অফলাইন নিউজ</string>
     <string name="action_change_font_size">Change Font Size</string>
+    <string name="app_slogan">এখন সব খবর হাতের মুঠোয়..</string>
 </resources>
