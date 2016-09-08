@@ -21,11 +21,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindArray;
 import butterknife.ButterKnife;
-import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
+import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
@@ -113,7 +112,7 @@ public class MainFragmentHelper {
         urlBuilder
                 .append(context.getResources().getString(R.string.baseUrl))
                 .append("/category/")
-                .append(categories[vpPageNumber-1])
+                .append(categories[vpPageNumber - 1])
 //                .append(".json")
                 .append("?sources=");
         for (int i = 0; i < prefSize; i++) {
@@ -156,7 +155,8 @@ public class MainFragmentHelper {
             this.moreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startIndex += pageSize;
+//                    startIndex += pageSize;
+                    startIndex++;
                     fetchNews(vpPageNumber, startIndex, pageSize);
                 }
             });
@@ -193,9 +193,9 @@ public class MainFragmentHelper {
             news.setTitle(newsJsonObject.getString("title"));
 
             String detailsNews = newsJsonObject.getString("details");
-            if (detailsNews.length()>100){
+            if (detailsNews.length() > 100) {
                 news.setDetails(detailsNews.substring(0, 100));
-            }else {
+            } else {
                 news.setDetails(detailsNews);
             }
 
