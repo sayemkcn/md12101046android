@@ -226,6 +226,7 @@ public class Commons {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         sendIntent.setType("text/plain");
         context.startActivity(Intent.createChooser(sendIntent, title));
     }

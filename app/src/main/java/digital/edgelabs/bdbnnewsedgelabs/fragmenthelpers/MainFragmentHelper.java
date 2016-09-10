@@ -193,8 +193,8 @@ public class MainFragmentHelper {
             news.setTitle(newsJsonObject.getString("title"));
 
             String detailsNews = newsJsonObject.getString("details");
-            if (detailsNews.length() > 100) {
-                news.setDetails(detailsNews.substring(0, 100));
+            if (detailsNews.length() > 75) {
+                news.setDetails(detailsNews.substring(0, 75));
             } else {
                 news.setDetails(detailsNews);
             }
@@ -202,8 +202,8 @@ public class MainFragmentHelper {
             news.setImageUrl(newsJsonObject.getString("imageUrl"));
             news.setAuthor(newsJsonObject.getString("author"));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            news.setLastUpdated(sdf.parse(newsJsonObject.getString("timestamp")));
-            news.setLastUpdated(sdf.parse("2016-08-31 20:01:41"));
+            news.setLastUpdated(sdf.parse(newsJsonObject.getString("timestamp")));
+//            news.setLastUpdated(sdf.parse("2016-08-31 20:01:41"));
 
 //            Log.i("DATE",news.getLastUpdated().toString());
 

@@ -233,10 +233,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_bookmark) {
+        if (id == R.id.nav_home) {
+            mViewPager.setCurrentItem(0);
+        } else if (id == R.id.nav_bookmark) {
             startActivity(new Intent(this, BookmarkActivity.class));
         } else if (id == R.id.nav_offline_news) {
             startActivity(new Intent(this, OfflineNewsActivity.class));
+        } else if (id == R.id.nav_share) {
+            Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

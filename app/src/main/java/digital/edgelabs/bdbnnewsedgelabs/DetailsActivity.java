@@ -144,7 +144,7 @@ public class DetailsActivity extends AppCompatActivity {
         } else if (id == R.id.action_font_size) {
             toggleFontSize();
         } else if (id==R.id.action_share){
-            Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
+            Commons.share(this, "Share this news", getResources().getString(R.string.singleNewsBaseUrl)+this.news.getId());
         }
         return super.onOptionsItemSelected(item);
     }

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -52,16 +53,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         NewsEntity news = this.newsList.get(position);
-        Glide.with(context).load(news.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).into(myViewHolder.newsImageView);
+        Glide.with(context).load(news.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.newsImageView);
         myViewHolder.titleTextView.setText(news.getTitle().replace("\n", ""));
 
         String newsSummary = news.getDetails();
-        if (newsSummary.length() > 100)
-            myViewHolder.summaryTextView.setText(newsSummary.substring(0, 100).replace("\n", "") + "..");
+        if (newsSummary.length() > 75)
+            myViewHolder.summaryTextView.setText(newsSummary.substring(0, 75).replace("\n", "") + "..");
         else
             myViewHolder.summaryTextView.setText(newsSummary.replace("\n", "") + "..");
 
-        Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
+        Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
         myViewHolder.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
         myViewHolder.newsTimeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + context.getResources().getString(R.string.hourBefore));
 //        Calendar calendar = Calendar.getInstance();

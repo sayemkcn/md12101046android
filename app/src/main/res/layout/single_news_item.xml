@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:text="News Title"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="News Summary."
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <LinearLayout
                 android:paddingBottom="10dp"
@@ -76,11 +76,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Prothom Alo"
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:textSize="10sp"
+                        android:textSize="8sp"
                         android:id="@+id/timeTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
