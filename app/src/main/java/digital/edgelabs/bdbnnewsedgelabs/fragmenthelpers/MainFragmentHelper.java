@@ -111,7 +111,7 @@ public class MainFragmentHelper {
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder
                 .append(context.getResources().getString(R.string.baseUrl))
-                .append("/category/")
+                .append("/categories/")
                 .append(categories[vpPageNumber - 1])
 //                .append(".json")
                 .append("?sources=");
