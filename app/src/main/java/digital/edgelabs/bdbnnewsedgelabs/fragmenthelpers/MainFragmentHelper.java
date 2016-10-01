@@ -36,7 +36,7 @@ import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
 public class MainFragmentHelper {
     private Activity context;
     private RecyclerView recyclerView;
-    private static int VP_PAGE_NUMBER = 1;
+    private static int VP_PAGE_NUMBER = 0;
     private ProgressBar progressBar;
 
     private Button moreButton;
@@ -64,12 +64,13 @@ public class MainFragmentHelper {
 
     public void exec(int pageNumber) {
         this.VP_PAGE_NUMBER = pageNumber;
-//        Log.d("URL", url);
+        Log.d("SECTION_NUMBER", String.valueOf(pageNumber));
 //        Toast.makeText(context, url, Toast.LENGTH_LONG).show();
 
         this.fetchNews(VP_PAGE_NUMBER, this.startIndex, this.pageSize);
 
     }
+
 
     private void fetchNews(final int vpPageNumber, final int startIndex, final int pageSize) {
         this.toast.show();
@@ -78,7 +79,8 @@ public class MainFragmentHelper {
             public void run() {
                 synchronized (this) {
                     try {
-                        final String url = buildUrl(context, vpPageNumber, startIndex, pageSize);
+//                        final String url = buildUrl(context, vpPageNumber, startIndex, pageSize);
+                        final String url = context.getResources().getString(R.string.newsUrl);
                         Log.i("URL: ", url);
                         final String response = new NewsProvider(context).fetchNews(url);
                         context.runOnUiThread(new Runnable() {
@@ -112,7 +114,7 @@ public class MainFragmentHelper {
         urlBuilder
                 .append(context.getResources().getString(R.string.baseUrl))
                 .append("/categories/")
-                .append(categories[vpPageNumber - 1])
+                .append(categories[vpPageNumber])
 //                .append(".json")
                 .append("?sources=");
         for (int i = 0; i < prefSize; i++) {

@@ -1,5 +1,11 @@
 [
   {
+    "categoryId":0,
+    "categoryName":"হোম",
+    "iconUrl":"",
+    "accentColorCode":"#ac93d7"
+  },
+  {
     "categoryId": 1,
     "categoryName": "জাতীয়",
     "iconUrl": "http://i.imgur.com/mwhLDcr.jpg",

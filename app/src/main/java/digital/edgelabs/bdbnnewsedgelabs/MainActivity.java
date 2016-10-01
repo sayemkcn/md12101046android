@@ -45,6 +45,7 @@ import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.CategoryEntity;
 import digital.edgelabs.bdbnnewsedgelabs.events.UserCategoryLoadEvent;
+import digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers.FeaturedFragmentHelper;
 import digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers.MainFragmentHelper;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
@@ -267,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber - 1);
             fragment.setArguments(args);
             return fragment;
         }
@@ -275,15 +276,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-//            View rootView = null;
-//            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
-//                case 1:
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            MainFragmentHelper mainFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
-            mainFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
-//                    break;
+            View rootView = null;
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                case 0:
+                    rootView = inflater.inflate(R.layout.fragment_featured,container,false);
+                    FeaturedFragmentHelper featuredFragmentHelper = new FeaturedFragmentHelper(getActivity(),rootView);
+                    featuredFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
+                    break;
+                default:
+                    rootView = inflater.inflate(R.layout.fragment_main, container, false);
+                    MainFragmentHelper mainFragmentHelper = new MainFragmentHelper(getActivity(), rootView);
+                    mainFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
+                    break;
 
-//            }
+            }
             return rootView;
         }
     }
@@ -307,21 +313,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // Show ${categories.length} total pages.
             return MainActivity.this.categories.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-//            switch (position) {
-//                case 0:
-//                    return "SECTION 1";
-//                case 1:
-//                    return "SECTION 2";
-//                case 2:
-//                    return "SECTION 3";
-//            }
-
             return MainActivity.this.categories[position];
         }
     }

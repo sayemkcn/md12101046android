@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.github.johnpersano.supertoasts.library.Style;
@@ -159,49 +160,52 @@ public class Commons {
     }
 
     public static void showNetworkUnavailableDialog(final Activity context, String title, String message) {
-        final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(context);
+        try {
+            final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(context);
 
-        int dividerColor = context.getResources().getColor(R.color.colorPrimaryDark);
-        int dialogColor = context.getResources().getColor(R.color.colorPrimary);
-        int buttonBackgroundColor = context.getResources().getColor(R.color.colorAccent);
-        Effectstype effect = Effectstype.Shake;
+            int dividerColor = context.getResources().getColor(R.color.colorPrimaryDark);
+            int dialogColor = context.getResources().getColor(R.color.colorPrimary);
+            int buttonBackgroundColor = context.getResources().getColor(R.color.colorAccent);
+            Effectstype effect = Effectstype.Shake;
 
-        final NiftyDialogBuilder builder = dialogBuilder
-                .withTitle(title)
-                .withTitleColor(context.getResources().getColor(android.R.color.white))
-                .withDividerColor(dividerColor)
-                .withMessage(message)
-                .withMessageColor(context.getResources().getColor(android.R.color.white))
-                .withDialogColor(dialogColor)
-                .withEffect(effect)
-                .withDuration(1000)
-                .withIcon(R.mipmap.ic_launcher);
-        builder.withButton2Text("Yes");
-        builder.setButton2Click(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (builder.isShowing())
-                    builder.cancel();
-                if (!(context instanceof DetailsActivity)) {
-                    context.finish();
-                    context.startActivity(new Intent(context, OfflineNewsActivity.class));
+            final NiftyDialogBuilder builder = dialogBuilder
+                    .withTitle(title)
+                    .withTitleColor(context.getResources().getColor(android.R.color.white))
+                    .withDividerColor(dividerColor)
+                    .withMessage(message)
+                    .withMessageColor(context.getResources().getColor(android.R.color.white))
+                    .withDialogColor(dialogColor)
+                    .withEffect(effect)
+                    .withDuration(1000)
+                    .withIcon(R.mipmap.ic_launcher);
+            builder.withButton2Text("Yes");
+            builder.setButton2Click(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (builder.isShowing())
+                        builder.cancel();
+                    if (!(context instanceof DetailsActivity)) {
+                        context.finish();
+                        context.startActivity(new Intent(context, OfflineNewsActivity.class));
+                    }
+
                 }
-
-            }
-        });
-        builder.withButton1Text("No");
-        builder.setButton1Click(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (builder.isShowing())
-                    builder.cancel();
-                if (!(context instanceof DetailsActivity))
-                    context.finish();
-            }
-        });
-        builder.isCancelableOnTouchOutside(false);
-        builder.show();
-
+            });
+            builder.withButton1Text("No");
+            builder.setButton1Click(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (builder.isShowing())
+                        builder.cancel();
+                    if (!(context instanceof DetailsActivity))
+                        context.finish();
+                }
+            });
+            builder.isCancelableOnTouchOutside(false);
+            builder.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.i("BadWindowTokenEx","Nifty Dialog bad window token exception on MainFragment");
+        }
     }
 
     public static SuperToast getLoadingToast(Context context) {

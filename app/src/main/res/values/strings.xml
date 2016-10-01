@@ -11,6 +11,7 @@
     <string name="hourBefore"> ঘন্টা পূর্বে</string>
 
     <string-array name="categories">
+        <item>featured</item>
         <item>national</item>
         <item>international</item>
         <item>finance</item>
@@ -20,6 +21,7 @@
         <item>lifestyle</item>
     </string-array>
     <string-array name="colors">
+        <item>#23FFFF</item>
         <item>#23FFFF</item>
         <item>#4D4D4D</item>
         <item>#A2A2A2</item>
@@ -40,4 +42,7 @@
     <string name="title_activity_offline_news">অফলাইন নিউজ</string>
     <string name="action_change_font_size">Change Font Size</string>
     <string name="app_slogan">এখন সব খবর হাতের মুঠোয়..</string>
+
+    <string name="featured_saved_news_text">সর্বশেষ সংরক্ষিত নিউজ</string>
+    <string name="featured_your_bookmarks_text">সর্বশেষ বুকমার্কগুলো</string>
 </resources>

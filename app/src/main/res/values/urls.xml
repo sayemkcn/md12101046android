@@ -4,7 +4,7 @@
     <string name="baseUrl">http://bdbn.news/api</string>
     <!--<string name="newsDetailsUrl">https://gist.githubusercontent.com/sayemkcn/74b4042ac9c9014d46b36c221af32977/raw/96e848177a2d00cd08f8ed85887150196b52c961/details.json</string>-->
     <string name="categoryUrl">http://blog.toracode.net/bdbn/category/list.json</string>
-    <string name="newsUrl">https://gist.githubusercontent.com/sayemkcn/b59b889c75e459f09ae419c6a98a6640/raw/a18ba177eb4586b6c49671e13f327890001a0485/test.json</string>
+    <string name="newsUrl">https://gist.githubusercontent.com/sayemkcn/b62532cb655b45dab3006513e06a4173/raw/2c4f6f5dc75cd4a73faed60349706fadd6ee2989/1.json</string>
 
     <string name="singleNewsBaseUrl">http://bdbn.news/newses/</string>
 </resources>

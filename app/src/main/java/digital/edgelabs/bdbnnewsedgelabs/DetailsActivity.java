@@ -98,7 +98,8 @@ public class DetailsActivity extends AppCompatActivity {
     private void loadNewsFromServer(Long newsId) {
         // THIS URL WILL BE CHANGED. RIGHT NOW IT's JUST MOCK URL
         // LIKE  /details/{newsUrl}
-        final String url = getResources().getString(R.string.baseUrl)+"/newses/"+newsId;
+//        final String url = getResources().getString(R.string.baseUrl)+"/newses/"+newsId;
+        final String url = "https://gist.githubusercontent.com/sayemkcn/74b4042ac9c9014d46b36c221af32977/raw/96e848177a2d00cd08f8ed85887150196b52c961/details.json";
         Log.d("NEWS_DETAILS_URL",url);
         new Thread(new Runnable() {
             @Override
