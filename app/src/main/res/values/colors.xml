@@ -10,4 +10,7 @@
     <color name="loadProgressColor">#FF4081</color>
     <color name="loadToastTextColor">@android:color/white</color>
 
+    <color name="sliderBorderColor">@color/colorPrimary</color>
+
+
 </resources>
