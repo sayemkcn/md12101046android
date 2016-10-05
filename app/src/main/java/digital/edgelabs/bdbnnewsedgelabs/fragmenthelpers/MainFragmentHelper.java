@@ -79,8 +79,8 @@ public class MainFragmentHelper {
             public void run() {
                 synchronized (this) {
                     try {
-//                        final String url = buildUrl(context, vpPageNumber, startIndex, pageSize);
-                        final String url = context.getResources().getString(R.string.newsUrl);
+                        final String url = buildUrl(context, vpPageNumber, startIndex, pageSize);
+//                        final String url = context.getResources().getString(R.string.newsUrl);
                         Log.i("URL: ", url);
                         final String response = new NewsProvider(context).fetchNews(url);
                         context.runOnUiThread(new Runnable() {

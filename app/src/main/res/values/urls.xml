@@ -4,9 +4,9 @@
     <string name="baseUrl">http://bdbn.news/api</string>
     <!--<string name="newsDetailsUrl">https://gist.githubusercontent.com/sayemkcn/74b4042ac9c9014d46b36c221af32977/raw/96e848177a2d00cd08f8ed85887150196b52c961/details.json</string>-->
     <string name="categoryUrl">http://blog.toracode.net/bdbn/category/list.json</string>
-    <string name="newsUrl">https://gist.githubusercontent.com/sayemkcn/b62532cb655b45dab3006513e06a4173/raw/5b50c953570f12348fcf62ce59e6be7654ce5e50/1.json</string>
+    <!--<string name="newsUrl">https://gist.githubusercontent.com/sayemkcn/b62532cb655b45dab3006513e06a4173/raw/5b50c953570f12348fcf62ce59e6be7654ce5e50/1.json</string>-->
 
     <string name="singleNewsBaseUrl">http://bdbn.news/newses/</string>
 
-    <string name="sliderNewsUrl">https://gist.githubusercontent.com/sayemkcn/b62532cb655b45dab3006513e06a4173/raw/5b50c953570f12348fcf62ce59e6be7654ce5e50/1.json</string>
+    <string name="sliderNewsUrl">http://bdbn.news:5000/api/sliders/homepage/top_stories</string>
 </resources>

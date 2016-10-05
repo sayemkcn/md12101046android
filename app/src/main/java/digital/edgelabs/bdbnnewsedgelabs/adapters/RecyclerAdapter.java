@@ -122,6 +122,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 }
             });
 
+            // to delete item
             if (context instanceof BookmarkActivity || context instanceof OfflineNewsActivity) {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override

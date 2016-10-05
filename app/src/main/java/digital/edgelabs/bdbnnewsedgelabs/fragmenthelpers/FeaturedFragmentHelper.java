@@ -1,6 +1,7 @@
 package digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.commons.CustomSliderView;
@@ -182,6 +184,7 @@ public class FeaturedFragmentHelper {
     }
 
     private void setUpRecyclerView(RecyclerView recyclerView, List<NewsEntity> newsList) {
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(new RecyclerAdapter(this.context, newsList));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
 //        this.recyclerView.setVisibility(View.VISIBLE);
@@ -209,7 +212,7 @@ public class FeaturedFragmentHelper {
     }
 
     // set json data to view
-    public void updateSlider(List<NewsEntity> newsList) {
+    public void updateSlider(final List<NewsEntity> newsList) {
         if (context != null) {
             for (final NewsEntity item : newsList) {
                 String iconUrl = item.getNewsSourceEntity().getIconUrl();
@@ -222,7 +225,8 @@ public class FeaturedFragmentHelper {
                         .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
                             @Override
                             public void onSliderClick(BaseSliderView slider) {
-
+                                context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", item.getId())
+                                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                             }
                         });
 
