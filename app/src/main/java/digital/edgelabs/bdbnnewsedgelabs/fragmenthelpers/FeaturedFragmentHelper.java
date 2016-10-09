@@ -104,8 +104,9 @@ public class FeaturedFragmentHelper {
             this.updateSlider(newsList);
 
         }catch (JSONException e){
-
+            Log.e("JSONEx",e.getMessage());
         }catch (ParseException e){
+            Log.e("ParseEx",e.getMessage());
 
         }
     }
