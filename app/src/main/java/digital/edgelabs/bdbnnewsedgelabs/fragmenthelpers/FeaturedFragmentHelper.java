@@ -6,10 +6,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.google.gson.Gson;
@@ -91,7 +89,12 @@ public class FeaturedFragmentHelper {
                         }
                     });
                 }catch (IOException e){
-                    Commons.showNetworkUnavailableDialog(context,"Network unavailable","Please connect to the internet.");
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Commons.showNetworkUnavailableDialog(context, "Network unavailable", "Please connect to the internet.");
+                        }
+                    });
                 }
             }
         }).start();
