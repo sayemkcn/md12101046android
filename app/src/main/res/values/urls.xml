@@ -9,4 +9,5 @@
     <string name="singleNewsBaseUrl">http://bdbn.news/newses/</string>
 
     <string name="sliderNewsUrl">http://bdbn.news:5000/api/sliders/homepage/top_stories</string>
+    <string name="featuredNewsUrl">http://bdbn.news:5000/api/sliders/homepage/todays_featured</string>
 </resources>

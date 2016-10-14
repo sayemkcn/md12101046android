@@ -4,22 +4,28 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginStart="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginEnd="@dimen/activity_vertical_margin"
+    android:layout_marginRight="@dimen/activity_vertical_margin"
     card:cardBackgroundColor="@android:color/white"
     card:cardCornerRadius="2dp"
     card:cardElevation="3dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/newsImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_weight="10"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,8 +35,7 @@
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp">
+            android:paddingStart="10dp">
 
             <TextView
                 android:id="@+id/titleTextView"
@@ -38,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="News Title"
                 android:textColor="@android:color/black"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,13 +51,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="News Summary."
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:visibility="gone" />
 
             <LinearLayout
-                android:paddingBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="10dp">
 
                 <ImageView
                     android:id="@+id/sourceLogoImageView"
@@ -80,22 +86,13 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:textSize="8sp"
                         android:id="@+id/timeTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="30 minutes ago" />
+                        android:text="30 minutes ago"
+                        android:textSize="8sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/newsImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="10"
-            android:padding="10dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher" />
     </LinearLayout>
 </android.support.v7.widget.CardView>
