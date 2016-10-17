@@ -12,13 +12,8 @@
 
     <string-array name="categories">
         <item>featured</item>
-        <item>national</item>
-        <item>international</item>
-        <item>finance</item>
-        <item>sports</item>
-        <item>entertainment</item>
-        <item>technology</item>
-        <item>lifestyle</item>
+        <item>upcoming</item>
+        <item>running</item>
     </string-array>
     <string-array name="colors">
         <item>#23FFFF</item>

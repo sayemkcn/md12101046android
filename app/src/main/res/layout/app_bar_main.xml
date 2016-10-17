@@ -41,7 +41,7 @@
                 android:layout_gravity="bottom"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:tabGravity="fill"
-                app:tabMode="scrollable" />
+                app:tabMode="fixed" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

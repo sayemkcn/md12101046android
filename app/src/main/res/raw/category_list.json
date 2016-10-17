@@ -7,45 +7,15 @@
   },
   {
     "categoryId": 1,
-    "categoryName": "জাতীয়",
+    "categoryName": "আসিতেছে",
     "iconUrl": "http://i.imgur.com/mwhLDcr.jpg",
     "accentColorCode": "#ac93d7"
   },
   {
     "categoryId": 2,
-    "categoryName": "আন্তর্জাতিক",
+    "categoryName": "চলিতেছে",
     "iconUrl": "https://i.imgur.com/nSpACch.jpg",
     "accentColorCode": "#bf73cd"
-  },
-  {
-    "categoryId": 3,
-    "categoryName": "অর্থনীতি",
-    "iconUrl": "https://i.imgur.com/61JJGQu.jpg",
-    "accentColorCode": "#74cffb"
-  },
-  {
-    "categoryId": 4,
-    "categoryName": "খেলা",
-    "iconUrl": "https://i.imgur.com/Y1tNx1M.jpg",
-    "accentColorCode": "#5bb2a9"
-  },
-  {
-    "categoryId": 5,
-    "categoryName": "বিনোদন",
-    "iconUrl": "https://i.imgur.com/jIUC09d.jpg",
-    "accentColorCode": "#f40057"
-  },
-  {
-    "categoryId": 6,
-    "categoryName": "তথ্যপ্রযুক্তি",
-    "iconUrl": "https://i.imgur.com/5oMrXkP.jpg",
-    "accentColorCode": "#d86793"
-  },
-  {
-    "categoryId": 7,
-    "categoryName": "লাইফস্টাইল",
-    "iconUrl": "https://i.imgur.com/zDfUuvM.jpg",
-    "accentColorCode": "#536DFE"
   }
 
 ]
