@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
+import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
@@ -38,25 +39,25 @@ public class OfflineNewsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        if (this.getNewsList() != null)
-            this.setupRecyclerView(this.getNewsList());
+        if (this.getMovieList() != null)
+            this.setupRecyclerView(this.getMovieList());
         else
             Commons.showDialog(this, "It's lonely here", "Seems like your haven't saved any item yet!");
 
     }
 
-    private List<NewsEntity> getNewsList() {
+    private List<Movie> getMovieList() {
         String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
             Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+            return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
             }.getType());
         }
         return null;
     }
 
-    private void setupRecyclerView(List<NewsEntity> newsList) {
-        recyclerView.setAdapter(new RecyclerAdapter(this, newsList));
+    private void setupRecyclerView(List<Movie> movieList) {
+        recyclerView.setAdapter(new RecyclerAdapter(this, movieList));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 

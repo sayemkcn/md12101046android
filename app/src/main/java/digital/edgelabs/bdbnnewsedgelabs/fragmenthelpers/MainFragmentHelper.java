@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
+import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
@@ -41,9 +42,9 @@ public class MainFragmentHelper {
 
     private Button moreButton;
 
-    private int startIndex = 1;
+    private int pageIndex = 1;
     private int pageSize = 10;
-    private List<NewsEntity> newsList = new ArrayList<>();
+    private List<Movie> movieList = new ArrayList<>();
     private SuperToast toast;
 
     String[] categories;
@@ -67,19 +68,19 @@ public class MainFragmentHelper {
         Log.d("SECTION_NUMBER", String.valueOf(pageNumber));
 //        Toast.makeText(context, url, Toast.LENGTH_LONG).show();
 
-        this.fetchNews(VP_PAGE_NUMBER, this.startIndex, this.pageSize);
+        this.fetchNews(VP_PAGE_NUMBER, this.pageIndex);
 
     }
 
 
-    private void fetchNews(final int vpPageNumber, final int startIndex, final int pageSize) {
+    private void fetchNews(final int vpPageNumber, final int pageIndex) {
         this.toast.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 synchronized (this) {
                     try {
-                        final String url = buildUrl(context, vpPageNumber, startIndex, pageSize);
+                        final String url = buildUrl(context, vpPageNumber, pageIndex);
 //                        final String url = context.getResources().getString(R.string.newsUrl);
                         Log.i("URL: ", url);
                         final String response = new NewsProvider(context).fetchNews(url);
@@ -105,26 +106,16 @@ public class MainFragmentHelper {
         }).start();
     }
 
-    private String buildUrl(Activity context, int vpPageNumber, int startIndex, int pageSize) {
+    private String buildUrl(Activity context, int vpPageNumber, int pageIndex) {
         // Build request url with filter
         // get news source url from sharedpref and send them as param
-        String[] newsSourceParamValues = context.getResources().getStringArray(R.array.newsSourceParamValues);
-        int prefSize = Pref.getPreferenceInt(context, Pref.PREF_SIZE);
-        StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder
-                .append(context.getResources().getString(R.string.baseUrl))
-                .append("/categories/")
+        String[] categories = context.getResources().getStringArray(R.array.categories);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(context.getResources().getString(R.string.baseUrl))
                 .append(categories[vpPageNumber])
-//                .append(".json")
-                .append("?sources=");
-        for (int i = 0; i < prefSize; i++) {
-            if (Pref.getPreference(context, "source" + (i + 1))) {
-                urlBuilder.append(newsSourceParamValues[i] + ",");
-//                Log.d("DOURCE",this.newsSourceParamValues[i]);
-            }
-        }
-        String tempUrl = this.concatAllSourceIdIfNone(urlBuilder.toString(), newsSourceParamValues);
-        return tempUrl.replaceAll(",$", "") + "&start=" + startIndex + "&size=" + pageSize;
+        .append("/page/"+pageIndex);
+        Log.i("URL++",stringBuilder.toString());
+        return stringBuilder.toString();
     }
 
     private String concatAllSourceIdIfNone(String url, String[] newsSourceParamValues) {
@@ -143,13 +134,13 @@ public class MainFragmentHelper {
 
     private void onResponse(String response, final int vpPageNumber) {
         try {
-            this.newsList = this.parseJson(response);
+            this.movieList = this.parseJson(response);
 //            if (this.newsList.size()>pageSize){
 //                RecyclerAdapter adapter = new RecyclerAdapter(context,this.newsList);
 //                adapter.notifyDataSetChanged();
 //                recyclerView.setAdapter(adapter);
 //            }else {
-            this.setUpRecyclerView(context, newsList, vpPageNumber);
+            this.setUpRecyclerView(context, movieList, vpPageNumber);
 //            }
 
             this.progressBar.setVisibility(View.GONE);
@@ -158,8 +149,8 @@ public class MainFragmentHelper {
                 @Override
                 public void onClick(View view) {
 //                    startIndex += pageSize;
-                    startIndex++;
-                    fetchNews(vpPageNumber, startIndex, pageSize);
+                    pageIndex++;
+                    fetchNews(vpPageNumber, pageIndex);
                 }
             });
 //            textView.setText(categoryEntity.toString());
@@ -171,9 +162,9 @@ public class MainFragmentHelper {
     }
 
 
-    private void setUpRecyclerView(final Activity context, List<NewsEntity> newsList, final int vpPageNumber) {
-        final RecyclerAdapter adapter = new RecyclerAdapter(context, this.newsList);
-        if (this.newsList.size() > pageSize) {
+    private void setUpRecyclerView(final Activity context, List<Movie> newsList, final int vpPageNumber) {
+        final RecyclerAdapter adapter = new RecyclerAdapter(context, this.movieList);
+        if (this.movieList.size() > pageSize) {
             adapter.notifyDataSetChanged();
         }
         recyclerView.setAdapter(adapter);
@@ -184,44 +175,23 @@ public class MainFragmentHelper {
         recyclerView.setVisibility(View.VISIBLE);
     }
 
-    private List<NewsEntity> parseJson(String response) throws JSONException, ParseException {
-        JSONObject catJsonObject = new JSONObject(response);
+    private List<Movie> parseJson(String response) throws JSONException, ParseException {
 
-        JSONArray newsJsonArray = catJsonObject.getJSONArray("newsList");
-        for (int i = 0; i < newsJsonArray.length(); i++) {
-            JSONObject newsJsonObject = newsJsonArray.getJSONObject(i);
-            NewsEntity news = new NewsEntity();
-            news.setId(newsJsonObject.getLong("id"));
-            news.setTitle(newsJsonObject.getString("title"));
+        // FILL UP MOVIE LIST
+        Movie movie = new Movie();
+        movie.setName("First Movie");
+        movie.setDirectorName("First Director");
+        movie.setImageUrl("http://dummyimage.com/150x150/ddd/fff.png");
+        movie.setCast("Cast list");
+        this.movieList.add(movie);
+        movie= new Movie();
+        movie.setName("Second Movie");
+        movie.setDirectorName("Second Director");
+        movie.setImageUrl("http://dummyimage.com/150x150/ddd/fff.png");
+        movie.setCast("Cast list Second");
+        this.movieList.add(movie);
 
-            String detailsNews = newsJsonObject.getString("details");
-            if (detailsNews.length() > 75) {
-                news.setDetails(detailsNews.substring(0, 75));
-            } else {
-                news.setDetails(detailsNews);
-            }
-
-            news.setImageUrl(newsJsonObject.getString("imageUrl"));
-            news.setAuthor(newsJsonObject.getString("author"));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            news.setLastUpdated(sdf.parse(newsJsonObject.getString("timestamp")));
-//            news.setLastUpdated(sdf.parse("2016-08-31 20:01:41"));
-
-//            Log.i("DATE",news.getLastUpdated().toString());
-
-            JSONObject sourceJsonObject = newsJsonObject.getJSONObject("source");
-            NewsSourceEntity source = new NewsSourceEntity();
-            source.setId(sourceJsonObject.getLong("sourceId"));
-            source.setName(sourceJsonObject.getString("sourceName"));
-            source.setIconUrl(sourceJsonObject.getString("iconUrl"));
-            source.setAccentColorCode(sourceJsonObject.getString("sourceAccentColorCode"));
-
-            news.setNewsSourceEntity(source);
-            this.newsList.add(news);
-
-        }
-
-        return this.newsList;
+        return this.movieList;
     }
 
 

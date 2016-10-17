@@ -33,6 +33,7 @@ import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
 import digital.edgelabs.bdbnnewsedgelabs.commons.CustomSliderView;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.commons.SliderChildAnimator;
+import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
@@ -191,8 +192,8 @@ public class FeaturedFragmentHelper {
     }
 
     private void fetchOfflineAndBookmarkedNews() {
-        List<NewsEntity> offlineNewsList = this.getOfflineNewsList();
-        List<NewsEntity> bookmarkedNewsList = this.getBookmarkedNewsList();
+        List<Movie> offlineNewsList = this.getOfflineNewsList();
+        List<Movie> bookmarkedNewsList = this.getBookmarkedNewsList();
         // load offline news
         if (offlineNewsList == null || offlineNewsList.isEmpty()) {
             this.noItemsTextOffline.setVisibility(View.VISIBLE);
@@ -221,29 +222,29 @@ public class FeaturedFragmentHelper {
 
     }
 
-    private void setUpRecyclerView(RecyclerView recyclerView, List<NewsEntity> newsList) {
+    private void setUpRecyclerView(RecyclerView recyclerView, List<Movie> movieList) {
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setAdapter(new RecyclerAdapter(this.context, newsList));
+        recyclerView.setAdapter(new RecyclerAdapter(this.context, movieList));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
 //        this.recyclerView.setVisibility(View.VISIBLE);
     }
 
-    private List<NewsEntity> getOfflineNewsList() {
+    private List<Movie> getOfflineNewsList() {
         String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
             Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+            return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
             }.getType());
         }
         return null;
     }
 
 
-    private List<NewsEntity> getBookmarkedNewsList() {
+    private List<Movie> getBookmarkedNewsList() {
         String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_BOOKMARK_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
             Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+            return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
             }.getType());
         }
         return null;

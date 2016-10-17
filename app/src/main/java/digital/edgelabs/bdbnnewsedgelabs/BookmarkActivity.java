@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
+import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
@@ -34,25 +35,25 @@ public class BookmarkActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        if (this.getNewsList() != null)
-            this.setupRecyclerView(this.getNewsList());
+        if (this.getMovieList() != null)
+            this.setupRecyclerView(this.getMovieList());
         else
             Commons.showDialog(this, "It's lonely here", "Seems like your bookmark list is empty. First add some articles and then proceed!");
 
     }
 
-    private List<NewsEntity> getNewsList() {
-        String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
-        if (newsListJson != null && !newsListJson.equals("")) {
+    private List<Movie> getMovieList() {
+        String movieListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
+        if (movieListJson != null && !movieListJson.equals("")) {
             Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+            return gson.fromJson(movieListJson, new TypeToken<List<Movie>>() {
             }.getType());
         }
         return null;
     }
 
-    private void setupRecyclerView(List<NewsEntity> newsList) {
-        recyclerView.setAdapter(new RecyclerAdapter(this, newsList));
+    private void setupRecyclerView(List<Movie> movieList) {
+        recyclerView.setAdapter(new RecyclerAdapter(this, movieList));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
