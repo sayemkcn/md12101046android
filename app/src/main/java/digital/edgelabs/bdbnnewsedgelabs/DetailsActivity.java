@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,46 +19,41 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
-import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
-import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
+import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
 
 public class DetailsActivity extends AppCompatActivity {
-    @BindView(R.id.newsDetailsImageView)
+    @BindView(R.id.detailsImageView)
     ImageView detailsImageView;
-    @BindView(R.id.newsSourceIconTextView)
-    ImageView sourceIconImageView;
-    @BindView(R.id.newsTitleTextView)
-    TextView titleTextView;
-    @BindView(R.id.newsSourceNameTextView)
-    TextView sourceNameTextView;
-    @BindView(R.id.newsAuthorTextView)
-    TextView authorTextView;
-    @BindView(R.id.newsTimeTextView)
-    TextView timeTextView;
-    @BindView(R.id.newsDetailsTextView)
-    TextView detailsTextView;
+    @BindView(R.id.movieNameTextView)
+    TextView movieNameTextView;
+    @BindView(R.id.movieTypeTextView)
+    TextView movieTypeTextView;
+    @BindView(R.id.directorNameTextView)
+    TextView directorNameTextView;
+    @BindView(R.id.producerNameTextView)
+    TextView producerTextView;
+    @BindView(R.id.ratingTextView)
+    TextView ratingTextView;
 
     @BindView(R.id.contentLayout)
     View contentLayout;
     @BindView(R.id.detailsProgressBar)
     ProgressBar progressBar;
 
-    private NewsEntity news;
+    private Movie movie;
 
     private Typeface typeface;
 
@@ -78,35 +74,28 @@ public class DetailsActivity extends AppCompatActivity {
 
         this.typeface = typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
 
-        this.news = (NewsEntity) getIntent().getExtras().getSerializable("offlineNewsItem");
-        if (this.news != null) {
-            this.showOfflineNewsItem(this.news);
-        } else {
-            this.loadNewsFromServer(getIntent().getLongExtra("newsId", 0));
-        }
+        this.movie = (Movie) getIntent().getExtras().getSerializable("movie");
+
+        this.loadNewsFromServer(movie);
 
     }
 
-    private void showOfflineNewsItem(NewsEntity news) {
+    private void showOfflineMovieItem(Movie movie) {
         if (this.progressBar.getVisibility() == View.VISIBLE) {
             this.contentLayout.setVisibility(View.VISIBLE);
             this.progressBar.setVisibility(View.GONE);
         }
-        this.updateViews(news);
+        this.onResponse(movie.getDetailsResponse());
     }
 
-    private void loadNewsFromServer(Long newsId) {
-        // THIS URL WILL BE CHANGED. RIGHT NOW IT's JUST MOCK URL
-        // LIKE  /details/{newsUrl}
-        final String url = getResources().getString(R.string.baseUrl)+"/newses/"+newsId;
-//        final String url = "https://gist.githubusercontent.com/sayemkcn/74b4042ac9c9014d46b36c221af32977/raw/96e848177a2d00cd08f8ed85887150196b52c961/details.json";
-        Log.d("NEWS_DETAILS_URL",url);
+    private void loadNewsFromServer(final Movie movie) {
+        Log.d("NEWS_DETAILS_URL", movie.getDetailsUrl());
         new Thread(new Runnable() {
             @Override
             public void run() {
                 synchronized (this) {
                     try {
-                        final String response = new NewsProvider(DetailsActivity.this).fetchNews(url);
+                        final String response = new NewsProvider(DetailsActivity.this).fetchNews(getResources().getString(R.string.baseUrl) + movie.getDetailsUrl());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -139,79 +128,65 @@ public class DetailsActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             this.finish();
         } else if (id == R.id.action_bookmark) {
-            this.createBookmark();
+//            this.createBookmark();
         } else if (id == R.id.action_save) {
             this.saveOffline();
-        } else if (id == R.id.action_font_size) {
-            toggleFontSize();
-        } else if (id==R.id.action_share){
-            Commons.share(this, "Share this news", getResources().getString(R.string.singleNewsBaseUrl)+this.news.getId());
+        } else if (id == R.id.action_share) {
+            Commons.share(this, "Share this news", getResources().getString(R.string.singleNewsBaseUrl) + this.movie.getId());
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void toggleFontSize() {
-        if (count == 0) {
-            detailsTextView.setTextSize(15);
-            count++;
-        } else if (count == 1) {
-            detailsTextView.setTextSize(17);
-            count++;
-        } else if (count == 2) {
-            detailsTextView.setTextSize(13);
-            count = 0;
-        }
-    }
 
     private void saveOffline() {
-        if (this.news == null) {
+        if (this.movie == null) {
             Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
         } else {
             Gson gson = new Gson();
-            String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
-            List<NewsEntity> newsList;
-            if (newsListJson == null || newsListJson.equals("")) {
-                newsList = new ArrayList<>();
-                Log.d("EXECUTED", "FUCK! " + newsListJson);
+            String movieListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+            List<Movie> movieList;
+            if (movieListJson == null || movieListJson.equals("")) {
+                movieList = new ArrayList<>();
+                Log.d("EXECUTED", "FUCK! " + movieListJson);
             } else {
-                newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+                movieList = gson.fromJson(movieListJson, new TypeToken<List<Movie>>() {
                 }.getType());
 //                    Log.d("EXECUTED", newsListJson);
             }
 
-            this.news.setDetails(this.news.getDetails());
-            newsList.add(this.news);
-            newsListJson = gson.toJson(newsList);
-            Pref.savePreference(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST, newsListJson);
+            this.movie.setDetailsResponse(this.movie.getDetailsResponse());
+            movieList.add(this.movie);
+            movieListJson = gson.toJson(movieList);
+            Pref.savePreference(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST, movieListJson);
             Commons.showSimpleToast(this, "Item saved for offline reading..");
 //                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
         }
     }
 
-    private void createBookmark() {
-        if (this.news == null) {
-            Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
-        } else {
-            Gson gson = new Gson();
-            String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
-            List<NewsEntity> newsList;
-            if (newsListJson == null || newsListJson.equals("")) {
-                newsList = new ArrayList<>();
-                Log.d("EXECUTED", "FUCK! " + newsListJson);
-            } else {
-                newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
-                }.getType());
-//                    Log.d("EXECUTED", newsListJson);
-            }
-
-            this.news.setDetails(this.news.getDetails().substring(0, 100) + "..");
-            newsList.add(this.news);
-            newsListJson = gson.toJson(newsList);
-            Pref.savePreference(this, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
-            Commons.showSimpleToast(this, "Bookmark Added!");
-//                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
-        }
-    }
+//    private void createBookmark() {
+//        if (this.movie == null) {
+//            Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
+//        } else {
+//            Gson gson = new Gson();
+//            String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
+//            List<NewsEntity> newsList;
+//            if (newsListJson == null || newsListJson.equals("")) {
+//                newsList = new ArrayList<>();
+//                Log.d("EXECUTED", "FUCK! " + newsListJson);
+//            } else {
+//                newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+//                }.getType());
+////                    Log.d("EXECUTED", newsListJson);
+//            }
+//
+//            this.news.setDetails(this.news.getDetails().substring(0, 100) + "..");
+//            newsList.add(this.news);
+//            newsListJson = gson.toJson(newsList);
+//            Pref.savePreference(this, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
+//            Commons.showSimpleToast(this, "Bookmark Added!");
+////                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
+//        }
+//    }
 
 
     private void onResponse(String response) {
@@ -220,8 +195,9 @@ public class DetailsActivity extends AppCompatActivity {
                 this.contentLayout.setVisibility(View.VISIBLE);
                 this.progressBar.setVisibility(View.GONE);
             }
-            this.news = this.parseNewsEntity(response);
-            this.updateViews(this.news);
+            Glide.with(this).load(this.parseImageUrl(response)).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(this.detailsImageView);
+            this.parseData(response);
+
         } catch (JSONException e) {
             Commons.showDialog(this, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet connection at all! Please connect to the internet first!");
         } catch (ParseException e) {
@@ -229,53 +205,72 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void updateViews(NewsEntity news) {
+
+    private String parseImageUrl(String response) {
+        return Jsoup.parse(response).getElementsByClass("main-movie-poster").get(0).getElementsByTag("img").get(0).attr("src");
+    }
+
+
+    private void parseData(String response) throws JSONException, ParseException {
         try {
-            Glide.with(this.getApplicationContext()).load(news.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).into(this.detailsImageView);
-            Glide.with(this.getApplicationContext()).load(news.getNewsSourceEntity().getIconUrl()).into(this.sourceIconImageView);
-        } catch (IllegalArgumentException e) {
-            Log.d("EX_GLIDE", e.toString());
+            /// PARSE DATA AND UPDATE VIEW
+            Elements elements = Jsoup.parseBodyFragment(response).body().getElementsByClass("home-box").get(0).getElementsByTag("ul").get(0).getElementsByTag("li");
+            Elements links = elements.get(0).getElementsByTag("a");
+            StringBuilder categoryBuilder = new StringBuilder();
+            for (int i = 0; i < links.size(); i++) {
+                categoryBuilder.append(links.get(i).text());
+                int index = i + 1;
+                if (index != links.size())
+                    categoryBuilder.append(",");
+            }
+            String producer = elements.get(2).getElementsByTag("a").get(0).text();
+            Elements thumnailElements = Jsoup.parseBodyFragment(response).body().getElementsByClass("thumbnails").get(0).getElementsByTag("img");
+            String[] thumbnailUrls = new String[thumnailElements.size()];
+            for (int i = 0; i < thumnailElements.size(); i++) {
+                thumbnailUrls[i] = thumnailElements.get(i).attr("src");
+            }
+
+            this.movie.setCategory(categoryBuilder.toString());
+            this.movie.setProducerName(producer);
+            this.movie.setThumbnailUrls(thumbnailUrls);
+
+            this.updateViews(this.movie);
+        } catch (Exception e) {
+            Log.e("JSOUP_PARSE", e.getMessage());
         }
-//        this.detailsImageView.setImageURI(Uri.parse(news.getImageUrl()));
-//        this.sourceIconImageView.setImageURI(Uri.parse(news.getNewsSourceEntity().getIconUrl()));
-        this.titleTextView.setText(news.getTitle());
-        this.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
-        this.authorTextView.setText(news.getAuthor() + " * ");
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(news.getLastUpdated());
-        this.timeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + getResources().getString(R.string.hourBefore));
-        this.detailsTextView.setText(news.getDetails());
-
-        // set typeface
-        this.titleTextView.setTypeface(typeface);
-        this.sourceNameTextView.setTypeface(typeface);
-        this.authorTextView.setTypeface(typeface);
-        this.timeTextView.setTypeface(typeface);
-        this.detailsTextView.setTypeface(typeface);
     }
 
-    private NewsEntity parseNewsEntity(String response) throws JSONException, ParseException {
-        JSONObject jsonObject = new JSONObject(response);
-        NewsEntity news = new NewsEntity();
-        news.setId(jsonObject.getLong("id"));
-        news.setTitle(jsonObject.getString("title"));
-        news.setDetails(jsonObject.getString("details"));
-        news.setImageUrl(jsonObject.getString("imageUrl"));
-        news.setAuthor(jsonObject.getString("author"));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        news.setLastUpdated(sdf.parse(jsonObject.getString("timestamp")));
-//            Log.i("DATE",news.getLastUpdated().toString());
+    private void updateViews(Movie movie) {
+        this.movieNameTextView.setText(movie.getName());
+        this.movieTypeTextView.setText(getResources().getString(R.string.categoryTextBangla) + " \n" + movie.getCategory());
+        this.directorNameTextView.setText(getResources().getString(R.string.directorTextBangla) + " \n" + movie.getDirectorName());
+        this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProducerName());
+        this.ratingTextView.setText(movie.getRating());
+        this.createImageView(movie.getThumbnailUrls());
 
-        JSONObject sourceJsonObject = jsonObject.getJSONObject("source");
-        NewsSourceEntity source = new NewsSourceEntity();
-        source.setId(sourceJsonObject.getLong("sourceId"));
-        source.setName(sourceJsonObject.getString("sourceName"));
-        source.setIconUrl(sourceJsonObject.getString("iconUrl"));
-        source.setAccentColorCode(sourceJsonObject.getString("sourceAccentColorCode"));
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
+        this.movieNameTextView.setTypeface(typeface);
+        this.movieTypeTextView.setTypeface(typeface);
+        this.directorNameTextView.setTypeface(typeface);
+        this.producerTextView.setTypeface(typeface);
+        this.ratingTextView.setTypeface(typeface);
 
-        news.setNewsSourceEntity(source);
-        return news;
+        this.contentLayout.setVisibility(View.VISIBLE);
+        this.progressBar.setVisibility(View.INVISIBLE);
     }
 
+    private void createImageView(String[] imageUrls) {
+        GridLayout layout = (GridLayout) findViewById(R.id.thumbnailView);
+        for (int i = 0; i < imageUrls.length; i++) {
+            ImageView image = new ImageView(this);
+            image.setLayoutParams(new android.view.ViewGroup.LayoutParams(200, 200));
+            image.setMaxHeight(200);
+            image.setMaxWidth(200);
+            Glide.with(this).load(imageUrls[i]).crossFade().into(image);
+
+            // Adds the view to the layout
+            layout.addView(image);
+        }
+    }
 
 }

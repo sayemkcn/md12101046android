@@ -24,6 +24,8 @@
     <string name="releaseDateTextBangla">রিলিজ ডেটঃ </string>
     <string name="directorTextBangla">পরিচালকঃ </string>
     <string name="castTextBangla">অভিনেতা/অভিনেত্রীঃ </string>
+    <string name="categoryTextBangla">ক্যাটেগরিঃ</string>
+    <string name="producerTextBangla">প্রযোজকঃ</string>
 
     <string name="title_activity_preference">Preference</string>
     <string name="title_activity_details"></string>

@@ -106,11 +106,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                 @Override
                 public void onClick(View view) {
                     if (!(context instanceof OfflineNewsActivity))
-                        context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", movieList.get(getAdapterPosition()).getId())
+                        context.startActivity(new Intent(context, DetailsActivity.class).putExtra("movie", movieList.get(getAdapterPosition()))
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     else if (context instanceof OfflineNewsActivity) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("offlineNewsItem", movieList.get(getAdapterPosition()));
+                        bundle.putSerializable("offlineMovieItem", movieList.get(getAdapterPosition()));
 //                        Log.d("NEWS",newsList.get(getAdapterPosition()).toString());
                         context.startActivity(new Intent(context, DetailsActivity.class).putExtras(bundle).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     }

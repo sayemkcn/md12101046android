@@ -57,17 +57,11 @@ public class MainFragmentHelper {
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
         this.moreButton.setTypeface(typeface);
         this.categories = context.getResources().getStringArray(R.array.categories);
-        // register eventbus
-//        EventBus.getDefault().register(this);
     }
 
     public void exec(int pageNumber) {
         this.VP_PAGE_NUMBER = pageNumber;
-        Log.d("SECTION_NUMBER", String.valueOf(pageNumber));
-//        Toast.makeText(context, url, Toast.LENGTH_LONG).show();
-
         this.fetchNews(VP_PAGE_NUMBER, this.pageIndex);
-
     }
 
 
@@ -79,8 +73,6 @@ public class MainFragmentHelper {
                 synchronized (this) {
                     try {
                         final String url = buildUrl(context, vpPageNumber, pageIndex);
-//                        final String url = context.getResources().getString(R.string.newsUrl);
-                        Log.i("URL: ", url);
                         final String response = new NewsProvider(context).fetchNews(url);
                         context.runOnUiThread(new Runnable() {
                             @Override
@@ -112,7 +104,6 @@ public class MainFragmentHelper {
         stringBuilder.append(context.getResources().getString(R.string.baseUrl))
                 .append(categories[vpPageNumber])
                 .append("/page/" + pageIndex);
-        Log.i("URL++", stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -218,8 +209,6 @@ public class MainFragmentHelper {
                     movie.setRating(rating);
 
                     this.movieList.add(movie);
-                    // CONTINUE HERE
-                    Log.i("MOVIE_LIST", this.movieList.toString());
                 }
             }
         } catch (Exception e) {
