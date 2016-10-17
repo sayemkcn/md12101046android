@@ -14,6 +14,10 @@ import com.github.johnpersano.supertoasts.library.SuperToast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -113,8 +117,8 @@ public class MainFragmentHelper {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(context.getResources().getString(R.string.baseUrl))
                 .append(categories[vpPageNumber])
-        .append("/page/"+pageIndex);
-        Log.i("URL++",stringBuilder.toString());
+                .append("/page/" + pageIndex);
+        Log.i("URL++", stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -178,19 +182,19 @@ public class MainFragmentHelper {
     private List<Movie> parseJson(String response) throws JSONException, ParseException {
 
         // FILL UP MOVIE LIST
-        Movie movie = new Movie();
-        movie.setName("First Movie");
-        movie.setDirectorName("First Director");
-        movie.setImageUrl("http://dummyimage.com/150x150/ddd/fff.png");
-        movie.setCast("Cast list");
-        this.movieList.add(movie);
-        movie= new Movie();
-        movie.setName("Second Movie");
-        movie.setDirectorName("Second Director");
-        movie.setImageUrl("http://dummyimage.com/150x150/ddd/fff.png");
-        movie.setCast("Cast list Second");
-        this.movieList.add(movie);
-
+        Document document = Jsoup.parseBodyFragment(response);
+        Element body = document.body();
+        Elements homeBoxes = body.getElementsByClass("home-box");
+        for (int i=0;i<homeBoxes.size();i++) {
+            if (i!=0){
+                Movie movie = new Movie();
+                String imgUrl = homeBoxes.get(i).getElementsByTag("img").get(0).attr("src");
+                movie.setImageUrl(imgUrl);
+                // CONTINUE HERE
+//                Log.i("IMAGE",img);
+            }
+        }
+//        Log.i("HOME_BOX",homeBoxes.toString());
         return this.movieList;
     }
 
