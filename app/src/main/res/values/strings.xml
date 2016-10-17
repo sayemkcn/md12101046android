@@ -19,12 +19,11 @@
         <item>#23FFFF</item>
         <item>#23FFFF</item>
         <item>#4D4D4D</item>
-        <item>#A2A2A2</item>
-        <item>#D9D900</item>
-        <item>#A1A900</item>
-        <item>#BBBBBB</item>
-        <item>#451246</item>
     </string-array>
+
+    <string name="releaseDateTextBangla">রিলিজ ডেটঃ </string>
+    <string name="directorTextBangla">পরিচালকঃ </string>
+    <string name="castTextBangla">অভিনেতা/অভিনেত্রীঃ </string>
 
     <string name="title_activity_preference">Preference</string>
     <string name="title_activity_details"></string>

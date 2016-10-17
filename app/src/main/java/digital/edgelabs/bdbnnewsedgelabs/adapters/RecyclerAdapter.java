@@ -18,18 +18,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import digital.edgelabs.bdbnnewsedgelabs.BookmarkActivity;
-import digital.edgelabs.bdbnnewsedgelabs.OfflineNewsActivity;
-import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
+import digital.edgelabs.bdbnnewsedgelabs.OfflineNewsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
+import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
 import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
-import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
@@ -54,8 +51,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         Movie movie = this.movieList.get(position);
         Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
-        myViewHolder.directorTextView.setText(movie.getDirectorName());
-        myViewHolder.castsTextView.setText(movie.getCast());
+        myViewHolder.releaseDateTextView.setText(context.getResources().getString(R.string.releaseDateTextBangla)+" "+movie.getReleaseDate());
+        myViewHolder.directorTextView.setText(context.getResources().getString(R.string.directorTextBangla)+" "+movie.getDirectorName());
+        StringBuilder casts = new StringBuilder();
+        for (int i = 0; i < movie.getCasts().length; i++) {
+            casts.append(movie.getCasts()[i]);
+            int indexNumber = i + 1;
+            if (indexNumber != movie.getCasts().length) {
+                casts.append(",");
+            }
+        }
+        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla)+" "+casts.toString());
+        myViewHolder.ratingTextView.setText(movie.getRating());
     }
 
     @Override
@@ -74,8 +81,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView titleTextView;
+        TextView releaseDateTextView;
         TextView directorTextView;
         TextView castsTextView;
+        TextView ratingTextView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -83,11 +92,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             directorTextView = (TextView) itemView.findViewById(R.id.directorTextView);
             castsTextView = (TextView) itemView.findViewById(R.id.castsTextView);
+            releaseDateTextView = (TextView) itemView.findViewById(R.id.releaseDateTextView);
+            ratingTextView = (TextView) itemView.findViewById(R.id.ratingTextView);
 
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
             titleTextView.setTypeface(typeface);
             directorTextView.setTypeface(typeface);
             castsTextView.setTypeface(typeface);
+            releaseDateTextView.setTypeface(typeface);
+            ratingTextView.setTypeface(typeface);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

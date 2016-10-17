@@ -22,6 +22,7 @@
 
         <LinearLayout
             android:layout_toLeftOf="@+id/imageView"
+            android:layout_toStartOf="@+id/imageView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_width="match_parent"
@@ -29,7 +30,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:orientation="vertical"
@@ -44,8 +45,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Movie Title"
-                    android:textColor="@android:color/black"
-                    android:textSize="12sp"
+                    android:textColor="@color/colorTitleText"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -59,17 +60,24 @@
                     android:id="@+id/directorTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Prothom Alo"
-                    android:textSize="8sp"
+                    android:text="Director Name"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/castsTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="30 minutes ago"
-                    android:textSize="8sp" />
+                    android:text="Cast List"
+                    android:textSize="10sp" />
 
+                <TextView
+                    android:id="@+id/ratingTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rating: 6.5"
+                    android:textColor="@color/colorRatingText"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -80,7 +88,6 @@
             android:id="@+id/imageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_weight="10"
             android:padding="10dp"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher" />

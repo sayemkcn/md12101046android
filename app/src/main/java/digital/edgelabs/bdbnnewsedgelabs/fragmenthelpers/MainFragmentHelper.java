@@ -11,9 +11,7 @@ import android.widget.ProgressBar;
 
 import com.github.johnpersano.supertoasts.library.SuperToast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,17 +19,13 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.adapters.RecyclerAdapter;
-import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
-import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
-import digital.edgelabs.bdbnnewsedgelabs.entity.NewsSourceEntity;
 import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
 import digital.edgelabs.bdbnnewsedgelabs.service.NewsProvider;
 
@@ -180,21 +174,57 @@ public class MainFragmentHelper {
     }
 
     private List<Movie> parseJson(String response) throws JSONException, ParseException {
+        try {
+            // FILL UP MOVIE LIST
+            Document document = Jsoup.parseBodyFragment(response);
+            Element body = document.body();
+            Elements homeBoxes = body.getElementsByClass("home-box");
+            // for every posts
+            for (int i = 0; i < homeBoxes.size(); i++) {
+                if (i != 0) {
+                    Movie movie = new Movie();
+                    String imgUrl = homeBoxes.get(i).getElementsByTag("img").get(0).attr("src");
+                    String name = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").text();
+                    String detailsUrl = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").attr("href");
+                    Elements metaElements = homeBoxes.get(i).getElementsByTag("ul").get(0).getElementsByTag("li");
+                    String directorName = null;
+                    Elements castsElements = null;
+                    String releaseDate = null;
+                    String rating = null;
+                    if (metaElements.size() == 2) {
+                        directorName = metaElements.get(0).getElementsByTag("a").text();
+                        castsElements = metaElements.get(1).getElementsByTag("a");
+                    } else if (metaElements.size() == 3) {
+                        castsElements = metaElements.get(1).getElementsByTag("a");
+                        releaseDate = metaElements.get(0).text();
+                        rating = metaElements.get(2).text();
+                    } else if (metaElements.size() == 4) {
+                        directorName = metaElements.get(1).getElementsByTag("a").text();
+                        castsElements = metaElements.get(2).getElementsByTag("a");
+                        releaseDate = metaElements.get(0).text();
+                        rating = metaElements.get(3).text();
+                    }
+                    String[] casts = new String[castsElements.size()];
+                    for (int j = 0; j < castsElements.size() && j < casts.length; j++)
+                        casts[j] = castsElements.get(j).text();
 
-        // FILL UP MOVIE LIST
-        Document document = Jsoup.parseBodyFragment(response);
-        Element body = document.body();
-        Elements homeBoxes = body.getElementsByClass("home-box");
-        for (int i=0;i<homeBoxes.size();i++) {
-            if (i!=0){
-                Movie movie = new Movie();
-                String imgUrl = homeBoxes.get(i).getElementsByTag("img").get(0).attr("src");
-                movie.setImageUrl(imgUrl);
-                // CONTINUE HERE
-//                Log.i("IMAGE",img);
+
+                    movie.setImageUrl(imgUrl);
+                    movie.setName(name);
+                    movie.setDetailsUrl(detailsUrl);
+                    movie.setDirectorName(directorName);
+                    movie.setCasts(casts);
+                    movie.setReleaseDate(releaseDate);
+                    movie.setRating(rating);
+
+                    this.movieList.add(movie);
+                    // CONTINUE HERE
+                    Log.i("MOVIE_LIST", this.movieList.toString());
+                }
             }
+        } catch (Exception e) {
+            Log.e("CAN_NOT_PARSE", e.getMessage());
         }
-//        Log.i("HOME_BOX",homeBoxes.toString());
         return this.movieList;
     }
 
