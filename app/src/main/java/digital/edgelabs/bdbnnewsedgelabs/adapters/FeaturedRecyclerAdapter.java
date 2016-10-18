@@ -13,82 +13,62 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
-import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
-import digital.edgelabs.bdbnnewsedgelabs.service.Commons;
+import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
 
 public class FeaturedRecyclerAdapter extends RecyclerView.Adapter<FeaturedRecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
-    private List<NewsEntity> newsList;
+    private List<Movie> movieList;
     private Activity context;
 
-    public FeaturedRecyclerAdapter(Activity context, List<NewsEntity> newsList) {
+    public FeaturedRecyclerAdapter(Activity context, List<Movie> movieList) {
         this.inflater = LayoutInflater.from(context);
-        this.newsList = newsList;
+        this.movieList = movieList;
         this.context = context;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View view = inflater.inflate(R.layout.single_news_item_featured, parent, false);
+        View view = inflater.inflate(R.layout.single_movie_item_featured, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
-        NewsEntity news = this.newsList.get(position);
-        Glide.with(context).load(news.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.newsImageView);
-        myViewHolder.titleTextView.setText(news.getTitle().replace("\n", ""));
-
-        String newsSummary = news.getDetails();
-        if (newsSummary.length() > 40)
-            myViewHolder.summaryTextView.setText(newsSummary.substring(0, 40).replace("\n", "") + "..");
-        else
-            myViewHolder.summaryTextView.setText(newsSummary.replace("\n", "") + "..");
-
-        Glide.with(context).load(news.getNewsSourceEntity().getIconUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap.ic_launcher).crossFade().into(myViewHolder.sourceLogoImageView);
-        myViewHolder.sourceNameTextView.setText(news.getNewsSourceEntity().getName());
-        myViewHolder.newsTimeTextView.setText(Commons.computeTimeDiff(news.getLastUpdated(), new Date()).get(TimeUnit.HOURS).toString() + " " + context.getResources().getString(R.string.hourBefore));
+        Movie movie = this.movieList.get(position);
+        Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
+        myViewHolder.titleTextView.setText(movie.getName());
+        myViewHolder.directorTextView.setText(movie.getDirectorName());
     }
 
     @Override
     public int getItemCount() {
-        return this.newsList.size();
+        return this.movieList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView newsImageView;
+        ImageView imageView;
         TextView titleTextView;
-        TextView summaryTextView;
-        ImageView sourceLogoImageView;
-        TextView sourceNameTextView;
-        TextView newsTimeTextView;
+        TextView directorTextView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            newsImageView = (ImageView) itemView.findViewById(R.id.newsImageView);
+            imageView = (ImageView) itemView.findViewById(R.id.movieImageView);
             titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-            summaryTextView = (TextView) itemView.findViewById(R.id.newsSummaryTextView);
-            sourceLogoImageView = (ImageView) itemView.findViewById(R.id.sourceLogoImageView);
-            sourceNameTextView = (TextView) itemView.findViewById(R.id.sourceNameTextView);
-            newsTimeTextView = (TextView) itemView.findViewById(R.id.timeTextView);
+            directorTextView = (TextView) itemView.findViewById(R.id.directorNameTextView);
 
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
             titleTextView.setTypeface(typeface);
-            summaryTextView.setTypeface(typeface);
-            sourceNameTextView.setTypeface(typeface);
-            newsTimeTextView.setTypeface(typeface);
+            directorTextView.setTypeface(typeface);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", newsList.get(getAdapterPosition()).getId())
+                    context.startActivity(new Intent(context, DetailsActivity.class).putExtra("movie", movieList.get(getAdapterPosition()))
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 }
             });

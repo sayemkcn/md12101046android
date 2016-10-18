@@ -17,6 +17,10 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -127,11 +131,11 @@ public class FeaturedFragmentHelper {
 
     private void onResponse(String url, String response) {
         try {
-            List<NewsEntity> newsList = this.parseJson(response);
+            List<Movie> movieList = this.parseJson(response);
             if (url.equals(context.getResources().getString(R.string.sliderNewsUrl)))
-                this.updateSlider(newsList);
+                this.updateSlider(movieList);
             else
-                this.updateFeaturedNews(newsList);
+                this.updateFeaturedNews(movieList);
 
         } catch (JSONException e) {
             Log.e("JSONEx", e.getMessage());
@@ -141,54 +145,66 @@ public class FeaturedFragmentHelper {
         }
     }
 
-    private void updateFeaturedNews(List<NewsEntity> newsList) {
+    private void updateFeaturedNews(List<Movie> movieList) {
         // WORK HERE
-        this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context,newsList));
+        this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context,movieList));
         this.featuredFeaturedRecyclerView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
         this.featuredNewsLayout.setVisibility(View.VISIBLE);
     }
 
 
-    private List<NewsEntity> parseJson(String response) throws JSONException, ParseException {
-        List<NewsEntity> newsList = new ArrayList<>();
+    private List<Movie> parseJson(String response) throws JSONException, ParseException {
+        List<Movie> movieList = new ArrayList<>();
+        try {
+            // FILL UP MOVIE LIST
+            Document document = Jsoup.parseBodyFragment(response);
+            Element body = document.body();
+            Elements homeBoxes = body.getElementsByClass("home-box");
+            // for every posts
+            for (int i = 0; i < homeBoxes.size(); i++) {
+                if (i != 0) {
+                    Movie movie = new Movie();
+                    String imgUrl = homeBoxes.get(i).getElementsByTag("img").get(0).attr("src");
+                    String name = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").text();
+                    String detailsUrl = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").attr("href");
+                    Elements metaElements = homeBoxes.get(i).getElementsByTag("ul").get(0).getElementsByTag("li");
+                    String directorName = null;
+                    Elements castsElements = null;
+                    String releaseDate = null;
+                    String rating = null;
+                    if (metaElements.size() == 2) {
+                        directorName = metaElements.get(0).getElementsByTag("a").text();
+                        castsElements = metaElements.get(1).getElementsByTag("a");
+                    } else if (metaElements.size() == 3) {
+                        castsElements = metaElements.get(1).getElementsByTag("a");
+                        releaseDate = metaElements.get(0).text();
+                        rating = metaElements.get(2).text();
+                    } else if (metaElements.size() == 4) {
+                        directorName = metaElements.get(1).getElementsByTag("a").text();
+                        castsElements = metaElements.get(2).getElementsByTag("a");
+                        releaseDate = metaElements.get(0).text();
+                        rating = metaElements.get(3).text();
+                    }
+                    String[] casts = new String[castsElements.size()];
+                    for (int j = 0; j < castsElements.size() && j < casts.length; j++)
+                        casts[j] = castsElements.get(j).text();
 
-        JSONObject catJsonObject = new JSONObject(response);
 
-        JSONArray newsJsonArray = catJsonObject.getJSONArray("newsList");
-        for (int i = 0; i < newsJsonArray.length(); i++) {
-            JSONObject newsJsonObject = newsJsonArray.getJSONObject(i);
-            NewsEntity news = new NewsEntity();
-            news.setId(newsJsonObject.getLong("id"));
-            news.setTitle(newsJsonObject.getString("title"));
+                    movie.setImageUrl(imgUrl);
+                    movie.setName(name);
+                    movie.setDetailsUrl(detailsUrl);
+                    movie.setDirectorName(directorName);
+                    movie.setCasts(casts);
+                    movie.setReleaseDate(releaseDate);
+                    movie.setRating(rating);
 
-            String detailsNews = newsJsonObject.getString("details");
-            if (detailsNews.length() > 75) {
-                news.setDetails(detailsNews.substring(0, 75));
-            } else {
-                news.setDetails(detailsNews);
+                    movieList.add(movie);
+                }
             }
-
-            news.setImageUrl(newsJsonObject.getString("imageUrl"));
-            news.setAuthor(newsJsonObject.getString("author"));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            news.setLastUpdated(sdf.parse(newsJsonObject.getString("timestamp")));
-//            news.setLastUpdated(sdf.parse("2016-08-31 20:01:41"));
-
-//            Log.i("DATE",news.getLastUpdated().toString());
-
-            JSONObject sourceJsonObject = newsJsonObject.getJSONObject("source");
-            NewsSourceEntity source = new NewsSourceEntity();
-            source.setId(sourceJsonObject.getLong("sourceId"));
-            source.setName(sourceJsonObject.getString("sourceName"));
-            source.setIconUrl(sourceJsonObject.getString("iconUrl"));
-            source.setAccentColorCode(sourceJsonObject.getString("sourceAccentColorCode"));
-
-            news.setNewsSourceEntity(source);
-            newsList.add(news);
-
+        } catch (Exception e) {
+            Log.e("CAN_NOT_PARSE", e.getMessage());
         }
-
-        return newsList;
+        return movieList;
     }
 
     private void fetchOfflineAndBookmarkedNews() {
@@ -251,20 +267,20 @@ public class FeaturedFragmentHelper {
     }
 
     // set json data to view
-    public void updateSlider(final List<NewsEntity> newsList) {
+    public void updateSlider(final List<Movie> newsList) {
         if (context != null) {
-            for (final NewsEntity item : newsList) {
-                String iconUrl = item.getNewsSourceEntity().getIconUrl();
+            for (final Movie item : newsList) {
+                String iconUrl = item.getImageUrl();
                 CustomSliderView textSliderView = new CustomSliderView(context, iconUrl);
                 // initialize a SliderLayout
                 textSliderView
-                        .description(item.getTitle())
+                        .description(item.getName())
                         .image(item.getImageUrl())
                         .setScaleType(BaseSliderView.ScaleType.Fit)
                         .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
                             @Override
                             public void onSliderClick(BaseSliderView slider) {
-                                context.startActivity(new Intent(context, DetailsActivity.class).putExtra("newsId", item.getId())
+                                context.startActivity(new Intent(context, DetailsActivity.class).putExtra("movie", item)
                                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                             }
                         });
