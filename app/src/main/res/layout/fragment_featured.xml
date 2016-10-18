@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_vertical_margin"
-            android:elevation="0dp"
+            card_view:cardElevation="4dp"
             card_view:cardBackgroundColor="@color/sliderBorderColor"
             card_view:cardCornerRadius="0dp"
             card_view:contentPaddingTop="4dp">
@@ -43,32 +43,39 @@
 
                 <com.daimajia.slider.library.SliderLayout
                     android:id="@+id/sliderLayout"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:background="@android:color/white"
                     android:paddingBottom="5dp"
                     android:paddingLeft="5dp"
-                    android:paddingRight="5dp" />
+                    android:paddingRight="5dp"
+                    android:visibility="gone" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/featuredNewsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <TextView
-                android:gravity="center"
-                android:layout_marginBottom="10dp"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="@string/featured_featured_news_text" />
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/featuredTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/featured_featured_news_text"
+                    android:textColor="@android:color/black" />
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/featuredFeaturedRecyclerView"
@@ -82,13 +89,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                android:text="@string/featured_saved_news_text" />
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/savedTitleText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/featured_saved_text"
+                    android:textColor="@android:color/black" />
+            </android.support.v7.widget.CardView>
 
             <TextView
                 android:id="@+id/offline_no_items_text"
@@ -111,13 +129,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                android:text="@string/featured_your_bookmarks_text" />
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/offlineTitleText"
+                    android:layout_width="match_parent"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/featured_your_wishlist_text"
+                    android:textColor="@android:color/black" />
+            </android.support.v7.widget.CardView>
 
             <TextView
                 android:id="@+id/bookmarks_no_items_text"

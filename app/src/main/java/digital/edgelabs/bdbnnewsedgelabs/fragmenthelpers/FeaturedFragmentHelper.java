@@ -2,6 +2,7 @@ package digital.edgelabs.bdbnnewsedgelabs.fragmenthelpers;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,6 +77,15 @@ public class FeaturedFragmentHelper {
         this.sliderLayout.setDuration(4000);
 
         this.featuredNewsLayout = rootView.findViewById(R.id.featuredNewsLayout);
+
+        // set typeface to title textviews
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
+        TextView featuredTitleTextView = (TextView) rootView.findViewById(R.id.featuredTitleTextView);
+        TextView savedTitleTextView = (TextView)rootView.findViewById(R.id.savedTitleText);
+        TextView offlineTitleTextView = (TextView)rootView.findViewById(R.id.offlineTitleText);
+        featuredTitleTextView.setTypeface(typeface);
+        savedTitleTextView.setTypeface(typeface);
+        offlineTitleTextView.setTypeface(typeface);
     }
 
     public void exec(int pageNumber) {
