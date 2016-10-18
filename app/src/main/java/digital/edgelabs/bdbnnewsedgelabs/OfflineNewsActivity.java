@@ -47,16 +47,17 @@ public class OfflineNewsActivity extends AppCompatActivity {
     }
 
     private List<Movie> getMovieList() {
-        String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
-        if (newsListJson != null && !newsListJson.equals("")) {
+        String movieListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+        if (movieListJson != null && !movieListJson.equals("")) {
             Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
+            return gson.fromJson(movieListJson, new TypeToken<List<Movie>>() {
             }.getType());
         }
         return null;
     }
 
     private void setupRecyclerView(List<Movie> movieList) {
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(new RecyclerAdapter(this, movieList));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

@@ -66,6 +66,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:text="@string/featured_featured_news_text" />
 
             <android.support.v7.widget.RecyclerView
@@ -85,6 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:textColor="@android:color/black"
                 android:text="@string/featured_saved_news_text" />
 
             <TextView
@@ -113,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:textColor="@android:color/black"
                 android:text="@string/featured_your_bookmarks_text" />
 
             <TextView

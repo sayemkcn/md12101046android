@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,17 +50,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         Movie movie = this.movieList.get(position);
         Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
-        myViewHolder.releaseDateTextView.setText(context.getResources().getString(R.string.releaseDateTextBangla)+" "+movie.getReleaseDate());
-        myViewHolder.directorTextView.setText(context.getResources().getString(R.string.directorTextBangla)+" "+movie.getDirectorName());
+        myViewHolder.releaseDateTextView.setText(context.getResources().getString(R.string.releaseDateTextBangla) + " " + movie.getReleaseDate());
+        myViewHolder.directorTextView.setText(context.getResources().getString(R.string.directorTextBangla) + " " + movie.getDirectorName());
         StringBuilder casts = new StringBuilder();
-        for (int i = 0; i < movie.getCasts().length; i++) {
+        for (int i = 0; movie.getCasts() != null && i < movie.getCasts().length; i++) {
             casts.append(movie.getCasts()[i]);
             int indexNumber = i + 1;
             if (indexNumber != movie.getCasts().length) {
                 casts.append(",");
             }
         }
-        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla)+" "+casts.toString());
+        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla) + " " + casts.toString());
         myViewHolder.ratingTextView.setText(movie.getRating());
     }
 
@@ -105,15 +104,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!(context instanceof OfflineNewsActivity))
-                        context.startActivity(new Intent(context, DetailsActivity.class).putExtra("movie", movieList.get(getAdapterPosition()))
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                    else if (context instanceof OfflineNewsActivity) {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("offlineMovieItem", movieList.get(getAdapterPosition()));
-//                        Log.d("NEWS",newsList.get(getAdapterPosition()).toString());
-                        context.startActivity(new Intent(context, DetailsActivity.class).putExtras(bundle).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                    }
+                    context.startActivity(new Intent(context, DetailsActivity.class).putExtra("movie", movieList.get(getAdapterPosition()))
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 }
             });
 
@@ -147,14 +139,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     private void removeItem(int position, String preferenceKey) {
         Gson gson = new Gson();
-        String newsListJson = Pref.getPreferenceString(context, preferenceKey);
-        List<NewsEntity> newsList;
-        if (newsListJson != null && !newsListJson.equals("")) {
-            newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
+        String movieListJson = Pref.getPreferenceString(context, preferenceKey);
+        List<Movie> movieList;
+        if (movieListJson != null && !movieListJson.equals("")) {
+            movieList = gson.fromJson(movieListJson, new TypeToken<List<Movie>>() {
             }.getType());
-            newsList.remove(position);
-            newsListJson = gson.toJson(newsList);
-            Pref.savePreference(context, preferenceKey, newsListJson);
+            movieList.remove(position);
+            movieListJson = gson.toJson(movieList);
+            Pref.savePreference(context, preferenceKey, movieListJson);
         }
         this.remove(position);
     }

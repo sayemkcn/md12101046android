@@ -39,9 +39,9 @@
     <string name="action_change_font_size">Change Font Size</string>
     <string name="app_slogan">এখন সব খবর হাতের মুঠোয়..</string>
 
-    <string name="featured_saved_news_text">সর্বশেষ সংরক্ষিত নিউজ</string>
-    <string name="featured_your_bookmarks_text">সর্বশেষ বুকমার্কগুলো</string>
+    <string name="featured_saved_news_text">সর্বশেষ সংরক্ষিত মুভি</string>
+    <string name="featured_your_bookmarks_text">সর্বশেষ উইশলিস্টে সংযুক্তি</string>
 
-    <string name="slider_headLine_bangla">ফিচারড নিউজ</string>
-    <string name="featured_featured_news_text">আজকের ফিচার</string>
+    <string name="slider_headLine_bangla">প্রেক্ষাগৃহে চলছে</string>
+    <string name="featured_featured_news_text">প্রেক্ষাগৃহে আসন্ন</string>
 </resources>
