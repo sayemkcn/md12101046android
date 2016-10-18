@@ -80,13 +80,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    private void showOfflineMovieItem(Movie movie) {
-        if (this.progressBar.getVisibility() == View.VISIBLE) {
-            this.contentLayout.setVisibility(View.VISIBLE);
-            this.progressBar.setVisibility(View.GONE);
-        }
-        this.onResponse(movie.getDetailsResponse());
-    }
 
     private void loadNewsFromServer(final Movie movie) {
         Log.d("NEWS_DETAILS_URL", movie.getDetailsUrl());
@@ -128,9 +121,9 @@ public class DetailsActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             this.finish();
         } else if (id == R.id.action_bookmark) {
-//            this.createBookmark();
+            this.saveOffline(Pref.PREF_KEY_WISH_LIST);
         } else if (id == R.id.action_save) {
-            this.saveOffline();
+            this.saveOffline(Pref.PREF_KEY_OFFLINE_LIST);
         } else if (id == R.id.action_share) {
             Commons.share(this, "Share this news", getResources().getString(R.string.singleNewsBaseUrl) + this.movie.getId());
         }
@@ -138,12 +131,12 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
 
-    private void saveOffline() {
+    private void saveOffline(String key) {
         if (this.movie == null) {
             Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
         } else {
             Gson gson = new Gson();
-            String movieListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+            String movieListJson = Pref.getPreferenceString(this, key);
             List<Movie> movieList;
             if (movieListJson == null || movieListJson.equals("")) {
                 movieList = new ArrayList<>();
@@ -157,36 +150,17 @@ public class DetailsActivity extends AppCompatActivity {
             this.movie.setDetailsResponse(this.movie.getDetailsResponse());
             movieList.add(this.movie);
             movieListJson = gson.toJson(movieList);
-            Pref.savePreference(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST, movieListJson);
-            Commons.showSimpleToast(this, "Item saved for offline reading..");
+            Pref.savePreference(this, key, movieListJson);
+
+            String message = null;
+            if (key.equals(Pref.PREF_KEY_WISH_LIST))
+                message = getResources().getString(R.string.addedToWishlistText);
+            else if (key.equals(Pref.PREF_KEY_OFFLINE_LIST))
+                message = getResources().getString(R.string.addedToOfflineText);
+            Commons.showSimpleToast(this, message);
 //                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
         }
     }
-
-//    private void createBookmark() {
-//        if (this.movie == null) {
-//            Commons.showDialog(this, "Wait a moment!", "Please wait while this news is fully loaded!");
-//        } else {
-//            Gson gson = new Gson();
-//            String newsListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
-//            List<NewsEntity> newsList;
-//            if (newsListJson == null || newsListJson.equals("")) {
-//                newsList = new ArrayList<>();
-//                Log.d("EXECUTED", "FUCK! " + newsListJson);
-//            } else {
-//                newsList = gson.fromJson(newsListJson, new TypeToken<List<NewsEntity>>() {
-//                }.getType());
-////                    Log.d("EXECUTED", newsListJson);
-//            }
-//
-//            this.news.setDetails(this.news.getDetails().substring(0, 100) + "..");
-//            newsList.add(this.news);
-//            newsListJson = gson.toJson(newsList);
-//            Pref.savePreference(this, Pref.PREF_KEY_BOOKMARK_LIST, newsListJson);
-//            Commons.showSimpleToast(this, "Bookmark Added!");
-////                Log.d("CONVERTED_STRING", newsList.size() + "  " + newsListJson);
-//        }
-//    }
 
 
     private void onResponse(String response) {

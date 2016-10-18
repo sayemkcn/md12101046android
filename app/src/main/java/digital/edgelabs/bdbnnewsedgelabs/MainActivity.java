@@ -237,9 +237,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_bookmark) {
-            startActivity(new Intent(this, BookmarkActivity.class));
+            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key",Pref.PREF_KEY_WISH_LIST));
         } else if (id == R.id.nav_offline_news) {
-            startActivity(new Intent(this, OfflineNewsActivity.class));
+            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key",Pref.PREF_KEY_OFFLINE_LIST));
         } else if (id == R.id.nav_share) {
             Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
         }
@@ -279,8 +279,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             View rootView = null;
             switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
                 case 0:
-                    rootView = inflater.inflate(R.layout.fragment_featured,container,false);
-                    FeaturedFragmentHelper featuredFragmentHelper = new FeaturedFragmentHelper(getActivity(),rootView);
+                    rootView = inflater.inflate(R.layout.fragment_featured, container, false);
+                    FeaturedFragmentHelper featuredFragmentHelper = new FeaturedFragmentHelper(getActivity(), rootView);
                     featuredFragmentHelper.exec(getArguments().getInt(ARG_SECTION_NUMBER));
                     break;
                 default:

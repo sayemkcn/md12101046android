@@ -44,4 +44,8 @@
 
     <string name="slider_headLine_bangla">প্রেক্ষাগৃহে চলছে</string>
     <string name="featured_featured_news_text">প্রেক্ষাগৃহে আসন্ন</string>
+
+    <string name="addedToWishlistText">উইশলিস্টে যুক্ত করা হয়েছে</string>
+    <string name="addedToOfflineText">অফলাইনে সংরক্ষণ করা হয়েছে</string>
+
 </resources>

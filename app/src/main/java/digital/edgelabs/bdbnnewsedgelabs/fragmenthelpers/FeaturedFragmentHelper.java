@@ -246,7 +246,7 @@ public class FeaturedFragmentHelper {
     }
 
     private List<Movie> getOfflineNewsList() {
-        String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+        String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_OFFLINE_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
             Gson gson = new Gson();
             return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
@@ -257,7 +257,7 @@ public class FeaturedFragmentHelper {
 
 
     private List<Movie> getBookmarkedNewsList() {
-        String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_BOOKMARK_LIST);
+        String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_WISH_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
             Gson gson = new Gson();
             return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {

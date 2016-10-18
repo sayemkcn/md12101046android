@@ -39,15 +39,16 @@ public class OfflineNewsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        if (this.getMovieList() != null)
-            this.setupRecyclerView(this.getMovieList());
+        String key = getIntent().getStringExtra("key");
+        if (this.getMovieList(key) != null)
+            this.setupRecyclerView(this.getMovieList(key),key);
         else
             Commons.showDialog(this, "It's lonely here", "Seems like your haven't saved any item yet!");
 
     }
 
-    private List<Movie> getMovieList() {
-        String movieListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_OFFLINE_NEWS_LIST);
+    private List<Movie> getMovieList(String key) {
+        String movieListJson = Pref.getPreferenceString(this, key);
         if (movieListJson != null && !movieListJson.equals("")) {
             Gson gson = new Gson();
             return gson.fromJson(movieListJson, new TypeToken<List<Movie>>() {
@@ -56,9 +57,11 @@ public class OfflineNewsActivity extends AppCompatActivity {
         return null;
     }
 
-    private void setupRecyclerView(List<Movie> movieList) {
+    private void setupRecyclerView(List<Movie> movieList,String key) {
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setAdapter(new RecyclerAdapter(this, movieList));
+        RecyclerAdapter adapter = new RecyclerAdapter(this,movieList);
+        adapter.setPrefKey(key);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 

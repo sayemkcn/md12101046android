@@ -43,7 +43,7 @@ public class BookmarkActivity extends AppCompatActivity {
     }
 
     private List<Movie> getMovieList() {
-        String movieListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_BOOKMARK_LIST);
+        String movieListJson = Pref.getPreferenceString(this, Pref.PREF_KEY_WISH_LIST);
         if (movieListJson != null && !movieListJson.equals("")) {
             Gson gson = new Gson();
             return gson.fromJson(movieListJson, new TypeToken<List<Movie>>() {

@@ -31,11 +31,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     private LayoutInflater inflater;
     private List<Movie> movieList;
     private Activity context;
+    private String prefKey = null;
 
     public RecyclerAdapter(Activity context, List<Movie> movieList) {
         this.inflater = LayoutInflater.from(context);
         this.movieList = movieList;
         this.context = context;
+    }
+
+    public void setPrefKey(String prefKey){
+        this.prefKey = prefKey;
     }
 
     @Override
@@ -121,11 +126,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        if (context instanceof BookmarkActivity)
-                                            removeItem(getAdapterPosition(), Pref.PREF_KEY_BOOKMARK_LIST);
-                                        else if (context instanceof OfflineNewsActivity)
-                                            removeItem(getAdapterPosition(), Pref.PREF_KEY_OFFLINE_NEWS_LIST);
-
+                                        if (prefKey!=null)
+                                            removeItem(getAdapterPosition(), prefKey);
                                     }
                                 })
                                 .setNegativeButton("No", null)
