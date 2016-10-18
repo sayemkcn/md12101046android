@@ -37,7 +37,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         this.context = context;
     }
 
-    public void setPrefKey(String prefKey){
+    public void setPrefKey(String prefKey) {
         this.prefKey = prefKey;
     }
 
@@ -53,7 +53,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         Movie movie = this.movieList.get(position);
         Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
-        myViewHolder.releaseDateTextView.setText(context.getResources().getString(R.string.releaseDateTextBangla) + " " + movie.getReleaseDate());
+        if (movie.getReleaseDate() != null)
+            myViewHolder.releaseDateTextView.setText(movie.getReleaseDate());
+        else
+            myViewHolder.releaseDateTextView.setText(context.getResources().getString(R.string.releaseDateTextBangla) + " " + context.getResources().getString(R.string.waitingText));
+
         myViewHolder.directorTextView.setText(context.getResources().getString(R.string.directorTextBangla) + " " + movie.getDirectorName());
         StringBuilder casts = new StringBuilder();
         for (int i = 0; movie.getCasts() != null && i < movie.getCasts().length; i++) {
@@ -124,7 +128,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        if (prefKey!=null)
+                                        if (prefKey != null)
                                             removeItem(getAdapterPosition(), prefKey);
                                     }
                                 })

@@ -52,4 +52,6 @@
     <string name="offlineMoviesText">অফলাইন মুভিস</string>
     <string name="shareText">শেয়ার করুন</string>
 
+    <string name="waitingText">অপেক্ষারত</string>
+
 </resources>
