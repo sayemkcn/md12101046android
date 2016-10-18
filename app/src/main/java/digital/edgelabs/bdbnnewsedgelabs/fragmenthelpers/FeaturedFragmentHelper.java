@@ -291,5 +291,8 @@ public class FeaturedFragmentHelper {
             }
 
         }
+
+        // set visibility
+        this.sliderLayout.setVisibility(View.VISIBLE);
     }
 }

@@ -6,20 +6,20 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@mipmap/ic_home_black_24dp"
-            android:title="Home" />
+            android:title="@string/homeText" />
         <item
             android:id="@+id/nav_bookmark"
             android:icon="@mipmap/ic_bookmark_white_24dp"
-            android:title="My Bookmarks" />
+            android:title="@string/wishlistText" />
         <item
             android:id="@+id/nav_offline_news"
             android:icon="@mipmap/ic_save_white_24dp"
-            android:title="Offline News" />
+            android:title="@string/offlineMoviesText" />
 
         <item
             android:id="@+id/nav_share"
             android:icon="@mipmap/ic_action_share"
-            android:title="Share" />
+            android:title="@string/shareText" />
 
     </group>
 

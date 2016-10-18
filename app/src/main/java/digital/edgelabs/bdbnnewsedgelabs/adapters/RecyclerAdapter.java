@@ -19,13 +19,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-import digital.edgelabs.bdbnnewsedgelabs.BookmarkActivity;
 import digital.edgelabs.bdbnnewsedgelabs.DetailsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.OfflineNewsActivity;
 import digital.edgelabs.bdbnnewsedgelabs.R;
 import digital.edgelabs.bdbnnewsedgelabs.commons.Pref;
 import digital.edgelabs.bdbnnewsedgelabs.entity.Movie;
-import digital.edgelabs.bdbnnewsedgelabs.entity.NewsEntity;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
@@ -115,7 +113,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             });
 
             // to delete item
-            if (context instanceof BookmarkActivity || context instanceof OfflineNewsActivity) {
+            if (context instanceof OfflineNewsActivity) {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {

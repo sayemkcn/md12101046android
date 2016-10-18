@@ -35,7 +35,7 @@
     <string name="message_loading">লোড হচ্ছে...</string>
     <string name="title_activity_bookmark">আমার বুকমার্কগুলো</string>
     <string name="action_save">Save Offline</string>
-    <string name="title_activity_offline_news">অফলাইন নিউজ</string>
+    <string name="title_activity_offline_news"></string>
     <string name="action_change_font_size">Change Font Size</string>
     <string name="app_slogan">এখন সব খবর হাতের মুঠোয়..</string>
 
@@ -47,5 +47,9 @@
 
     <string name="addedToWishlistText">উইশলিস্টে যুক্ত করা হয়েছে</string>
     <string name="addedToOfflineText">অফলাইনে সংরক্ষণ করা হয়েছে</string>
+    <string name="homeText">হোম</string>
+    <string name="wishlistText">উইশলিস্ট</string>
+    <string name="offlineMoviesText">অফলাইন মুভিস</string>
+    <string name="shareText">শেয়ার করুন</string>
 
 </resources>
