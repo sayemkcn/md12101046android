@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="digital.edgelabs.bdbnnewsedgelabs.BookmarkActivity"
+    tools:context="net.toracode.moviedb.BookmarkActivity"
     tools:showIn="@layout/activity_bookmark">
 
     <android.support.v7.widget.RecyclerView

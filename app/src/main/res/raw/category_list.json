@@ -7,14 +7,14 @@
   },
   {
     "categoryId": 1,
-    "categoryName": "আসিতেছে",
-    "iconUrl": "http://www.chtnews24.com/uploads/1455604656.jpg",
+    "categoryName": "আসছে",
+    "iconUrl": "http://i.imgur.com/Y2LOpi3.png",
     "accentColorCode": "#ac93d7"
   },
   {
     "categoryId": 2,
-    "categoryName": "চলিতেছে",
-    "iconUrl": "http://primenews.com.bd/bn/wp-content/uploads/2016/02/sunny-15-02-16.jpg",
+    "categoryName": "থিয়েটারে চলছে",
+    "iconUrl": "http://i.imgur.com/zyEFTn5.jpg",
     "accentColorCode": "#bf73cd"
   }
 

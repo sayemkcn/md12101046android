@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "digital.edgelabs.bdbnnewsedgelabs"
+        applicationId "net.toracode.moviedb"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
