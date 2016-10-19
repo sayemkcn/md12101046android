@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.CategoryEntity;
@@ -85,10 +87,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean isUserRegistered = false;
 
+    InterstitialAd interstitial;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Interstitial ad load
+
+        // Create the interstitial.
+        interstitial = new InterstitialAd(this);
+        interstitial.setAdUnitId(getResources().getString(R.string.intertitial_ad_unit_id));
+
+        // Create ad request.
+        AdRequest intAdRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(getResources().getString(R.string.device_id))
+                .build();
+
+        // Begin loading your interstitial.
+        interstitial.loadAd(intAdRequest);
+
+        // End Loading Interstitial
 
         // init ButterKnife
         ButterKnife.bind(this);
@@ -129,6 +150,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPageSelected(int position) {
+
+                // show interstitial
+                if (interstitial.isLoaded())
+                    interstitial.show();
+                // end
+
                 Pref.savePreference(MainActivity.this, "page_number", position);
 
                 collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
