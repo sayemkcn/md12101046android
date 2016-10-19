@@ -3,16 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_font_size"
-        android:icon="@mipmap/ic_font_download_white_24dp"
-        android:title="@string/action_change_font_size"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_share"
-        android:icon="@mipmap/ic_share_white_24dp"
-        android:title="@string/action_share"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_bookmark"
         android:icon="@mipmap/ic_bookmark_white_24dp"
         android:title="@string/action_bookmark_this"

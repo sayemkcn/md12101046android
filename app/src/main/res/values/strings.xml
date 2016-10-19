@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">BMDB</string>
-    <string name="app_url">https://play.google.com/store/apps/details?id=digital.edgelabs.bdbnnewsedgelabs</string>
+    <string name="app_name">মুভি ডেটাবেজ - বাংলা</string>
+    <string name="app_slogan">হ্যাঁ ভাই, বাংলা নতুন মুভির খবরাখবর জানুন..</string>
+    <string name="app_base_url">https://play.google.com/store/apps/details?id=</string>
+    <string name="shareAppText">সব ধরনের মুভির খবরাখবর বিস্তারিত জানুন সম্পূর্ন বাংলাতে..</string>
 
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
@@ -37,7 +39,6 @@
     <string name="action_save">Save Offline</string>
     <string name="title_activity_offline_news"></string>
     <string name="action_change_font_size">Change Font Size</string>
-    <string name="app_slogan">এখন সব খবর হাতের মুঠোয়..</string>
 
     <string name="featured_saved_text">সর্বশেষ সংরক্ষিত মুভি</string>
     <string name="featured_your_wishlist_text">সর্বশেষ উইশলিস্টে সংযুক্তি</string>

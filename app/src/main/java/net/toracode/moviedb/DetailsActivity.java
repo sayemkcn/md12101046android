@@ -3,11 +3,13 @@ package net.toracode.moviedb;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -124,8 +126,6 @@ public class DetailsActivity extends AppCompatActivity {
             this.saveOffline(Pref.PREF_KEY_WISH_LIST);
         } else if (id == R.id.action_save) {
             this.saveOffline(Pref.PREF_KEY_OFFLINE_LIST);
-        } else if (id == R.id.action_share) {
-            Commons.share(this, "Share this news", getResources().getString(R.string.singleNewsBaseUrl) + this.movie.getId());
         }
         return super.onOptionsItemSelected(item);
     }

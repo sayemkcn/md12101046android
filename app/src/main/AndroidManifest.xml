@@ -22,10 +22,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="net.toracode.moviedb.PreferenceActivity"
-            android:label="@string/title_activity_preference"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name="net.toracode.moviedb.DetailsActivity"
             android:label="@string/title_activity_details"
             android:theme="@style/AppTheme.NoActionBar" />

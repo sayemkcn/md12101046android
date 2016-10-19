@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
+            Commons.share(this, "Share this app", getResources().getString(R.string.shareAppText)+" " + getResources().getString(R.string.app_base_url)+getApplication().getPackageName());
         } else if (id == R.id.action_about) {
             Commons.showDevDialog(this);
             return true;
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_offline_news) {
             startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
         } else if (id == R.id.nav_share) {
-            Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
+            Commons.share(this, "Share this app", getResources().getString(R.string.shareAppText)+" " + getResources().getString(R.string.app_base_url)+getApplication().getPackageName());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
