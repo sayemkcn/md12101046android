@@ -1,9 +1,12 @@
 package net.toracode.moviedb.service;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -233,5 +236,19 @@ public class Commons {
         sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         sendIntent.setType("text/plain");
         context.startActivity(Intent.createChooser(sendIntent, title));
+    }
+    public static void showDevDialog(final Activity context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Dev")
+                .setIcon(R.mipmap.ic_launcher)
+                .setMessage("Sayem Hossain")
+                .setPositiveButton("OK", null)
+                .setNegativeButton("CONTACT DEV", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/SAyEM.RimOn"));
+                        context.startActivity(browserIntent);
+                    }
+                }).show();
     }
 }

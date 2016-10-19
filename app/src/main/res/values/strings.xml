@@ -53,5 +53,6 @@
     <string name="shareText">শেয়ার করুন</string>
 
     <string name="waitingText">অপেক্ষারত</string>
+    <string name="action_about">About</string>
 
 </resources>

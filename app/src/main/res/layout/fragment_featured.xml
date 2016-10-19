@@ -156,7 +156,7 @@
                 android:layout_height="200dp"
                 android:background="@android:color/white"
                 android:gravity="center"
-                android:text="Bookmarks Empty!"
+                android:text="Wishlist Empty!"
                 android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView

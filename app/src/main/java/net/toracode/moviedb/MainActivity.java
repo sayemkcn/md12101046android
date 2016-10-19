@@ -26,6 +26,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import net.toracode.moviedb.commons.Pref;
+import net.toracode.moviedb.entity.CategoryEntity;
+import net.toracode.moviedb.events.UserCategoryLoadEvent;
+import net.toracode.moviedb.fragmenthelpers.FeaturedFragmentHelper;
+import net.toracode.moviedb.fragmenthelpers.MainFragmentHelper;
+import net.toracode.moviedb.service.Commons;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -42,12 +49,6 @@ import java.util.List;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import net.toracode.moviedb.commons.Pref;
-import net.toracode.moviedb.entity.CategoryEntity;
-import net.toracode.moviedb.events.UserCategoryLoadEvent;
-import net.toracode.moviedb.fragmenthelpers.FeaturedFragmentHelper;
-import net.toracode.moviedb.fragmenthelpers.MainFragmentHelper;
-import net.toracode.moviedb.service.Commons;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -224,8 +225,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
             Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
-        } else if (id == R.id.action_settings) {
-            this.startActivity(new Intent(this, PreferenceActivity.class));
+        } else if (id == R.id.action_about) {
+            Commons.showDevDialog(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -237,9 +238,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_bookmark) {
-            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key",Pref.PREF_KEY_WISH_LIST));
+            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
         } else if (id == R.id.nav_offline_news) {
-            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key",Pref.PREF_KEY_OFFLINE_LIST));
+            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
         } else if (id == R.id.nav_share) {
             Commons.share(this, "Share this app", "Download BDBN.NEWS aggregator for android " + getResources().getString(R.string.app_url));
         }
