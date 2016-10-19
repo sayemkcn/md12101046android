@@ -160,6 +160,7 @@ public class FeaturedFragmentHelper {
         this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context,movieList));
         this.featuredFeaturedRecyclerView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
         this.featuredNewsLayout.setVisibility(View.VISIBLE);
+        this.featuredFeaturedRecyclerView.setNestedScrollingEnabled(false);
     }
 
 
