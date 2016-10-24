@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +24,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.ui.AccountKitActivity;
+import com.facebook.accountkit.ui.AccountKitConfiguration;
+import com.facebook.accountkit.ui.LoginType;
 
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.CategoryEntity;
@@ -56,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String[] categories;
     @BindArray(R.array.colors)
     String[] colors;
+
+    public static int APP_REQUEST_CODE = 99;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -93,6 +103,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // init ButterKnife
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
+
+        // FACEBOOK ACCOUNT KIT
+        AccessToken accessToken = AccountKit.getCurrentAccessToken();
+
+        if (accessToken != null) {
+            //Handle Returning User
+            Log.d("ACCOUNT_KIT","LoggedIn");
+        } else {
+            //Handle new or logged out user
+            this.onLoginPhone();
+        }
 
         // load user custom CategoryList
         if (this.isUserRegistered)
@@ -148,7 +169,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
     }
+    // *******ACCOUNT KIT FACEBOOK *******//
+    public void onLoginPhone() {
+        final Intent intent = new Intent(this, AccountKitActivity.class);
+        AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
+                new AccountKitConfiguration.AccountKitConfigurationBuilder(
+                        LoginType.PHONE,
+                        AccountKitActivity.ResponseType.TOKEN); // or .ResponseType.TOKEN
+        // ... perform additional configuration ...
+        intent.putExtra(
+                AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
+                configurationBuilder.build());
+        startActivityForResult(intent, APP_REQUEST_CODE);
+    }
 
+    @Override
+    protected void onActivityResult(
+            final int requestCode,
+            final int resultCode,
+            final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == APP_REQUEST_CODE) { // confirm that this response matches your request
+            AccountKitLoginResult loginResult = data.getParcelableExtra(AccountKitLoginResult.RESULT_KEY);
+            String toastMessage;
+            if (loginResult.getError() != null) {
+                toastMessage = loginResult.getError().getErrorType().getMessage();
+//                showErrorActivity(loginResult.getError());
+            } else if (loginResult.wasCancelled()) {
+                toastMessage = "Login Cancelled";
+            } else {
+                if (loginResult.getAccessToken() != null) {
+                    toastMessage = "Success:" + loginResult.getAccessToken().getAccountId();
+
+                    //**********LOGGED IN********//
+                    // SEND REQUEST WITH THIS ACCOUNT ID //
+                    Log.d("AUTH_TOKEN",loginResult.getAccessToken().getAccountId());
+                } else {
+                    toastMessage = String.format(
+                            "Success:%s...",
+                            loginResult.getAuthorizationCode().substring(0,10));
+                    Log.d("AUTH_CODE",loginResult.getAuthorizationCode());
+
+                }
+
+                // If you have an authorization code, retrieve it from
+                // loginResult.getAuthorizationCode()
+                // and pass it to your server and exchange it for an access token.
+
+                // Success! Start your next activity...
+//                goToMyLoggedInActivity();
+            }
+
+            // Surface the result to your user in an appropriate way.
+            Toast.makeText(
+                    this,
+                    toastMessage,
+                    Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
+    // **********END FACEBOOK ACCOUNT KIT //
     private String getCategoryListFromResource() {
         InputStream is = getResources().openRawResource(R.raw.category_list);
         Writer writer = new StringWriter();
