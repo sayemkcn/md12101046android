@@ -60,4 +60,5 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.facebook.android:account-kit-sdk:4.+'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
 }

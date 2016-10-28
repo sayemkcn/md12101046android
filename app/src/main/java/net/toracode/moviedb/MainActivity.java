@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.accountkit.AccessToken;
@@ -40,6 +39,7 @@ import net.toracode.moviedb.events.UserCategoryLoadEvent;
 import net.toracode.moviedb.fragmenthelpers.FeaturedFragmentHelper;
 import net.toracode.moviedb.fragmenthelpers.MainFragmentHelper;
 import net.toracode.moviedb.service.Commons;
+import net.toracode.moviedb.service.ResourceProvider;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -57,6 +57,7 @@ import java.util.List;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (accessToken != null) {
             //Handle Returning User
-            Log.d("ACCOUNT_KIT","LoggedIn");
+            Log.d("ACCOUNT_KIT", "LoggedIn");
         } else {
             //Handle new or logged out user
             this.onLoginPhone();
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
     }
+
     // *******ACCOUNT KIT FACEBOOK *******//
     public void onLoginPhone() {
         final Intent intent = new Intent(this, AccountKitActivity.class);
@@ -191,24 +193,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == APP_REQUEST_CODE) { // confirm that this response matches your request
             AccountKitLoginResult loginResult = data.getParcelableExtra(AccountKitLoginResult.RESULT_KEY);
-            String toastMessage;
+
             if (loginResult.getError() != null) {
-                toastMessage = loginResult.getError().getErrorType().getMessage();
+                Commons.showSimpleToast(this, loginResult.getError().getErrorType().getMessage());
 //                showErrorActivity(loginResult.getError());
             } else if (loginResult.wasCancelled()) {
-                toastMessage = "Login Cancelled";
+                Commons.showSimpleToast(getApplicationContext(),"Not cool man! not cool!");
             } else {
                 if (loginResult.getAccessToken() != null) {
-                    toastMessage = "Success:" + loginResult.getAccessToken().getAccountId();
-
                     //**********LOGGED IN********//
                     // SEND REQUEST WITH THIS ACCOUNT ID //
-                    Log.d("AUTH_TOKEN",loginResult.getAccessToken().getAccountId());
+                    registerUser(loginResult);
+//                    Log.d("AUTH_TOKEN", loginResult.getAccessToken().getAccountId());
                 } else {
-                    toastMessage = String.format(
-                            "Success:%s...",
-                            loginResult.getAuthorizationCode().substring(0,10));
-                    Log.d("AUTH_CODE",loginResult.getAuthorizationCode());
+                    Commons.showSimpleToast(getApplicationContext(), "Success:%s..." +
+                            loginResult.getAuthorizationCode().substring(0, 10));
+                    Log.d("AUTH_CODE", loginResult.getAuthorizationCode());
 
                 }
 
@@ -220,14 +220,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                goToMyLoggedInActivity();
             }
 
-            // Surface the result to your user in an appropriate way.
-            Toast.makeText(
-                    this,
-                    toastMessage,
-                    Toast.LENGTH_LONG)
-                    .show();
         }
     }
+
+    // registers user with account kit account id
+    private void registerUser(final AccountKitLoginResult loginResult) {
+        final String url = getResources().getString(R.string.baseUrl) + "user/"
+                + loginResult.getAccessToken().getAccountId() + "?name=&email=";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Response response = new ResourceProvider(MainActivity.this).fetchPostResponse(url);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
+                                Pref.savePreference(MainActivity.this, Pref.PREF_ACCOUNT_ID, loginResult.getAccessToken().getAccountId());
+                                Commons.showSimpleToast(getApplicationContext(), "Registration successful!!");
+                            } else if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
+                                Pref.savePreference(MainActivity.this, Pref.PREF_ACCOUNT_ID, loginResult.getAccessToken().getAccountId());
+                                Commons.showSimpleToast(getApplicationContext(), "Registration successful!!");
+                            }
+                        }
+                    });
+                    Log.d("RESPONSE", response.toString());
+                } catch (IOException e) {
+                    Log.e("EXCEPTION", e.toString());
+                }
+            }
+        }).start();
+
+    }
+
     // **********END FACEBOOK ACCOUNT KIT //
     private String getCategoryListFromResource() {
         InputStream is = getResources().openRawResource(R.raw.category_list);
@@ -304,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_share) {
-            Commons.share(this, "Share this app", getResources().getString(R.string.shareAppText)+" " + getResources().getString(R.string.app_base_url)+getApplication().getPackageName());
+            Commons.share(this, "Share this app", getResources().getString(R.string.shareAppText) + " " + getResources().getString(R.string.app_base_url) + getApplication().getPackageName());
         } else if (id == R.id.action_about) {
             Commons.showDevDialog(this);
             return true;
@@ -322,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_offline_news) {
             startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
         } else if (id == R.id.nav_share) {
-            Commons.share(this, "Share this app", getResources().getString(R.string.shareAppText)+" " + getResources().getString(R.string.app_base_url)+getApplication().getPackageName());
+            Commons.share(this, "Share this app", getResources().getString(R.string.shareAppText) + " " + getResources().getString(R.string.app_base_url) + getApplication().getPackageName());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
