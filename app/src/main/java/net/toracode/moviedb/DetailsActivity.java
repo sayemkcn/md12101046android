@@ -3,13 +3,11 @@ package net.toracode.moviedb;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,7 +32,7 @@ import butterknife.ButterKnife;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Movie;
 import net.toracode.moviedb.service.Commons;
-import net.toracode.moviedb.service.NewsProvider;
+import net.toracode.moviedb.service.ResourceProvider;
 
 public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.detailsImageView)
@@ -90,7 +88,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void run() {
                 synchronized (this) {
                     try {
-                        final String response = new NewsProvider(DetailsActivity.this).fetchNews(getResources().getString(R.string.baseUrl) + movie.getDetailsUrl());
+                        final String response = new ResourceProvider(DetailsActivity.this).fetchData(getResources().getString(R.string.baseUrl) + movie.getDetailsUrl());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

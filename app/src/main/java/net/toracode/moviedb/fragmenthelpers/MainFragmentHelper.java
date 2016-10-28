@@ -27,7 +27,7 @@ import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.RecyclerAdapter;
 import net.toracode.moviedb.entity.Movie;
 import net.toracode.moviedb.service.Commons;
-import net.toracode.moviedb.service.NewsProvider;
+import net.toracode.moviedb.service.ResourceProvider;
 
 /**
  * Created by sayemkcn on 8/10/16.
@@ -73,7 +73,7 @@ public class MainFragmentHelper {
                 synchronized (this) {
                     try {
                         final String url = buildUrl(context, vpPageNumber, pageIndex);
-                        final String response = new NewsProvider(context).fetchNews(url);
+                        final String response = new ResourceProvider(context).fetchData(url);
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
