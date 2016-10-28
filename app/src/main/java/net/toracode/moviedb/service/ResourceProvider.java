@@ -13,21 +13,21 @@ import okhttp3.Response;
 /**
  * Created by sayemkcn on 8/10/16.
  */
-public class NewsProvider {
+public class ResourceProvider {
 
     private Activity context;
     private String response = null;
 
-    public NewsProvider(Activity context) {
+    public ResourceProvider(Activity context) {
         this.context = context;
     }
 
-    public String fetchNews(String url) throws IOException {
+    public String fetchData(String url) throws IOException {
 //        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 //            @Override
 //            public void onResponse(String response) {
 ////                EventBus.getDefault().post(new UserCategoryLoadEvent(response));
-//                NewsProvider.this.response = response;
+//                ResourceProvider.this.response = response;
 //            }
 //        }, new Response.ErrorListener() {
 //            @Override

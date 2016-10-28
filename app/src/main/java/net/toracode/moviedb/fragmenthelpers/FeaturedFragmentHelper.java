@@ -35,7 +35,7 @@ import net.toracode.moviedb.commons.CustomSliderView;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.commons.SliderChildAnimator;
 import net.toracode.moviedb.entity.Movie;
-import net.toracode.moviedb.service.NewsProvider;
+import net.toracode.moviedb.service.ResourceProvider;
 
 /**
  * Created by sayemkcn on 8/10/16.
@@ -98,7 +98,7 @@ public class FeaturedFragmentHelper {
             public void run() {
                 final String url = context.getResources().getString(R.string.featuredNewsUrl);
                 try {
-                    final String response = new NewsProvider(context).fetchNews(url);
+                    final String response = new ResourceProvider(context).fetchData(url);
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -118,7 +118,7 @@ public class FeaturedFragmentHelper {
             public void run() {
                 final String url = context.getResources().getString(R.string.sliderNewsUrl);
                 try {
-                    final String response = new NewsProvider(context).fetchNews(url);
+                    final String response = new ResourceProvider(context).fetchData(url);
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
