@@ -7,13 +7,13 @@
   },
   {
     "categoryId": 1,
-    "categoryName": "আসছে",
+    "categoryName": "মুভি",
     "iconUrl": "http://i.imgur.com/Y2LOpi3.png",
     "accentColorCode": "#ac93d7"
   },
   {
     "categoryId": 2,
-    "categoryName": "থিয়েটারে চলছে",
+    "categoryName": "টিভি সিরিজ",
     "iconUrl": "http://i.imgur.com/zyEFTn5.jpg",
     "accentColorCode": "#bf73cd"
   }

@@ -14,8 +14,8 @@
 
     <string-array name="categories">
         <item>featured</item>
-        <item>upcoming</item>
-        <item>running</item>
+        <item>movie</item>
+        <item>tvseries</item>
     </string-array>
     <string-array name="colors">
         <item>#23FFFF</item>
