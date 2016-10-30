@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +17,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.List;
-
 import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.OfflineNewsActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Movie;
+import net.toracode.moviedb.entity.Person;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
@@ -52,25 +53,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         Movie movie = this.movieList.get(position);
-        Log.i("IMAGE_URL",movie.getImageUrl());
         Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
         if (movie.getReleaseDate() != null)
-            myViewHolder.releaseDateTextView.setText(movie.getCreated().toString());
+            myViewHolder.releaseDateTextView.setText(context.getString(R.string.releaseDateTextBangla) + " " + sdf.format(movie.getReleaseDate()));
         else
-            myViewHolder.releaseDateTextView.setText(movie.getLastUpdated().toString());
+            myViewHolder.releaseDateTextView.setText(context.getResources().getString(R.string.waitingText));
 
-        myViewHolder.directorTextView.setText(context.getResources().getString(R.string.directorTextBangla) + " " + movie.getProductionHouse());
-        StringBuilder casts = new StringBuilder();
-        for (int i = 0; movie.getCastAndCrewList() != null && i < movie.getCastAndCrewList().size(); i++) {
-            casts.append(movie.getCastAndCrewList().get(i));
-            int indexNumber = i + 1;
-            if (indexNumber != movie.getCastAndCrewList().size()) {
-                casts.append(",");
-            }
-        }
-        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla) + " " + casts.toString());
-        myViewHolder.ratingTextView.setText(movie.getRated()+"");
+        myViewHolder.industryTextView.setText(movie.getIndustry());
+        myViewHolder.genereTextView.setText(movie.getGenere());
+        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla) + "\n" + this.getCommaSeperatedCastsString(movie.getCastAndCrewList()));
+        myViewHolder.filmRatingTextView.setText(context.getString(R.string.filmRatingText) + " " + movie.getRated());
     }
 
     @Override
@@ -90,25 +84,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         ImageView imageView;
         TextView titleTextView;
         TextView releaseDateTextView;
-        TextView directorTextView;
+        TextView industryTextView;
+        TextView genereTextView;
         TextView castsTextView;
-        TextView ratingTextView;
+        TextView filmRatingTextView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
-            directorTextView = (TextView) itemView.findViewById(R.id.directorTextView);
+            industryTextView = (TextView) itemView.findViewById(R.id.industryTextView);
             castsTextView = (TextView) itemView.findViewById(R.id.castsTextView);
             releaseDateTextView = (TextView) itemView.findViewById(R.id.releaseDateTextView);
-            ratingTextView = (TextView) itemView.findViewById(R.id.ratingTextView);
+            filmRatingTextView = (TextView) itemView.findViewById(R.id.filmRatingTextView);
+            genereTextView = (TextView) itemView.findViewById(R.id.genereTextView);
 
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
             titleTextView.setTypeface(typeface);
-            directorTextView.setTypeface(typeface);
+            industryTextView.setTypeface(typeface);
             castsTextView.setTypeface(typeface);
             releaseDateTextView.setTypeface(typeface);
-            ratingTextView.setTypeface(typeface);
+            filmRatingTextView.setTypeface(typeface);
+            genereTextView.setTypeface(typeface);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,5 +152,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             Pref.savePreference(context, preferenceKey, movieListJson);
         }
         this.remove(position);
+    }
+
+    private String getCommaSeperatedCastsString(List<Person> personList) {
+        StringBuilder casts = new StringBuilder();
+        for (int i = 0; personList != null && i < personList.size(); i++) {
+            Person cast = personList.get(i);
+            casts.append(cast.getName());
+            int indexNumber = i + 1;
+            if (indexNumber != personList.size()) {
+                casts.append(",");
+            }
+        }
+        return casts.toString();
     }
 }

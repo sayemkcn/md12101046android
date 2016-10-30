@@ -55,5 +55,6 @@
 
     <string name="waitingText">অপেক্ষারত</string>
     <string name="action_about">About</string>
+    <string name="filmRatingText">"ফিল্ম রেটিং: "</string>
 
 </resources>
