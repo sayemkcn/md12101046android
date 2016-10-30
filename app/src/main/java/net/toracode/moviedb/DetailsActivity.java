@@ -18,9 +18,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import net.toracode.moviedb.commons.Pref;
+import net.toracode.moviedb.entity.Movie;
+import net.toracode.moviedb.fragmants.ReviewFragment;
+import net.toracode.moviedb.service.Commons;
+import net.toracode.moviedb.service.ResourceProvider;
+
 import org.json.JSONException;
 import org.jsoup.Jsoup;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -29,10 +34,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import net.toracode.moviedb.commons.Pref;
-import net.toracode.moviedb.entity.Movie;
-import net.toracode.moviedb.service.Commons;
-import net.toracode.moviedb.service.ResourceProvider;
 
 public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.detailsImageView)
@@ -52,6 +53,8 @@ public class DetailsActivity extends AppCompatActivity {
     View contentLayout;
     @BindView(R.id.detailsProgressBar)
     ProgressBar progressBar;
+    @BindView(R.id.reviewFragmentContainer)
+    View reviewFragmentContainer;
 
     private Movie movie;
 
@@ -78,6 +81,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         this.updateViews(this.movie);
 //        this.loadNewsFromServer(movie);
+        getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer,ReviewFragment.newInstance("","")).commit();
 
     }
 
@@ -88,7 +92,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void run() {
                 synchronized (this) {
                     try {
-                        final String response = new ResourceProvider(DetailsActivity.this).fetchData(getResources().getString(R.string.baseUrl) +"movie/" + movie.getUniqueId());
+                        final String response = new ResourceProvider(DetailsActivity.this).fetchData(getResources().getString(R.string.baseUrl) + "movie/" + movie.getUniqueId());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -186,7 +190,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void parseData(String response) throws JSONException, ParseException {
         try {
             Gson gson = new Gson();
-            this.movie = gson.fromJson(response,Movie.class);
+            this.movie = gson.fromJson(response, Movie.class);
             this.updateViews(this.movie);
         } catch (Exception e) {
             Log.e("JSOUP_PARSE", e.getMessage());
