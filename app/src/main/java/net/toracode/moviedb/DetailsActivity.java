@@ -81,7 +81,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         this.updateViews(this.movie);
 //        this.loadNewsFromServer(movie);
-        getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer,ReviewFragment.newInstance("","")).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer,ReviewFragment.newInstance(movie.getUniqueId())).commit();
 
     }
 

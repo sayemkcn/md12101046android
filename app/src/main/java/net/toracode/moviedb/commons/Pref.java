@@ -20,7 +20,6 @@ public class Pref {
 
         prefEditor.putBoolean(key, value);
         prefEditor.apply();
-
     }
 
     public static boolean getPreference(Context context, String key) {
