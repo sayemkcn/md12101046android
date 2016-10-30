@@ -10,24 +10,33 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.github.johnpersano.supertoasts.library.SuperToast;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.ButterKnife;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.RecyclerAdapter;
 import net.toracode.moviedb.entity.Movie;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by sayemkcn on 8/10/16.
@@ -40,7 +49,7 @@ public class MainFragmentHelper {
 
     private Button moreButton;
 
-    private int pageIndex = 1;
+    private int pageIndex = 0;
     private int pageSize = 10;
     private List<Movie> movieList = new ArrayList<>();
     private SuperToast toast;
@@ -102,8 +111,9 @@ public class MainFragmentHelper {
         String[] categories = context.getResources().getStringArray(R.array.categories);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(context.getResources().getString(R.string.baseUrl))
+                .append("movie/type/")
                 .append(categories[vpPageNumber])
-                .append("/page/" + pageIndex);
+                .append("?page=" + pageIndex + "&size=" + pageSize);
         return stringBuilder.toString();
     }
 
@@ -165,54 +175,32 @@ public class MainFragmentHelper {
     }
 
     private List<Movie> parseJson(String response) throws JSONException, ParseException {
+//        Log.i("RESPONSE",response);
         try {
-            // FILL UP MOVIE LIST
-            Document document = Jsoup.parseBodyFragment(response);
-            Element body = document.body();
-            Elements homeBoxes = body.getElementsByClass("home-box");
-            // for every posts
-            for (int i = 0; i < homeBoxes.size(); i++) {
-                if (i != 0) {
-                    Movie movie = new Movie();
-                    String imgUrl = homeBoxes.get(i).getElementsByTag("img").get(0).attr("src");
-                    String name = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").text();
-                    String detailsUrl = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").attr("href");
-                    Elements metaElements = homeBoxes.get(i).getElementsByTag("ul").get(0).getElementsByTag("li");
-                    String directorName = null;
-                    Elements castsElements = null;
-                    String releaseDate = null;
-                    String rating = null;
-                    if (metaElements.size() == 2) {
-                        directorName = metaElements.get(0).getElementsByTag("a").text();
-                        castsElements = metaElements.get(1).getElementsByTag("a");
-                    } else if (metaElements.size() == 3) {
-                        castsElements = metaElements.get(1).getElementsByTag("a");
-                        releaseDate = metaElements.get(0).text();
-                        rating = metaElements.get(2).text();
-                    } else if (metaElements.size() == 4) {
-                        directorName = metaElements.get(1).getElementsByTag("a").text();
-                        castsElements = metaElements.get(2).getElementsByTag("a");
-                        releaseDate = metaElements.get(0).text();
-                        rating = metaElements.get(3).text();
-                    }
-                    String[] casts = new String[castsElements.size()];
-                    for (int j = 0; j < castsElements.size() && j < casts.length; j++)
-                        casts[j] = castsElements.get(j).text();
+            // Creates the json object which will manage the information received
+            GsonBuilder builder = new GsonBuilder();
 
-
-                    movie.setImageUrl(imgUrl);
-                    movie.setName(name);
-                    movie.setDetailsUrl(detailsUrl);
-                    movie.setDirectorName(directorName);
-                    movie.setCasts(casts);
-                    movie.setReleaseDate(releaseDate);
-                    movie.setRating(rating);
-
-                    this.movieList.add(movie);
+            // Register an adapter to manage the date types as long values
+            builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+                public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    return new Date(json.getAsJsonPrimitive().getAsLong());
                 }
+            });
+
+            Gson gson = builder.create();
+            JSONArray jsonArray = new JSONArray(response);
+            for (int i=0;i<jsonArray.length();i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                Movie movie = gson.fromJson(jsonObject.toString(),Movie.class);
+                movie.setImageUrl(context.getResources().getString(R.string.baseUrl)+"movie/image/"+movie.getUniqueId());
+                this.movieList.add(movie);
             }
+
+//            Type listType = new TypeToken<List<Movie>>() {
+//            }.getType();
+//            this.movieList = gson.fromJson(response, listType);
         } catch (Exception e) {
-            Log.e("CAN_NOT_PARSE", e.getMessage());
+            Log.e("CAN_NOT_PARSE", e.toString());
         }
         return this.movieList;
     }

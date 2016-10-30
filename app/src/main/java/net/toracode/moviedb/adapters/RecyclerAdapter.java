@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,24 +52,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         Movie movie = this.movieList.get(position);
+        Log.i("IMAGE_URL",movie.getImageUrl());
         Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
         if (movie.getReleaseDate() != null)
-            myViewHolder.releaseDateTextView.setText(movie.getReleaseDate());
+            myViewHolder.releaseDateTextView.setText(movie.getCreated().toString());
         else
-            myViewHolder.releaseDateTextView.setText(context.getResources().getString(R.string.releaseDateTextBangla) + " " + context.getResources().getString(R.string.waitingText));
+            myViewHolder.releaseDateTextView.setText(movie.getLastUpdated().toString());
 
-        myViewHolder.directorTextView.setText(context.getResources().getString(R.string.directorTextBangla) + " " + movie.getDirectorName());
+        myViewHolder.directorTextView.setText(context.getResources().getString(R.string.directorTextBangla) + " " + movie.getProductionHouse());
         StringBuilder casts = new StringBuilder();
-        for (int i = 0; movie.getCasts() != null && i < movie.getCasts().length; i++) {
-            casts.append(movie.getCasts()[i]);
+        for (int i = 0; movie.getCastAndCrewList() != null && i < movie.getCastAndCrewList().size(); i++) {
+            casts.append(movie.getCastAndCrewList().get(i));
             int indexNumber = i + 1;
-            if (indexNumber != movie.getCasts().length) {
+            if (indexNumber != movie.getCastAndCrewList().size()) {
                 casts.append(",");
             }
         }
         myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla) + " " + casts.toString());
-        myViewHolder.ratingTextView.setText(movie.getRating());
+        myViewHolder.ratingTextView.setText(movie.getRated()+"");
     }
 
     @Override

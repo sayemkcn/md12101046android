@@ -82,13 +82,12 @@ public class DetailsActivity extends AppCompatActivity {
 
 
     private void loadNewsFromServer(final Movie movie) {
-        Log.d("NEWS_DETAILS_URL", movie.getDetailsUrl());
         new Thread(new Runnable() {
             @Override
             public void run() {
                 synchronized (this) {
                     try {
-                        final String response = new ResourceProvider(DetailsActivity.this).fetchData(getResources().getString(R.string.baseUrl) + movie.getDetailsUrl());
+                        final String response = new ResourceProvider(DetailsActivity.this).fetchData(getResources().getString(R.string.baseUrl) +"movie/" + movie.getUniqueId());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -145,7 +144,7 @@ public class DetailsActivity extends AppCompatActivity {
 //                    Log.d("EXECUTED", newsListJson);
             }
 
-            this.movie.setDetailsResponse(this.movie.getDetailsResponse());
+//            this.movie.setDetailsResponse(this.movie.getDetailsResponse());
             movieList.add(this.movie);
             movieListJson = gson.toJson(movieList);
             Pref.savePreference(this, key, movieListJson);
@@ -185,27 +184,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void parseData(String response) throws JSONException, ParseException {
         try {
-            /// PARSE DATA AND UPDATE VIEW
-            Elements elements = Jsoup.parseBodyFragment(response).body().getElementsByClass("home-box").get(0).getElementsByTag("ul").get(0).getElementsByTag("li");
-            Elements links = elements.get(0).getElementsByTag("a");
-            StringBuilder categoryBuilder = new StringBuilder();
-            for (int i = 0; i < links.size(); i++) {
-                categoryBuilder.append(links.get(i).text());
-                int index = i + 1;
-                if (index != links.size())
-                    categoryBuilder.append(",");
-            }
-            String producer = elements.get(2).getElementsByTag("a").get(0).text();
-            Elements thumnailElements = Jsoup.parseBodyFragment(response).body().getElementsByClass("thumbnails").get(0).getElementsByTag("img");
-            String[] thumbnailUrls = new String[thumnailElements.size()];
-            for (int i = 0; i < thumnailElements.size(); i++) {
-                thumbnailUrls[i] = thumnailElements.get(i).attr("src");
-            }
-
-            this.movie.setCategory(categoryBuilder.toString());
-            this.movie.setProducerName(producer);
-            this.movie.setThumbnailUrls(thumbnailUrls);
-
+            Gson gson = new Gson();
+            this.movie = gson.fromJson(response,Movie.class);
             this.updateViews(this.movie);
         } catch (Exception e) {
             Log.e("JSOUP_PARSE", e.getMessage());
@@ -214,11 +194,11 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void updateViews(Movie movie) {
         this.movieNameTextView.setText(movie.getName());
-        this.movieTypeTextView.setText(getResources().getString(R.string.categoryTextBangla) + " \n" + movie.getCategory());
-        this.directorNameTextView.setText(getResources().getString(R.string.directorTextBangla) + " \n" + movie.getDirectorName());
-        this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProducerName());
-        this.ratingTextView.setText(movie.getRating());
-        this.createImageView(movie.getThumbnailUrls());
+        this.movieTypeTextView.setText(getResources().getString(R.string.categoryTextBangla) + " \n" + movie.getIndustry());
+        this.directorNameTextView.setText(getResources().getString(R.string.directorTextBangla) + " \n" + movie.getProductionHouse());
+        this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProductionHouse());
+        this.ratingTextView.setText(movie.getRated());
+//        this.createImageView(movie.getThumbnailUrls());
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
         this.movieNameTextView.setTypeface(typeface);

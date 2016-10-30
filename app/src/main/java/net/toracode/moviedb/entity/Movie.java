@@ -2,27 +2,28 @@ package net.toracode.moviedb.entity;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by sayemkcn on 10/17/2016.
  */
 
-public class Movie implements Serializable {
-    private int id;
+public class Movie extends BaseEntity implements Serializable {
     private String name;
+    private String storyLine;
+    private String type;
+    private String language;
     private String imageUrl;
-    private String detailsUrl;
-    private String releaseDate;
-    private String directorName;
-    private String producerName;
-    private String detailsResponse;
-    private String[] casts;
-    private String rating;
-    private String category;
-    private String[] thumbnailUrls;
-
-    public Movie() {
-    }
+    private String industry;
+    private String genere;
+    private String trailerUrl;
+    private Date releaseDate;
+    private String duration;
+    private String budget;
+    private char rated;
+    private String productionHouse;
+    private List<Person> castAndCrewList;
 
     public String getName() {
         return name;
@@ -30,6 +31,30 @@ public class Movie implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStoryLine() {
+        return storyLine;
+    }
+
+    public void setStoryLine(String storyLine) {
+        this.storyLine = storyLine;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getImageUrl() {
@@ -40,101 +65,95 @@ public class Movie implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public String getReleaseDate() {
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public String getGenere() {
+        return genere;
+    }
+
+    public void setGenere(String genere) {
+        this.genere = genere;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
+    }
+
+    public Date getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
 
-    public String getDirectorName() {
-        return directorName;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setDirectorName(String directorName) {
-        this.directorName = directorName;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
-
-    public String getRating() {
-        return rating;
+    public String getBudget() {
+        return budget;
     }
 
-    public void setRating(String rating) {
-        this.rating = rating;
+    public void setBudget(String budget) {
+        this.budget = budget;
     }
 
-    public int getId() {
-        return id;
+    public char getRated() {
+        return rated;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRated(char rated) {
+        this.rated = rated;
     }
 
-    public String getDetailsUrl() {
-        return detailsUrl;
+    public String getProductionHouse() {
+        return productionHouse;
     }
 
-    public void setDetailsUrl(String detailsUrl) {
-        this.detailsUrl = detailsUrl;
+    public void setProductionHouse(String productionHouse) {
+        this.productionHouse = productionHouse;
     }
 
-    public String[] getCasts() {
-        return casts;
+    public List<Person> getCastAndCrewList() {
+        return castAndCrewList;
     }
 
-    public void setCasts(String[] casts) {
-        this.casts = casts;
-    }
-
-    public String getDetailsResponse() {
-        return detailsResponse;
-    }
-
-    public void setDetailsResponse(String detailsResponse) {
-        this.detailsResponse = detailsResponse;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getProducerName() {
-        return producerName;
-    }
-
-    public void setProducerName(String producerName) {
-        this.producerName = producerName;
+    public void setCastAndCrewList(List<Person> castAndCrewList) {
+        this.castAndCrewList = castAndCrewList;
     }
 
     @Override
     public String toString() {
         return "Movie{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
+                ", storyLine='" + storyLine + '\'' +
+                ", type='" + type + '\'' +
+                ", language='" + language + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", detailsUrl='" + detailsUrl + '\'' +
-                ", releaseDate='" + releaseDate + '\'' +
-                ", directorName='" + directorName + '\'' +
-                ", producerName='" + producerName + '\'' +
-                ", detailsResponse='" + detailsResponse + '\'' +
-                ", casts=" + Arrays.toString(casts) +
-                ", rating='" + rating + '\'' +
-                ", category='" + category + '\'' +
+                ", industry='" + industry + '\'' +
+                ", genere='" + genere + '\'' +
+                ", trailerUrl='" + trailerUrl + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", duration='" + duration + '\'' +
+                ", budget='" + budget + '\'' +
+                ", rated=" + rated +
+                ", productionHouse='" + productionHouse + '\'' +
+                ", castAndCrewList=" + castAndCrewList +
                 '}';
-    }
-
-    public String[] getThumbnailUrls() {
-        return thumbnailUrls;
-    }
-
-    public void setThumbnailUrls(String[] thumbnailUrls) {
-        this.thumbnailUrls = thumbnailUrls;
     }
 }

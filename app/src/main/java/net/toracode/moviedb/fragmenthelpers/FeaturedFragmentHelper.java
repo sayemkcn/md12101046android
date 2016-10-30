@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -20,7 +21,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -161,53 +166,11 @@ public class FeaturedFragmentHelper {
     private List<Movie> parseJson(String response) throws JSONException, ParseException {
         List<Movie> movieList = new ArrayList<>();
         try {
-            // FILL UP MOVIE LIST
-            Document document = Jsoup.parseBodyFragment(response);
-            Element body = document.body();
-            Elements homeBoxes = body.getElementsByClass("home-box");
-            // for every posts
-            for (int i = 0; i < homeBoxes.size(); i++) {
-                if (i != 0) {
-                    Movie movie = new Movie();
-                    String imgUrl = homeBoxes.get(i).getElementsByTag("img").get(0).attr("src");
-                    String name = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").text();
-                    String detailsUrl = homeBoxes.get(i).getElementsByTag("h3").get(0).getElementsByTag("a").attr("href");
-                    Elements metaElements = homeBoxes.get(i).getElementsByTag("ul").get(0).getElementsByTag("li");
-                    String directorName = null;
-                    Elements castsElements = null;
-                    String releaseDate = null;
-                    String rating = null;
-                    if (metaElements.size() == 2) {
-                        directorName = metaElements.get(0).getElementsByTag("a").text();
-                        castsElements = metaElements.get(1).getElementsByTag("a");
-                    } else if (metaElements.size() == 3) {
-                        castsElements = metaElements.get(1).getElementsByTag("a");
-                        releaseDate = metaElements.get(0).text();
-                        rating = metaElements.get(2).text();
-                    } else if (metaElements.size() == 4) {
-                        directorName = metaElements.get(1).getElementsByTag("a").text();
-                        castsElements = metaElements.get(2).getElementsByTag("a");
-                        releaseDate = metaElements.get(0).text();
-                        rating = metaElements.get(3).text();
-                    }
-                    String[] casts = new String[castsElements.size()];
-                    for (int j = 0; j < castsElements.size() && j < casts.length; j++)
-                        casts[j] = castsElements.get(j).text();
-
-
-                    movie.setImageUrl(imgUrl);
-                    movie.setName(name);
-                    movie.setDetailsUrl(detailsUrl);
-                    movie.setDirectorName(directorName);
-                    movie.setCasts(casts);
-                    movie.setReleaseDate(releaseDate);
-                    movie.setRating(rating);
-
-                    movieList.add(movie);
-                }
-            }
+            Type listType = new TypeToken<List<Movie>>() {
+            }.getType();
+            movieList = new Gson().fromJson(response, listType);
         } catch (Exception e) {
-            Log.e("CAN_NOT_PARSE", e.getMessage());
+//            Log.e("CAN_NOT_PARSE", e.getMessage());
         }
         return movieList;
     }
@@ -273,10 +236,10 @@ public class FeaturedFragmentHelper {
 
     // set json data to view
     public void updateSlider(final List<Movie> newsList) {
+
         if (context != null) {
             for (final Movie item : newsList) {
-                String iconUrl = item.getImageUrl();
-                CustomSliderView textSliderView = new CustomSliderView(context, iconUrl);
+                CustomSliderView textSliderView = new CustomSliderView(context, "");
                 // initialize a SliderLayout
                 textSliderView
                         .description(item.getName())
@@ -300,4 +263,5 @@ public class FeaturedFragmentHelper {
         // set visibility
         this.sliderLayout.setVisibility(View.VISIBLE);
     }
+
 }

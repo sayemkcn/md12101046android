@@ -42,7 +42,7 @@ public class FeaturedRecyclerAdapter extends RecyclerView.Adapter<FeaturedRecycl
         Movie movie = this.movieList.get(position);
         Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
-        myViewHolder.directorTextView.setText(movie.getDirectorName());
+        myViewHolder.directorTextView.setText(movie.getProductionHouse());
     }
 
     @Override
