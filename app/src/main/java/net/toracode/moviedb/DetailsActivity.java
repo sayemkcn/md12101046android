@@ -76,7 +76,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         this.movie = (Movie) getIntent().getExtras().getSerializable("movie");
 
-        this.loadNewsFromServer(movie);
+        this.updateViews(this.movie);
+//        this.loadNewsFromServer(movie);
 
     }
 
@@ -197,7 +198,7 @@ public class DetailsActivity extends AppCompatActivity {
         this.movieTypeTextView.setText(getResources().getString(R.string.categoryTextBangla) + " \n" + movie.getIndustry());
         this.directorNameTextView.setText(getResources().getString(R.string.directorTextBangla) + " \n" + movie.getProductionHouse());
         this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProductionHouse());
-        this.ratingTextView.setText(movie.getRated());
+        this.ratingTextView.setText(String.valueOf(movie.getRated()));
 //        this.createImageView(movie.getThumbnailUrls());
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");

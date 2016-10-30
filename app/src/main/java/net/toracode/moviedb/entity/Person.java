@@ -1,5 +1,6 @@
 package net.toracode.moviedb.entity;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -7,7 +8,7 @@ import java.util.Date;
  * Created by sayemkcn on 10/30/16.
  */
 
-public class Person {
+public class Person extends BaseEntity implements Serializable{
     private String name;
     private String[] designations;
     private Date birthDate;
