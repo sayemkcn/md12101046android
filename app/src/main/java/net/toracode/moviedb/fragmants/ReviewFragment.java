@@ -218,6 +218,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 } else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE) {
                     Commons.showSimpleToast(getActivity().getApplicationContext(), getResources().getString(R.string.movieOrUserNotFoundText));
                 } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
+                    fetchReviews();
                     Commons.showDialog(getActivity(), getResources().getString(R.string.reviewSuccessTitle), getResources().getString(R.string.reviewSuccessMessage));
                 }
             }
