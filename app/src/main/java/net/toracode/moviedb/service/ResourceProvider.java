@@ -23,6 +23,7 @@ public class ResourceProvider {
 
     public static final int RESPONSE_CODE_CREATED = 201;
     public static final int RESPONSE_CODE_FOUND = 302;
+    public static final int RESPONSE_CODE_NO_CONTENT = 204;
 
     public ResourceProvider(Activity context) {
         this.context = context;
@@ -35,6 +36,16 @@ public class ResourceProvider {
                 .build();
         Response response = okHttpClient.newCall(request).execute();
         return response.body().string();
+
+    }
+
+    public Response fetchGetResponse(String url) throws IOException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        return response;
 
     }
 

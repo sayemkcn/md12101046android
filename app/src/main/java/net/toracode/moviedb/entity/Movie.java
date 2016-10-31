@@ -9,7 +9,7 @@ import java.util.List;
  * Created by sayemkcn on 10/17/2016.
  */
 
-public class Movie extends BaseEntity implements Serializable {
+public class Movie  implements Serializable {
     private String name;
     private String storyLine;
     private String type;
@@ -24,6 +24,9 @@ public class Movie extends BaseEntity implements Serializable {
     private char rated;
     private String productionHouse;
     private List<Person> castAndCrewList;
+    private Long uniqueId;
+    private Date lastUpdated;
+    private Date created;
 
     public String getName() {
         return name;
@@ -137,6 +140,30 @@ public class Movie extends BaseEntity implements Serializable {
         this.castAndCrewList = castAndCrewList;
     }
 
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Long getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(Long uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -154,6 +181,9 @@ public class Movie extends BaseEntity implements Serializable {
                 ", rated=" + rated +
                 ", productionHouse='" + productionHouse + '\'' +
                 ", castAndCrewList=" + castAndCrewList +
+                ", uniqueId=" + uniqueId +
+                ", lastUpdated=" + lastUpdated +
+                ", created=" + created +
                 '}';
     }
 }
