@@ -24,6 +24,8 @@ public class ResourceProvider {
     public static final int RESPONSE_CODE_CREATED = 201;
     public static final int RESPONSE_CODE_FOUND = 302;
     public static final int RESPONSE_CODE_NO_CONTENT = 204;
+    public static final int RESPONSE_CODE_LOCKED = 423;
+    public static final int RESPONSE_NOT_ACCEPTABLE = 406;
 
     public ResourceProvider(Activity context) {
         this.context = context;

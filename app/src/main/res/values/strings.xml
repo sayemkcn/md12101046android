@@ -61,4 +61,25 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+
+    <string name="alreadyPostedReviewTitle">
+        দুঃখিত
+    </string>
+    <string name="alreadyPostedReviewMessage">
+        আপনি এখানে অলরেডি একবার রিভিউ দিয়েছেন।
+    </string>
+    <string name="movieOrUserNotFoundText">
+        মুভি খুঁজে পাওয়া যায় নি! অথবা আপনাকে খুঁজে পাওয়া যায়নি!
+    </string>
+    <string name="reviewSuccessTitle">
+        সফল হয়েছে
+    </string>
+    <string name="reviewSuccessMessage">
+        আপনার রিভিউটি গৃহীত হয়েছে। রিভিউ দেয়ার জন্য আপনাকে ধন্যবাদ।
+    </string>
+    <string name="loadingText">
+        দয়া করে অপেক্ষা করুন..
+    </string>
+
+
 </resources>

@@ -1,6 +1,7 @@
 package net.toracode.moviedb.fragmants;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,7 +24,9 @@ import com.google.gson.JsonParseException;
 
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.ReviewRecyclerAdapter;
+import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Review;
+import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import org.json.JSONArray;
@@ -34,10 +40,17 @@ import java.util.List;
 
 import okhttp3.Response;
 
-public class ReviewFragment extends Fragment {
+public class ReviewFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_MOVIE_ID = "param1";
 
     private String movieId;
+    private View reviewBoxLayout;
+    private String accountId = null;
+
+    private EditText reviewTitleEditText;
+    private EditText reviewMessageEditText;
+    private RatingBar ratingBar;
+    private Button postReviewButton;
 
     private RecyclerView reviewRecyclerView;
     private int page = 0;
@@ -75,13 +88,27 @@ public class ReviewFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.reviewRecyclerView = (RecyclerView) getView().findViewById(R.id.reviewRecyclerView);
+        this.reviewBoxLayout = getView().findViewById(R.id.reviewBoxLayout);
+        this.reviewTitleEditText = (EditText) getView().findViewById(R.id.reviewTitle);
+        this.reviewMessageEditText = (EditText) getView().findViewById(R.id.reviewMessage);
+        this.ratingBar = (RatingBar) getView().findViewById(R.id.ratingBar);
+        this.postReviewButton = (Button) getView().findViewById(R.id.postReviewButton);
 
+        this.accountId = Pref.getPreferenceString(getActivity(), Pref.PREF_ACCOUNT_ID);
+        // hide the review box if user not registered
+        if (accountId == null || accountId.isEmpty()) {
+            this.reviewBoxLayout.setVisibility(View.GONE);
+        }
         this.fetchReviews();
+
+        // post review
+        this.postReviewButton.setOnClickListener(this);
+
     }
 
     private void fetchReviews() {
         final String url = this.buildUrl();
-        Log.d("URL_REVIEW",url);
+//        Log.d("URL_REVIEW", url);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -89,7 +116,7 @@ public class ReviewFragment extends Fragment {
                     Response response = new ResourceProvider(getActivity()).fetchGetResponse(url);
                     onResponse(response);
                 } catch (IOException e) {
-                    Log.d("Ex",e.toString());
+                    Log.d("Ex", e.toString());
                 }
             }
         }).start();
@@ -98,15 +125,16 @@ public class ReviewFragment extends Fragment {
     private void onResponse(Response response) throws IOException {
         if (response != null && response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
             final List<Review> reviewList = this.parseJson(response.body().string());
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    reviewRecyclerView.setAdapter(new ReviewRecyclerAdapter(getActivity(),reviewList));
-                    reviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    reviewRecyclerView.setNestedScrollingEnabled(false);
-                }
-            });
-
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        reviewRecyclerView.setAdapter(new ReviewRecyclerAdapter(getActivity(), reviewList));
+                        reviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        reviewRecyclerView.setNestedScrollingEnabled(false);
+                    }
+                });
+            }
         }
     }
 
@@ -125,7 +153,7 @@ public class ReviewFragment extends Fragment {
                     }
                 });
                 Gson gson = builder.create();
-                Review review = gson.fromJson(jsonArray.getJSONObject(i).toString(),Review.class);
+                Review review = gson.fromJson(jsonArray.getJSONObject(i).toString(), Review.class);
                 reviewList.add(review);
             }
         } catch (JSONException e) {
@@ -139,5 +167,78 @@ public class ReviewFragment extends Fragment {
         stringBuilder.append(getResources().getString(R.string.baseUrl) + "review/movie/" + this.movieId);
         stringBuilder.append("?page=" + this.page + "&size=" + this.size);
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.postReviewButton)
+            postReview();
+    }
+
+    private void postReview() {
+        String title = this.reviewTitleEditText.getText().toString();
+        String message = this.reviewMessageEditText.getText().toString();
+        float rating = this.ratingBar.getRating();
+        if (this.isValid(title, message, rating)) {
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage(getResources().getString(R.string.loadingText));
+            final String url = getResources().getString(R.string.baseUrl) + "review/create?title=" + title + "&message=" + message + "&rating=" + rating + "&accountId=" + this.accountId + "&movieId=" + this.movieId;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Response response = new ResourceProvider(getActivity()).fetchPostResponse(url);
+                        onPostReviewResponse(response);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (progressDialog.isShowing())
+                                    progressDialog.cancel();
+                            }
+                        });
+                    } catch (IOException e) {
+                        Log.e("POST_REVIEW", e.toString());
+                    }
+                }
+            }).start();
+
+        }
+    }
+
+    private void onPostReviewResponse(final Response response) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                reviewTitleEditText.setText("");
+                reviewMessageEditText.setText("");
+                ratingBar.setRating(0f);
+                if (response.code() == ResourceProvider.RESPONSE_CODE_LOCKED) {
+                    Commons.showDialog(getActivity(), getResources().getString(R.string.alreadyPostedReviewTitle), getResources().getString(R.string.alreadyPostedReviewMessage));
+                } else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE) {
+                    Commons.showSimpleToast(getActivity().getApplicationContext(), getResources().getString(R.string.movieOrUserNotFoundText));
+                } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
+                    Commons.showDialog(getActivity(), getResources().getString(R.string.reviewSuccessTitle), getResources().getString(R.string.reviewSuccessMessage));
+                }
+            }
+        });
+
+    }
+
+    private boolean isValid(String title, String message, float rating) {
+        if (title.isEmpty()) {
+            this.reviewTitleEditText.setError("Review title can not be empty!");
+            return false;
+        }
+        if (message.isEmpty()) {
+            this.reviewMessageEditText.setError("Review message can not be empty!");
+            return false;
+        }
+        if (rating == 0f) {
+            Commons.showSimpleToast(getActivity().getApplicationContext(), "You have to choose a rating!");
+            return false;
+        }
+
+        return true;
     }
 }
