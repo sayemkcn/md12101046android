@@ -151,6 +151,7 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
                     //**********LOGGED IN********//
                     // SEND REQUEST WITH THIS ACCOUNT ID //
                     registerUser(loginResult);
+                    this.fillUserData(loginResult.getAccessToken());
 //                    Log.d("AUTH_TOKEN", loginResult.getAccessToken().getAccountId());
                 } else {
                     Commons.showSimpleToast(getApplicationContext(), "Success:%s..." +

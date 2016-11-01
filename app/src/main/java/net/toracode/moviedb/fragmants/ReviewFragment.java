@@ -2,6 +2,7 @@ package net.toracode.moviedb.fragmants;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 
+import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -22,6 +24,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.ReviewRecyclerAdapter;
 import net.toracode.moviedb.commons.Pref;
@@ -51,6 +54,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private EditText reviewMessageEditText;
     private RatingBar ratingBar;
     private Button postReviewButton;
+    private Button registerButton;
 
     private RecyclerView reviewRecyclerView;
     private int page = 0;
@@ -93,6 +97,14 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         this.reviewMessageEditText = (EditText) getView().findViewById(R.id.reviewMessage);
         this.ratingBar = (RatingBar) getView().findViewById(R.id.ratingBar);
         this.postReviewButton = (Button) getView().findViewById(R.id.postReviewButton);
+        this.registerButton = (Button) getView().findViewById(R.id.registerButton);
+
+        // if user logged in then show user the review box and hide register button
+        if (AccountKit.getCurrentAccessToken() != null) {
+            this.reviewBoxLayout.setVisibility(View.VISIBLE);
+            this.registerButton.setVisibility(View.GONE);
+        }
+
 
         this.accountId = Pref.getPreferenceString(getActivity(), Pref.PREF_ACCOUNT_ID);
         // hide the review box if user not registered
@@ -103,6 +115,8 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
         // post review
         this.postReviewButton.setOnClickListener(this);
+
+        this.registerButton.setOnClickListener(this);
 
     }
 
@@ -174,6 +188,14 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         int id = view.getId();
         if (id == R.id.postReviewButton)
             postReview();
+        else if (id == R.id.registerButton) {
+            if (AccountKit.getCurrentAccessToken() != null) {
+                this.registerButton.setVisibility(View.GONE);
+                this.reviewBoxLayout.setVisibility(View.VISIBLE);
+                return;
+            }
+            this.startActivity(new Intent(getActivity(), PreferenceActivity.class));
+        }
     }
 
     private void postReview() {

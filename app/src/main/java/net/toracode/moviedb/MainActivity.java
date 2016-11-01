@@ -26,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.facebook.accountkit.AccessToken;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
@@ -335,6 +334,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         } else if (id == R.id.action_settings) {
             this.startActivity(new Intent(this, PreferenceActivity.class));
+        } else if (id == R.id.action_logout) {
+            AccountKit.logOut();
+            Commons.showSimpleToast(this,"You're logged out!");
         }
         return super.onOptionsItemSelected(item);
     }
