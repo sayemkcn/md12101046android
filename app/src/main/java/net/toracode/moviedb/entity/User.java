@@ -6,10 +6,11 @@ import java.io.Serializable;
  * Created by sayemkcn on 10/31/16.
  */
 
-public class User extends BaseEntity implements Serializable{
+public class User extends BaseEntity implements Serializable {
     private String name;
     private String email;
     private String accountId;
+    private String phone;
 
     public String getName() {
         return name;
@@ -35,12 +36,22 @@ public class User extends BaseEntity implements Serializable{
         this.accountId = accountId;
     }
 
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", accountId='" + accountId + '\'' +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 }

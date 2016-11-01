@@ -10,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitCallback;
+import com.facebook.accountkit.AccountKitError;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
@@ -217,8 +220,32 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
                 this.onLoginPhone();
             } else {
                 this.postEditedData();
+                this.updatePhoneNumber();
             }
         }
+    }
+
+    private void updatePhoneNumber() {
+        AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+            @Override
+            public void onSuccess(Account account) {
+                String accountId = AccountKit.getCurrentAccessToken().getAccountId();
+                String phone = account.getPhoneNumber().toString();
+                String url = getResources().getString(R.string.baseUrl) + "user/update/" + accountId + "/" + phone;
+                try {
+                    Response response = new ResourceProvider(PreferenceActivity.this).fetchPostResponse(url);
+                    Log.i("PHONE_RESPONSE_CODE", response.code() + "");
+                } catch (IOException e) {
+                    Log.e("UPDATE_PHONE", e.toString());
+                }
+            }
+
+            @Override
+            public void onError(AccountKitError accountKitError) {
+                Log.e("UPDATE_PHONE", accountKitError.toString());
+            }
+        });
+
     }
 
     private void postEditedData() {
