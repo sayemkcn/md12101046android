@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -26,6 +25,7 @@ public class ResourceProvider {
     public static final int RESPONSE_CODE_NO_CONTENT = 204;
     public static final int RESPONSE_CODE_LOCKED = 423;
     public static final int RESPONSE_NOT_ACCEPTABLE = 406;
+    public static final int RESPONSE_ACCEPTED = 202;
 
     public ResourceProvider(Activity context) {
         this.context = context;
@@ -54,7 +54,7 @@ public class ResourceProvider {
     public Response fetchPostResponse(String url) throws IOException {
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
-        builder.addFormDataPart("test","test");
+        builder.addFormDataPart("test", "test");
         RequestBody requestBody = builder.build();
 
         Request request = new Request.Builder()
@@ -62,7 +62,7 @@ public class ResourceProvider {
                 .method("POST", RequestBody.create(null, new byte[0]))
                 .post(requestBody)
                 .build();
-        Log.d("FUCKEN_URL",request.url().toString());
+        Log.d("FUCKEN_URL", request.url().toString());
         return new OkHttpClient().newCall(request).execute();
     }
 

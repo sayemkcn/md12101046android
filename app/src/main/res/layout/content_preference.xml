@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,9 +8,48 @@
     tools:context="net.toracode.moviedb.PreferenceActivity"
     tools:showIn="@layout/activity_preference">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/preferenceRecyclerView"
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="30dp" />
-</RelativeLayout>
+        android:scaleType="fitXY"
+        android:src="@color/colorPrimaryDark" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:alpha=".7"
+        android:background="@android:color/black"
+        android:orientation="vertical"
+        android:padding="50dp">
+
+        <EditText
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Your Name" />
+
+        <EditText
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:hint="Your Email" />
+
+        <Button
+            android:textColor="@android:color/white"
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="Submit" />
+    </LinearLayout>
+</FrameLayout>

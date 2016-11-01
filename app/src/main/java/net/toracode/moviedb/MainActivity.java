@@ -105,16 +105,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
 
-        // FACEBOOK ACCOUNT KIT
-        AccessToken accessToken = AccountKit.getCurrentAccessToken();
-
-        if (accessToken != null) {
-            //Handle Returning User
-            Log.d("ACCOUNT_KIT", "LoggedIn");
-        } else {
-            //Handle new or logged out user
-            this.onLoginPhone();
-        }
+//        // FACEBOOK ACCOUNT KIT
+//        AccessToken accessToken = AccountKit.getCurrentAccessToken();
+//
+//        if (accessToken != null) {
+//            //Handle Returning User
+//            Log.d("ACCOUNT_KIT", "LoggedIn");
+//        } else {
+//            //Handle new or logged out user
+//            this.onLoginPhone();
+//        }
 
         // load user custom CategoryList
         if (this.isUserRegistered)
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Commons.showSimpleToast(this, loginResult.getError().getErrorType().getMessage());
 //                showErrorActivity(loginResult.getError());
             } else if (loginResult.wasCancelled()) {
-                Commons.showSimpleToast(getApplicationContext(),"Not cool man! not cool!");
+                Commons.showSimpleToast(getApplicationContext(), "Not cool man! not cool!");
             } else {
                 if (loginResult.getAccessToken() != null) {
                     //**********LOGGED IN********//
@@ -333,6 +333,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.action_about) {
             Commons.showDevDialog(this);
             return true;
+        } else if (id == R.id.action_settings) {
+            this.startActivity(new Intent(this, PreferenceActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
