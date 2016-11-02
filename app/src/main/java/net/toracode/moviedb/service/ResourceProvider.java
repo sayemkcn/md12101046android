@@ -22,10 +22,13 @@ public class ResourceProvider {
 
     public static final int RESPONSE_CODE_CREATED = 201;
     public static final int RESPONSE_CODE_FOUND = 302;
+    public static final int RESPONSE_CODE_NOT_FOUND = 404;
     public static final int RESPONSE_CODE_NO_CONTENT = 204;
     public static final int RESPONSE_CODE_LOCKED = 423;
     public static final int RESPONSE_NOT_ACCEPTABLE = 406;
     public static final int RESPONSE_ACCEPTED = 202;
+    public static final int RESPONSE_CODE_BAD_REQUEST = 400;
+    public static final int RESPONSE_CODE_INTERNAL_SERVER_ERROR = 00;
 
     public ResourceProvider(Activity context) {
         this.context = context;

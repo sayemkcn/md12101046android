@@ -12,5 +12,10 @@
         android:icon="@mipmap/ic_save_white_24dp"
         android:title="@string/action_save"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_add_to_list"
+        android:icon="@mipmap/ic_add_circle_white_24dp"
+        android:title="Add to list"
+        app:showAsAction="always" />
 
 </menu>
