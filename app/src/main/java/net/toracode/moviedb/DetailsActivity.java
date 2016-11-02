@@ -193,15 +193,17 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     // shows user custom list chooser.
-    private void showAddToListDialog(List<CustomList> listOfCustomList) {
+    private void showAddToListDialog(final List<CustomList> listOfCustomList) {
         String[] listTitles = this.copyListTitles(listOfCustomList);
 
         new MaterialDialog.Builder(this)
                 .title("Add To List")
                 .items(listTitles)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        CustomList list = listOfCustomList.get(which);
+                        addMovieToList(list, movie);
                         /**
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
@@ -218,6 +220,32 @@ public class DetailsActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    private void addMovieToList(final CustomList list, final Movie movie) {
+        final String url = getResources().getString(R.string.baseUrl) + "list/" + list.getUniqueId() + "/add/" + movie.getUniqueId();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Response response = new ResourceProvider(DetailsActivity.this).fetchPostResponse(url);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.code() == ResourceProvider.RESPONSE_CODE_INTERNAL_SERVER_ERROR) {
+                                Commons.showSimpleToast(getApplicationContext(), "Can not add " + movie.getName() + " to list. List not found! ");
+                            } else if (response.code() == ResourceProvider.RESPONSE_CODE_CONFLICT) {
+                                Commons.showDialog(DetailsActivity.this, "Can not add movie!", "Movie " + movie.getName() + " is already added to your " + list.getTitle() + ".");
+                            } else if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
+                                Commons.showDialog(DetailsActivity.this, "Success!", "Movie " + movie.getName() + " is added to your " + list.getTitle() + " successfully.");
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    Log.e("ADD_TO_LIST", e.toString());
+                }
+            }
+        }).start();
     }
 
     private String[] copyListTitles(List<CustomList> listOfCustomList) {
