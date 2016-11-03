@@ -49,7 +49,7 @@
     <string name="addedToWishlistText">উইশলিস্টে যুক্ত করা হয়েছে</string>
     <string name="addedToOfflineText">অফলাইনে সংরক্ষণ করা হয়েছে</string>
     <string name="homeText">হোম</string>
-    <string name="wishlistText">উইশলিস্ট</string>
+    <string name="myListsText">আমার লিস্ট</string>
     <string name="offlineMoviesText">অফলাইন মুভিস</string>
     <string name="shareText">শেয়ার করুন</string>
 
@@ -80,7 +80,9 @@
     <string name="loadingText">
         দয়া করে অপেক্ষা করুন..
     </string>
-    <string name="title_activity_list_items">ListItemsActivity</string>
+    <string name="title_activity_list_items">List Items</string>
+    <string name="title_activity_my_reviews">MyReviewsActivity</string>
+    <string name="myReviewsText">আমার রিভিউগুলো</string>
 
 
 </resources>

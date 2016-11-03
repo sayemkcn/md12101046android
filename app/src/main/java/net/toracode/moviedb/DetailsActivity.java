@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -189,13 +188,15 @@ public class DetailsActivity extends AppCompatActivity {
                     }
                 })
                 .positiveText("Add")
-                .negativeText("New List")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                .negativeText("Cancel")
+                .neutralText("New List")
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         showNewListDialog();
                     }
                 })
+                .canceledOnTouchOutside(false)
                 .show();
     }
 
@@ -253,6 +254,8 @@ public class DetailsActivity extends AppCompatActivity {
                         createCustomList(name, desc, type);
                     }
                 })
+                .negativeText("Cancel")
+                .canceledOnTouchOutside(false)
                 .show();
 
     }

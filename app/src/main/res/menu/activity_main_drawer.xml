@@ -8,9 +8,13 @@
             android:icon="@mipmap/ic_home_black_24dp"
             android:title="@string/homeText" />
         <item
-            android:id="@+id/nav_bookmark"
+            android:id="@+id/nav_my_list"
             android:icon="@mipmap/ic_bookmark_white_24dp"
-            android:title="@string/wishlistText" />
+            android:title="@string/myListsText" />
+        <item
+            android:id="@+id/nav_my_reviews"
+            android:icon="@mipmap/ic_bookmark_white_24dp"
+            android:title="@string/myReviewsText" />
         <item
             android:id="@+id/nav_offline_news"
             android:icon="@mipmap/ic_save_white_24dp"

@@ -88,12 +88,12 @@
 
 
                 <TextView
-                    android:textStyle="bold"
                     android:id="@+id/castsTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cast List"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/filmRatingTextView"

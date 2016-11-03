@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.google.gson.Gson;
@@ -35,7 +36,11 @@ public class ListItemsActivity extends AppCompatActivity {
 
     @BindView(R.id.listItemsRecyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
     private Long listId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +48,13 @@ public class ListItemsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_items);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ButterKnife.bind(this);
 
         this.listId = getIntent().getLongExtra("listId", 0);
-//        this.loadListItems(list);
         this.getListByListId(listId);
-//        getSupportActionBar().setTitle(list.getTitle());
     }
 
     private void getListByListId(Long listId) {
@@ -83,6 +88,9 @@ public class ListItemsActivity extends AppCompatActivity {
         if (movieList != null) {
             recyclerView.setAdapter(new RecyclerAdapter(this, movieList));
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setVisibility(View.VISIBLE);
+            if (progressBar.getVisibility() == View.VISIBLE)
+                progressBar.setVisibility(View.GONE);
             ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                 @Override
                 public void onItemClicked(RecyclerView recyclerView, int position, View v) {

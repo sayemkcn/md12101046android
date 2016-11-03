@@ -1,5 +1,6 @@
 package net.toracode.moviedb;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -336,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.startActivity(new Intent(this, PreferenceActivity.class));
         } else if (id == R.id.action_logout) {
             AccountKit.logOut();
-            Commons.showSimpleToast(this,"You're logged out!");
+            Commons.showSimpleToast(this, "You're logged out!");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -346,8 +347,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
-        } else if (id == R.id.nav_bookmark) {
-            startActivity(new Intent(this, OfflineActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
+        } else if (id == R.id.nav_my_list) {
+            startActivity(new Intent(this, ListActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
+        } else if (id == R.id.nav_my_reviews) {
+            startActivity(new Intent(this, MyReviewsActivity.class));
         } else if (id == R.id.nav_offline_news) {
             startActivity(new Intent(this, OfflineActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
         } else if (id == R.id.nav_share) {
