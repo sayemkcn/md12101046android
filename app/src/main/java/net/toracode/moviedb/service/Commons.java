@@ -19,6 +19,12 @@ import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.github.johnpersano.supertoasts.library.utils.PaletteUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -26,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -36,7 +43,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import net.toracode.moviedb.DetailsActivity;
-import net.toracode.moviedb.OfflineNewsActivity;
+import net.toracode.moviedb.OfflineActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.entity.CategoryEntity;
 import net.toracode.moviedb.events.UserCategoryLoadEvent;
@@ -135,7 +142,7 @@ public class Commons {
         int dividerColor = context.getResources().getColor(R.color.colorPrimaryDark);
         int dialogColor = context.getResources().getColor(R.color.colorPrimary);
         int buttonBackgroundColor = context.getResources().getColor(R.color.colorAccent);
-        Effectstype effect = Effectstype.Shake;
+        Effectstype effect = Effectstype.Fall;
 
         final NiftyDialogBuilder builder = dialogBuilder
                 .withTitle(title)
@@ -189,7 +196,7 @@ public class Commons {
                         builder.cancel();
                     if (!(context instanceof DetailsActivity)) {
                         context.finish();
-                        context.startActivity(new Intent(context, OfflineNewsActivity.class));
+                        context.startActivity(new Intent(context, OfflineActivity.class));
                     }
 
                 }
@@ -250,5 +257,18 @@ public class Commons {
                         context.startActivity(browserIntent);
                     }
                 }).show();
+    }
+
+    public static Gson buildGson(){
+        // Creates the json object which will manage the information received
+        GsonBuilder builder = new GsonBuilder();
+
+        // Register an adapter to manage the date types as long values
+        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                return new Date(json.getAsJsonPrimitive().getAsLong());
+            }
+        });
+        return builder.create();
     }
 }

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,7 +21,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.accountkit.AccountKit;
 import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.google.gson.Gson;
@@ -39,11 +40,9 @@ import net.toracode.moviedb.service.ResourceProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,8 +76,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     private Typeface typeface;
 
-    int count = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,35 +98,17 @@ public class DetailsActivity extends AppCompatActivity {
         Log.i("MOVIE", movie.toString());
         getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer, ReviewFragment.newInstance(movie.getUniqueId())).commit();
 
-    }
-
-
-    private void loadNewsFromServer(final Movie movie) {
-        new Thread(new Runnable() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                synchronized (this) {
-                    try {
-                        final String response = new ResourceProvider(DetailsActivity.this).fetchData(getResources().getString(R.string.baseUrl) + "movie/" + movie.getUniqueId());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                onResponse(response);
-                            }
-                        });
-                    } catch (IOException e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Commons.showDialog(DetailsActivity.this, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!");
-                            }
-                        });
-                    }
-                }
+            public void onClick(View view) {
+                if (AccountKit.getCurrentAccessToken() == null)
+                    startActivity(new Intent(DetailsActivity.this, PreferenceActivity.class));
+                else
+                    fetchListsAndShowChooserDialog(AccountKit.getCurrentAccessToken().getAccountId());
             }
-        }).start();
+        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,8 +121,6 @@ public class DetailsActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             this.finish();
-        } else if (id == R.id.action_bookmark) {
-            this.saveOffline(Pref.PREF_KEY_WISH_LIST);
         } else if (id == R.id.action_save) {
             this.saveOffline(Pref.PREF_KEY_OFFLINE_LIST);
         } else if (id == R.id.action_add_to_list) {
@@ -176,10 +153,10 @@ public class DetailsActivity extends AppCompatActivity {
                                 startActivity(new Intent(DetailsActivity.this, PreferenceActivity.class));
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_NOT_FOUND) { // if list is empty for the user.
                                 createCustomList("Watchlist", "This is your private watchlist. This list auto generated for you.", "private");
-                                List<CustomList> listOfCustomList = parseCutomList(responseBody);
+                                List<CustomList> listOfCustomList = parseCustomList(responseBody);
                                 showAddToListDialog(listOfCustomList);
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) { // if list is not empty then show a chooser dialog
-                                List<CustomList> listOfCustomList = parseCutomList(responseBody);
+                                List<CustomList> listOfCustomList = parseCustomList(responseBody);
                                 showAddToListDialog(listOfCustomList);
                             }
                         }
@@ -321,7 +298,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    private List<CustomList> parseCutomList(String jsonArrayString) {
+    private List<CustomList> parseCustomList(String jsonArrayString) {
         // Creates the json object which will manage the information received
         GsonBuilder builder = new GsonBuilder();
 
@@ -377,38 +354,6 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-
-    private void onResponse(String response) {
-        try {
-            if (this.progressBar.getVisibility() == View.VISIBLE) {
-                this.contentLayout.setVisibility(View.VISIBLE);
-                this.progressBar.setVisibility(View.GONE);
-            }
-            Glide.with(this).load(this.parseImageUrl(response)).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(this.detailsImageView);
-            this.parseData(response);
-
-        } catch (JSONException e) {
-            Commons.showDialog(this, "Connection unavailable!", "Looks like your internet connection is too slow or there\'s no internet connection at all! Please connect to the internet first!");
-        } catch (ParseException e) {
-            Log.d("PARSE_EX", e.toString());
-        }
-    }
-
-
-    private String parseImageUrl(String response) {
-        return Jsoup.parse(response).getElementsByClass("main-movie-poster").get(0).getElementsByTag("img").get(0).attr("src");
-    }
-
-
-    private void parseData(String response) throws JSONException, ParseException {
-        try {
-            Gson gson = new Gson();
-            this.movie = gson.fromJson(response, Movie.class);
-            this.updateViews(this.movie);
-        } catch (Exception e) {
-            Log.e("JSOUP_PARSE", e.getMessage());
-        }
-    }
 
     private void updateViews(Movie movie) {
         this.movieNameTextView.setText(movie.getName());

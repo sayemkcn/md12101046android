@@ -19,7 +19,7 @@ import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Movie;
 import net.toracode.moviedb.service.Commons;
 
-public class OfflineNewsActivity extends AppCompatActivity {
+public class OfflineActivity extends AppCompatActivity {
 
     @BindView(R.id.offlineNewsRecyclerView)
     RecyclerView recyclerView;

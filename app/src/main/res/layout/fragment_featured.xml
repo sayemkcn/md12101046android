@@ -141,12 +141,12 @@
                 android:layout_marginTop="10dp">
 
                 <TextView
-                    android:id="@+id/offlineTitleText"
+                    android:id="@+id/myListText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="@string/featured_your_wishlist_text"
+                    android:text="@string/featured_my_list_text"
                     android:textColor="@android:color/black" />
             </android.support.v7.widget.CardView>
 
@@ -156,11 +156,11 @@
                 android:layout_height="200dp"
                 android:background="@android:color/white"
                 android:gravity="center"
-                android:text="Wishlist Empty!"
+                android:text="No list yet!"
                 android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/featuredBookmarkedRecyclerView"
+                android:id="@+id/featuredMyListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical" />

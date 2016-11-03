@@ -53,8 +53,8 @@ public class ResourceProvider {
                 .url(url)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
+        Log.d("FUCKEN_URL", request.url().toString());
         return response;
-
     }
 
     public Response fetchPostResponse(String url) throws IOException {

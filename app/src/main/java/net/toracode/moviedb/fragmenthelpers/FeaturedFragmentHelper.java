@@ -5,42 +5,46 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import butterknife.ButterKnife;
 import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.R;
+import net.toracode.moviedb.adapters.CustomListAdapter;
 import net.toracode.moviedb.adapters.FeaturedRecyclerAdapter;
 import net.toracode.moviedb.adapters.RecyclerAdapter;
 import net.toracode.moviedb.commons.CustomSliderView;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.commons.SliderChildAnimator;
+import net.toracode.moviedb.entity.CustomList;
 import net.toracode.moviedb.entity.Movie;
 import net.toracode.moviedb.service.ResourceProvider;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.ButterKnife;
+import okhttp3.Response;
 
 /**
  * Created by sayemkcn on 8/10/16.
@@ -49,7 +53,7 @@ public class FeaturedFragmentHelper {
     private Activity context;
     private static int VP_PAGE_NUMBER = 0;
     private RecyclerView featuredOfflineRecyclerView;
-    private RecyclerView featuredBookmarksRecyclerView;
+    private RecyclerView featuredMyListRecyclerView;
     private RecyclerView featuredFeaturedRecyclerView;
     private TextView noItemsTextOffline;
     private TextView noItemsTextBookmarks;
@@ -63,7 +67,7 @@ public class FeaturedFragmentHelper {
         this.context = context;
         ButterKnife.bind(context);
         this.featuredOfflineRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredOfflineRecyclerView);
-        this.featuredBookmarksRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredBookmarkedRecyclerView);
+        this.featuredMyListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredMyListRecyclerView);
         this.featuredFeaturedRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredFeaturedRecyclerView);
         this.noItemsTextOffline = (TextView) rootView.findViewById(R.id.offline_no_items_text);
         this.noItemsTextBookmarks = (TextView) rootView.findViewById(R.id.bookmarks_no_items_text);
@@ -80,8 +84,8 @@ public class FeaturedFragmentHelper {
         // set typeface to title textviews
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
         TextView featuredTitleTextView = (TextView) rootView.findViewById(R.id.featuredTitleTextView);
-        TextView savedTitleTextView = (TextView)rootView.findViewById(R.id.savedTitleText);
-        TextView offlineTitleTextView = (TextView)rootView.findViewById(R.id.offlineTitleText);
+        TextView savedTitleTextView = (TextView) rootView.findViewById(R.id.savedTitleText);
+        TextView offlineTitleTextView = (TextView) rootView.findViewById(R.id.myListText);
         featuredTitleTextView.setTypeface(typeface);
         savedTitleTextView.setTypeface(typeface);
         offlineTitleTextView.setTypeface(typeface);
@@ -91,10 +95,62 @@ public class FeaturedFragmentHelper {
         this.VP_PAGE_NUMBER = pageNumber;
         Log.d("SECTION_NUMBER", String.valueOf(pageNumber));
 
-        this.fetchOfflineAndBookmarkedNews();
+        this.fetchOfflineNews();
         this.fetchSliderNews();
         this.fetchFeaturedNews();
+        this.fetchMyLists();
+    }
 
+    private void fetchMyLists() {
+        if (AccountKit.getCurrentAccessToken() != null) {
+            String accountId = AccountKit.getCurrentAccessToken().getAccountId();
+            final String url = context.getResources().getString(R.string.baseUrl) + "list?accountId=" + accountId;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        final Response response = new ResourceProvider(context).fetchGetResponse(url);
+                        final String responseBody = response.body().string();
+                        context.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
+                                    List<CustomList> listOfCustomList = parseCustomList(responseBody);
+                                    setUpCustomListRecyclerView(featuredMyListRecyclerView,listOfCustomList);
+                                }
+                            }
+                        });
+
+                    } catch (IOException e) {
+                        Log.e("GET_LISTS", e.toString());
+                    }
+                }
+            }).start();
+        }
+    }
+
+    private List<CustomList> parseCustomList(String jsonArrayString) {
+        // Creates the json object which will manage the information received
+        GsonBuilder builder = new GsonBuilder();
+
+        // Register an adapter to manage the date types as long values
+        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                return new Date(json.getAsJsonPrimitive().getAsLong());
+            }
+        });
+        Gson gson = builder.create();
+        List<CustomList> listOfCustomList = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonArrayString);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                CustomList list = gson.fromJson(jsonArray.getJSONObject(i).toString(), CustomList.class);
+                listOfCustomList.add(list);
+            }
+        } catch (JSONException e) {
+            Log.e("LIST_JSON_PERSON", e.toString());
+        }
+        return listOfCustomList;
     }
 
     private void fetchFeaturedNews() {
@@ -156,8 +212,8 @@ public class FeaturedFragmentHelper {
 
     private void updateFeaturedNews(List<Movie> movieList) {
         // WORK HERE
-        this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context,movieList));
-        this.featuredFeaturedRecyclerView.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
+        this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context, movieList));
+        this.featuredFeaturedRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         this.featuredNewsLayout.setVisibility(View.VISIBLE);
         this.featuredFeaturedRecyclerView.setNestedScrollingEnabled(false);
     }
@@ -175,9 +231,8 @@ public class FeaturedFragmentHelper {
         return movieList;
     }
 
-    private void fetchOfflineAndBookmarkedNews() {
+    private void fetchOfflineNews() {
         List<Movie> offlineNewsList = this.getOfflineNewsList();
-        List<Movie> bookmarkedNewsList = this.getBookmarkedNewsList();
         // load offline news
         if (offlineNewsList == null || offlineNewsList.isEmpty()) {
             this.noItemsTextOffline.setVisibility(View.VISIBLE);
@@ -191,18 +246,6 @@ public class FeaturedFragmentHelper {
                 this.setUpRecyclerView(this.featuredOfflineRecyclerView, offlineNewsList);
             }
         }
-        // load Bookmarks
-        if (bookmarkedNewsList == null || bookmarkedNewsList.isEmpty()) {
-            this.noItemsTextBookmarks.setVisibility(View.VISIBLE);
-        } else {
-            Collections.reverse(bookmarkedNewsList);
-            // Limit 3 news Items
-            if (bookmarkedNewsList.size() > 3) {
-                this.setUpRecyclerView(this.featuredBookmarksRecyclerView, bookmarkedNewsList.subList(0, 3));
-            } else {
-                this.setUpRecyclerView(this.featuredBookmarksRecyclerView, bookmarkedNewsList);
-            }
-        }
 
     }
 
@@ -210,6 +253,15 @@ public class FeaturedFragmentHelper {
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(new RecyclerAdapter(this.context, movieList));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
+        recyclerView.setNestedScrollingEnabled(false);
+//        this.recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void setUpCustomListRecyclerView(RecyclerView recyclerView, List<CustomList> listOfCustomList) {
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setAdapter(new CustomListAdapter(this.context, listOfCustomList));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
+        recyclerView.setNestedScrollingEnabled(false);
 //        this.recyclerView.setVisibility(View.VISIBLE);
     }
 
@@ -223,16 +275,6 @@ public class FeaturedFragmentHelper {
         return null;
     }
 
-
-    private List<Movie> getBookmarkedNewsList() {
-        String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_WISH_LIST);
-        if (newsListJson != null && !newsListJson.equals("")) {
-            Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
-            }.getType());
-        }
-        return null;
-    }
 
     // set json data to view
     public void updateSlider(final List<Movie> newsList) {

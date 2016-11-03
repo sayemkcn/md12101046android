@@ -347,9 +347,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_bookmark) {
-            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
+            startActivity(new Intent(this, OfflineActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
         } else if (id == R.id.nav_offline_news) {
-            startActivity(new Intent(this, OfflineNewsActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
+            startActivity(new Intent(this, OfflineActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
         } else if (id == R.id.nav_share) {
             Commons.share(this, "Share this app", getResources().getString(R.string.shareAppText) + " " + getResources().getString(R.string.app_base_url) + getApplication().getPackageName());
         }

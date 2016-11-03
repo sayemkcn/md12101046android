@@ -41,7 +41,7 @@
     <string name="action_change_font_size">Change Font Size</string>
 
     <string name="featured_saved_text">সর্বশেষ সংরক্ষিত মুভি</string>
-    <string name="featured_your_wishlist_text">সর্বশেষ উইশলিস্টে সংযুক্তি</string>
+    <string name="featured_my_list_text">আমার লিস্টগুলো</string>
 
     <string name="slider_headLine_bangla">প্রেক্ষাগৃহে চলছে</string>
     <string name="featured_featured_news_text">প্রেক্ষাগৃহে আসন্ন</string>
@@ -80,6 +80,7 @@
     <string name="loadingText">
         দয়া করে অপেক্ষা করুন..
     </string>
+    <string name="title_activity_list_items">ListItemsActivity</string>
 
 
 </resources>

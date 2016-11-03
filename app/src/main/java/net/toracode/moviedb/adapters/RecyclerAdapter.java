@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import net.toracode.moviedb.DetailsActivity;
-import net.toracode.moviedb.OfflineNewsActivity;
+import net.toracode.moviedb.OfflineActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Movie;
@@ -116,14 +116,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             });
 
             // to delete item
-            if (context instanceof OfflineNewsActivity) {
+            if (context instanceof OfflineActivity) {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
                         new AlertDialog.Builder(context)
                                 .setIcon(R.mipmap.ic_launcher)
-                                .setTitle("Delete Bookmark")
-                                .setMessage("Are you sure you want to remove this item from your bookmark list?")
+                                .setTitle("Delete Item")
+                                .setMessage("Are you sure you want to remove this item from your saved list?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {

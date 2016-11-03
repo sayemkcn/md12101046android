@@ -1,17 +1,17 @@
 package net.toracode.moviedb.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by sayemkcn on 11/2/16.
  */
 
-public class CustomList extends BaseEntity{
+public class CustomList extends BaseEntity implements Serializable{
     private String title;
     private String description;
     private String type;
     private List<Movie> movieList;
-
     private User user;
 
     public String getTitle() {
