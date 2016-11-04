@@ -1,20 +1,33 @@
 package net.toracode.moviedb.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.johnpersano.supertoasts.library.SuperToast;
+
+import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.entity.Review;
+import net.toracode.moviedb.service.Commons;
+import net.toracode.moviedb.service.ResourceProvider;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import okhttp3.Response;
 
 public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
@@ -87,7 +100,73 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
             titleTextView.setTypeface(typeface);
             messageTextView.setTypeface(typeface);
 
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+                            .title("Edit review")
+                            .customView(R.layout.review_box_layout, false);
+                    MaterialDialog dialog = builder.show();
+                    View v = dialog.getCustomView();
+
+                    EditText titleEditText = (EditText) v.findViewById(R.id.reviewTitle);
+                    EditText messageEditText = (EditText) v.findViewById(R.id.reviewMessage);
+                    RatingBar ratingBar = (RatingBar) v.findViewById(R.id.ratingBar);
+                    Button postReviewButton = (Button) v.findViewById(R.id.postReviewButton);
+
+                    Review review = reviewList.get(getAdapterPosition());
+                    titleEditText.setText(review.getTitle());
+                    messageEditText.setText(review.getMessage());
+                    ratingBar.setRating(review.getRating());
+
+                    submitEditedReview(dialog, postReviewButton, titleEditText, messageEditText, ratingBar, review);
+                }
+            });
+
         }
+    }
+
+    private void submitEditedReview(final MaterialDialog dialog, Button postReviewButton,
+                                    final EditText titleEditText,
+                                    final EditText messageEditText,
+                                    final RatingBar ratingBar,
+                                    final Review review) {
+        postReviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final SuperToast loadingToast = Commons.getLoadingToast(context);
+                loadingToast.show();
+                review.setTitle(titleEditText.getText().toString());
+                review.setMessage(messageEditText.getText().toString());
+                review.setRating(ratingBar.getRating());
+                final String url = context.getResources().getString(R.string.baseUrl) + "review/update/" + review.getUniqueId() + "?title=" + review.getTitle() + "&message=" + review.getMessage() + "&rating=" + review.getRating()
+                        + "&accountId=" + accountId + "&movieId=" + review.getMovie().getUniqueId();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            final Response response = new ResourceProvider(context).fetchPostResponse(url);
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (loadingToast.isShowing()) loadingToast.dismiss();
+                                    dialog.dismiss();
+                                    if (response.code() == ResourceProvider.RESPONSE_CODE_FORBIDDEN)
+                                        context.startActivity(new Intent(context, PreferenceActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE)
+                                        Commons.showSimpleToast(context, "Can not edit review.");
+                                    else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED)
+                                        Commons.showSimpleToast(context, "Successfully edited review!");
+                                }
+                            });
+
+                        } catch (IOException e) {
+                            Log.d("EDIT_REVIEW", e.toString());
+                        }
+                    }
+                }).start();
+            }
+        });
     }
 
 

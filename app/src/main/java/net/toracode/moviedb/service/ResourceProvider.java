@@ -31,6 +31,7 @@ public class ResourceProvider {
     public static final int RESPONSE_CODE_INTERNAL_SERVER_ERROR = 500;
     public static final int RESPONSE_CODE_OK = 200;
     public static final int RESPONSE_CODE_CONFLICT = 409;
+    public static final int RESPONSE_CODE_FORBIDDEN = 403;
 
 
     public ResourceProvider(Activity context) {

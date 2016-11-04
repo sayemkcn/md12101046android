@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 
 import com.facebook.accountkit.AccountKit;
@@ -27,6 +28,7 @@ import com.google.gson.JsonParseException;
 import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.ReviewRecyclerAdapter;
+import net.toracode.moviedb.commons.ItemClickSupport;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Review;
 import net.toracode.moviedb.service.Commons;
