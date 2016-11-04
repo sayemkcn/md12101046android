@@ -56,7 +56,6 @@ public class FeaturedFragmentHelper {
     private RecyclerView featuredMyListRecyclerView;
     private RecyclerView featuredFeaturedRecyclerView;
     private TextView noItemsTextOffline;
-    private TextView noItemsTextBookmarks;
     private SliderLayout sliderLayout;
 
     private View featuredNewsLayout;
@@ -70,7 +69,6 @@ public class FeaturedFragmentHelper {
         this.featuredMyListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredMyListRecyclerView);
         this.featuredFeaturedRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredFeaturedRecyclerView);
         this.noItemsTextOffline = (TextView) rootView.findViewById(R.id.offline_no_items_text);
-        this.noItemsTextBookmarks = (TextView) rootView.findViewById(R.id.bookmarks_no_items_text);
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
         // Slider Layout
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
@@ -116,7 +114,7 @@ public class FeaturedFragmentHelper {
                             public void run() {
                                 if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
                                     List<CustomList> listOfCustomList = parseCustomList(responseBody);
-                                    setUpCustomListRecyclerView(featuredMyListRecyclerView,listOfCustomList);
+                                    setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
                                 }
                             }
                         });

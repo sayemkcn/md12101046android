@@ -83,6 +83,7 @@
     <string name="title_activity_list_items">List Items</string>
     <string name="title_activity_my_reviews">MyReviewsActivity</string>
     <string name="myReviewsText">আমার রিভিউগুলো</string>
+    <string name="title_activity_my_list">MyListActivity</string>
 
 
 </resources>

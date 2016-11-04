@@ -57,7 +57,7 @@ public class MyReviewsActivity extends AppCompatActivity {
 
     }
 
-    private void loadReviews(String accountId) {
+    private void loadReviews(final String accountId) {
         final String url = getResources().getString(R.string.baseUrl) + "review/user/" + accountId + "?page=" + this.page + "&size=" + this.size;
         new Thread(new Runnable() {
             @Override
@@ -70,7 +70,7 @@ public class MyReviewsActivity extends AppCompatActivity {
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                 reviewList = parseReviewList(responseBody);
-                                setupRecyclerView(reviewList);
+                                setupRecyclerView(reviewList, accountId);
                             }
                         }
                     });
@@ -81,8 +81,10 @@ public class MyReviewsActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void setupRecyclerView(List<Review> reviewList) {
-        this.recyclerView.setAdapter(new ReviewRecyclerAdapter(this, reviewList));
+    private void setupRecyclerView(List<Review> reviewList, String accountId) {
+        ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(this, reviewList);
+        adapter.setAccountId(accountId);
+        this.recyclerView.setAdapter(adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if (this.progressBar.getVisibility() == View.VISIBLE)
             this.progressBar.setVisibility(View.GONE);

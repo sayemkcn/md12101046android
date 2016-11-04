@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.toracode.moviedb.ListItemsActivity;
-import net.toracode.moviedb.OfflineActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.entity.CustomList;
 
@@ -73,34 +71,33 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
 //                    Log.i("PARENT_ADAPTER",listOfCustomList.get(getAdapterPosition()).getUniqueId()+"");
                     context.startActivity(
                             new Intent(context, ListItemsActivity.class)
-                                    .putExtra("listId",listOfCustomList.get(getAdapterPosition()).getUniqueId())
+                                    .putExtra("listId", listOfCustomList.get(getAdapterPosition()).getUniqueId())
                                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     );
 
                 }
             });
 
-            // to delete item
-            if (context instanceof OfflineActivity) {
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        new AlertDialog.Builder(context)
-                                .setIcon(R.mipmap.ic_launcher)
-                                .setTitle("Delete Bookmark")
-                                .setMessage("Are you sure you want to remove this item from your bookmark list?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        // delete the list
-                                    }
-                                })
-                                .setNegativeButton("No", null)
-                                .show();
-                        return false;
-                    }
-                });
-            }
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    new AlertDialog.Builder(context)
+                            .setIcon(R.mipmap.ic_launcher)
+                            .setTitle("Delete List")
+                            .setMessage("Are you sure you want to remove this list?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // delete the list
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                    return false;
+                }
+            });
+
         }
     }
 

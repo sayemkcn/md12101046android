@@ -1,6 +1,5 @@
 package net.toracode.moviedb;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -348,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_my_list) {
-            startActivity(new Intent(this, ListActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
+            startActivity(new Intent(this, MyListActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
         } else if (id == R.id.nav_my_reviews) {
             startActivity(new Intent(this, MyReviewsActivity.class));
         } else if (id == R.id.nav_offline_news) {

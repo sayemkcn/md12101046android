@@ -119,14 +119,16 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
                     messageEditText.setText(review.getMessage());
                     ratingBar.setRating(review.getRating());
 
-                    submitEditedReview(dialog, postReviewButton, titleEditText, messageEditText, ratingBar, review);
+                    submitEditedReview(dialog, getAdapterPosition(), postReviewButton, titleEditText, messageEditText, ratingBar, review);
                 }
             });
 
         }
     }
 
-    private void submitEditedReview(final MaterialDialog dialog, Button postReviewButton,
+    private void submitEditedReview(final MaterialDialog dialog,
+                                    final int position,
+                                    Button postReviewButton,
                                     final EditText titleEditText,
                                     final EditText messageEditText,
                                     final RatingBar ratingBar,
@@ -155,8 +157,10 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
                                         context.startActivity(new Intent(context, PreferenceActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                     else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE)
                                         Commons.showSimpleToast(context, "Can not edit review.");
-                                    else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED)
+                                    else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
                                         Commons.showSimpleToast(context, "Successfully edited review!");
+                                        notifyItemChanged(position);
+                                    }
                                 }
                             });
 

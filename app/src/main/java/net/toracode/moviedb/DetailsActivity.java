@@ -93,8 +93,7 @@ public class DetailsActivity extends AppCompatActivity {
         this.movie = (Movie) getIntent().getExtras().getSerializable("movie");
 
         this.updateViews(this.movie);
-//        this.loadNewsFromServer(movie);
-        Log.i("MOVIE", movie.toString());
+
         getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer, ReviewFragment.newInstance(movie.getUniqueId())).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -193,6 +192,7 @@ public class DetailsActivity extends AppCompatActivity {
                 .onNeutral(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
                         showNewListDialog();
                     }
                 })
@@ -266,7 +266,7 @@ public class DetailsActivity extends AppCompatActivity {
             return;
         }
 
-        String accountId = AccountKit.getCurrentAccessToken().getAccountId();
+        final String accountId = AccountKit.getCurrentAccessToken().getAccountId();
         final String url = getResources().getString(R.string.baseUrl) + "list/create?accountId=" + accountId + "&title=" + name + "&description=" + desc + "&type=" + type;
         new Thread(new Runnable() {
             @Override
@@ -288,7 +288,8 @@ public class DetailsActivity extends AppCompatActivity {
                                 } else {
                                     message = "Your list has been created successfully.";
                                 }
-                                Commons.showDialog(DetailsActivity.this, "Successfull!", message);
+                                Commons.showDialog(DetailsActivity.this, "Successful!", message);
+                                fetchListsAndShowChooserDialog(accountId);
                             }
                         }
                     });

@@ -3,12 +3,12 @@
     xmlns:card="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginStart="@dimen/activity_horizontal_margin"
-    card:cardBackgroundColor="@android:color/transparent"
+    android:layout_marginEnd="@dimen/activity_horizontal_margin"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+    android:layout_marginStart="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    card:cardBackgroundColor="@android:color/transparent"
     card:contentPadding="10dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
