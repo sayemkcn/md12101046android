@@ -143,7 +143,9 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        reviewRecyclerView.setAdapter(new ReviewRecyclerAdapter(getActivity(), reviewList));
+                        ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getActivity(),reviewList);
+                        adapter.setAccountId(accountId);
+                        reviewRecyclerView.setAdapter(adapter);
                         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         reviewRecyclerView.setNestedScrollingEnabled(false);
                     }
