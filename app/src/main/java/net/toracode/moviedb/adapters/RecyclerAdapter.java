@@ -63,8 +63,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         myViewHolder.industryTextView.setText(movie.getIndustry());
         myViewHolder.genereTextView.setText(movie.getGenere());
-        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla) + "\n" + this.getCommaSeperatedCastsString(movie.getCastAndCrewList()));
-        myViewHolder.filmRatingTextView.setText(context.getString(R.string.filmRatingText) + " " + movie.getRated());
+        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla) + " " + this.getCommaSeperatedCastsString(movie.getCastAndCrewList()));
     }
 
     @Override
@@ -96,7 +95,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             industryTextView = (TextView) itemView.findViewById(R.id.industryTextView);
             castsTextView = (TextView) itemView.findViewById(R.id.castsTextView);
             releaseDateTextView = (TextView) itemView.findViewById(R.id.releaseDateTextView);
-            filmRatingTextView = (TextView) itemView.findViewById(R.id.filmRatingTextView);
             genereTextView = (TextView) itemView.findViewById(R.id.genereTextView);
 
             Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
@@ -104,7 +102,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             industryTextView.setTypeface(typeface);
             castsTextView.setTypeface(typeface);
             releaseDateTextView.setTypeface(typeface);
-            filmRatingTextView.setTypeface(typeface);
             genereTextView.setTypeface(typeface);
 
             itemView.setOnClickListener(new View.OnClickListener() {

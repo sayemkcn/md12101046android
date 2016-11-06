@@ -1,7 +1,6 @@
 package net.toracode.moviedb.entity;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import java.util.List;
  * Created by sayemkcn on 10/17/2016.
  */
 
-public class Movie  implements Serializable {
+public class Movie extends BaseEntity implements Serializable {
     private String name;
     private String storyLine;
     private String type;
@@ -24,9 +23,9 @@ public class Movie  implements Serializable {
     private char rated;
     private String productionHouse;
     private List<Person> castAndCrewList;
-    private Long uniqueId;
-    private Date lastUpdated;
-    private Date created;
+    private boolean featured;
+    private boolean upcoming;
+
 
     public String getName() {
         return name;
@@ -140,28 +139,20 @@ public class Movie  implements Serializable {
         this.castAndCrewList = castAndCrewList;
     }
 
-    public Date getCreated() {
-        return created;
+    public boolean isFeatured() {
+        return featured;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 
-    public Date getLastUpdated() {
-        return lastUpdated;
+    public boolean isUpcoming() {
+        return upcoming;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public Long getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(Long uniqueId) {
-        this.uniqueId = uniqueId;
+    public void setUpcoming(boolean upcoming) {
+        this.upcoming = upcoming;
     }
 
     @Override
@@ -181,9 +172,8 @@ public class Movie  implements Serializable {
                 ", rated=" + rated +
                 ", productionHouse='" + productionHouse + '\'' +
                 ", castAndCrewList=" + castAndCrewList +
-                ", uniqueId=" + uniqueId +
-                ", lastUpdated=" + lastUpdated +
-                ", created=" + created +
+                ", featured=" + featured +
+                ", upcoming=" + upcoming +
                 '}';
     }
 }

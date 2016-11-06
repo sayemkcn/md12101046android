@@ -156,6 +156,7 @@ public class ListItemsActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray(responseBody);
             for (int i = 0; i < jsonArray.length(); i++) {
                 Movie movie = gson.fromJson(jsonArray.getJSONObject(i).toString(), Movie.class);
+                movie.setImageUrl(getResources().getString(R.string.baseUrl)+"movie/image/"+movie.getUniqueId());
                 movieList.add(movie);
             }
         } catch (JSONException e) {
