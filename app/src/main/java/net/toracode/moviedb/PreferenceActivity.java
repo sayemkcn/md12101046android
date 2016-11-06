@@ -149,6 +149,7 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
 //                showErrorActivity(loginResult.getError());
             } else if (loginResult.wasCancelled()) {
                 Commons.showSimpleToast(getApplicationContext(), "Not cool man! not cool!");
+                this.finish();
             } else {
                 if (loginResult.getAccessToken() != null) {
                     //**********LOGGED IN********//

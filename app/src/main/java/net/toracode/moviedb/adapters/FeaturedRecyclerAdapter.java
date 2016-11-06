@@ -40,7 +40,8 @@ public class FeaturedRecyclerAdapter extends RecyclerView.Adapter<FeaturedRecycl
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         Movie movie = this.movieList.get(position);
-        Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
+        String imageUrl = context.getResources().getString(R.string.baseUrl)+"movie/image/"+movie.getUniqueId();
+        Glide.with(context).load(imageUrl).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
         myViewHolder.directorTextView.setText(movie.getProductionHouse());
     }

@@ -347,9 +347,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_my_list) {
-            startActivity(new Intent(this, MyListActivity.class).putExtra("key", Pref.PREF_KEY_WISH_LIST));
+            if (AccountKit.getCurrentAccessToken() != null)
+                startActivity(new Intent(this, MyListActivity.class));
+            else
+                startActivity(new Intent(this, PreferenceActivity.class));
         } else if (id == R.id.nav_my_reviews) {
-            startActivity(new Intent(this, MyReviewsActivity.class));
+            if (AccountKit.getCurrentAccessToken() != null)
+                startActivity(new Intent(this, MyReviewsActivity.class));
+            else
+                startActivity(new Intent(this, PreferenceActivity.class));
         } else if (id == R.id.nav_offline_news) {
             startActivity(new Intent(this, OfflineActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
         } else if (id == R.id.nav_share) {

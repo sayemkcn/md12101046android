@@ -8,6 +8,6 @@
 
     <string name="singleNewsBaseUrl">http://bdbn.news/newses/</string>
 
-    <string name="sliderNewsUrl">http://www.bmdb.com.bd/running/</string>
-    <string name="featuredNewsUrl">http://www.bmdb.com.bd/upcoming/</string>
+    <string name="sliderContentUrl">http://10.42.0.169:8080/api/movie/running</string>
+    <string name="featuredContentUrl">http://10.42.0.169:8080/api/movie/upcoming</string>
 </resources>

@@ -30,6 +30,7 @@ import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.commons.SliderChildAnimator;
 import net.toracode.moviedb.entity.CustomList;
 import net.toracode.moviedb.entity.Movie;
+import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import org.json.JSONArray;
@@ -93,9 +94,9 @@ public class FeaturedFragmentHelper {
         this.VP_PAGE_NUMBER = pageNumber;
         Log.d("SECTION_NUMBER", String.valueOf(pageNumber));
 
-        this.fetchOfflineNews();
-        this.fetchSliderNews();
-        this.fetchFeaturedNews();
+        this.fetchOfflineItems();
+        this.fetchSliderItems();
+        this.fetchFeaturedItems();
         this.fetchMyLists();
     }
 
@@ -151,11 +152,11 @@ public class FeaturedFragmentHelper {
         return listOfCustomList;
     }
 
-    private void fetchFeaturedNews() {
+    private void fetchFeaturedItems() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String url = context.getResources().getString(R.string.featuredNewsUrl);
+                final String url = context.getResources().getString(R.string.featuredContentUrl);
                 try {
                     final String response = new ResourceProvider(context).fetchData(url);
                     context.runOnUiThread(new Runnable() {
@@ -171,17 +172,21 @@ public class FeaturedFragmentHelper {
         }).start();
     }
 
-    private void fetchSliderNews() {
+    private void fetchSliderItems() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String url = context.getResources().getString(R.string.sliderNewsUrl);
+                final String url = context.getResources().getString(R.string.sliderContentUrl);
                 try {
-                    final String response = new ResourceProvider(context).fetchData(url);
+                    final Response response = new ResourceProvider(context).fetchGetResponse(url);
+                    final String responseBody = response.body().string();
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            onResponse(url, response);
+                            if (response.code() == ResourceProvider.RESPONSE_CODE_NO_CONTENT)
+                                sliderLayout.setVisibility(View.GONE);
+                            else if (response.code() == ResourceProvider.RESPONSE_CODE_OK)
+                                onResponse(url, responseBody);
                         }
                     });
                 } catch (IOException e) {
@@ -195,10 +200,10 @@ public class FeaturedFragmentHelper {
     private void onResponse(String url, String response) {
         try {
             List<Movie> movieList = this.parseJson(response);
-            if (url.equals(context.getResources().getString(R.string.sliderNewsUrl)))
+            if (url.equals(context.getResources().getString(R.string.sliderContentUrl)))
                 this.updateSlider(movieList);
-            else
-                this.updateFeaturedNews(movieList);
+            else if (url.equals(context.getResources().getString(R.string.featuredContentUrl)))
+                this.updateFeaturedItems(movieList);
 
         } catch (JSONException e) {
             Log.e("JSONEx", e.getMessage());
@@ -208,7 +213,7 @@ public class FeaturedFragmentHelper {
         }
     }
 
-    private void updateFeaturedNews(List<Movie> movieList) {
+    private void updateFeaturedItems(List<Movie> movieList) {
         // WORK HERE
         this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context, movieList));
         this.featuredFeaturedRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
@@ -222,26 +227,26 @@ public class FeaturedFragmentHelper {
         try {
             Type listType = new TypeToken<List<Movie>>() {
             }.getType();
-            movieList = new Gson().fromJson(response, listType);
+            movieList = Commons.buildGson().fromJson(response, listType);
         } catch (Exception e) {
 //            Log.e("CAN_NOT_PARSE", e.getMessage());
         }
         return movieList;
     }
 
-    private void fetchOfflineNews() {
-        List<Movie> offlineNewsList = this.getOfflineNewsList();
+    private void fetchOfflineItems() {
+        List<Movie> offlineItemList = this.getOfflineItemList();
         // load offline news
-        if (offlineNewsList == null || offlineNewsList.isEmpty()) {
+        if (offlineItemList == null || offlineItemList.isEmpty()) {
             this.noItemsTextOffline.setVisibility(View.VISIBLE);
         } else {
             // if list not empty
-            Collections.reverse(offlineNewsList);
+            Collections.reverse(offlineItemList);
             // Limit 3 news items
-            if (offlineNewsList.size() > 3) {
-                this.setUpRecyclerView(this.featuredOfflineRecyclerView, offlineNewsList.subList(0, 3));
+            if (offlineItemList.size() > 3) {
+                this.setUpRecyclerView(this.featuredOfflineRecyclerView, offlineItemList.subList(0, 3));
             } else {
-                this.setUpRecyclerView(this.featuredOfflineRecyclerView, offlineNewsList);
+                this.setUpRecyclerView(this.featuredOfflineRecyclerView, offlineItemList);
             }
         }
 
@@ -263,7 +268,7 @@ public class FeaturedFragmentHelper {
 //        this.recyclerView.setVisibility(View.VISIBLE);
     }
 
-    private List<Movie> getOfflineNewsList() {
+    private List<Movie> getOfflineItemList() {
         String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_OFFLINE_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
             Gson gson = new Gson();
@@ -276,14 +281,13 @@ public class FeaturedFragmentHelper {
 
     // set json data to view
     public void updateSlider(final List<Movie> newsList) {
-
         if (context != null) {
             for (final Movie item : newsList) {
                 CustomSliderView textSliderView = new CustomSliderView(context, "");
                 // initialize a SliderLayout
                 textSliderView
                         .description(item.getName())
-                        .image(item.getImageUrl())
+                        .image(context.getResources().getString(R.string.baseUrl)+"movie/image/"+item.getUniqueId())
                         .setScaleType(BaseSliderView.ScaleType.Fit)
                         .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
                             @Override
