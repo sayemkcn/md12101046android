@@ -9,6 +9,7 @@
     android:layout_gravity="center"
     android:layout_marginEnd="@dimen/activity_vertical_margin"
     android:layout_marginRight="@dimen/activity_vertical_margin"
+    android:layout_marginBottom="3dp"
     card:cardBackgroundColor="@android:color/white"
     card:cardCornerRadius="4dp"
     card:cardElevation="4dp">

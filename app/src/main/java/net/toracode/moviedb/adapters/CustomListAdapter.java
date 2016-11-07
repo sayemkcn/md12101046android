@@ -38,7 +38,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         CustomList list = this.listOfCustomList.get(position);
-        myViewHolder.titleTextView.setText(list.getTitle());
+        myViewHolder.titleTextView.setText((position + 1) + ". " + list.getTitle());
         myViewHolder.typeTextView.setText(list.getType());
         myViewHolder.descriptionTextView.setText(list.getDescription());
     }
