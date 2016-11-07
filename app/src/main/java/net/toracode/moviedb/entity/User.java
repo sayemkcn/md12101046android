@@ -1,16 +1,44 @@
 package net.toracode.moviedb.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by sayemkcn on 10/31/16.
  */
 
-public class User extends BaseEntity implements Serializable {
+public class User implements Serializable {
+    private Long uniqueId;
+    private Date lastUpdated;
+    private Date created;
     private String name;
     private String email;
     private String accountId;
     private String phone;
+
+    public Long getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(Long uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
     public String getName() {
         return name;
@@ -36,7 +64,6 @@ public class User extends BaseEntity implements Serializable {
         this.accountId = accountId;
     }
 
-
     public String getPhone() {
         return phone;
     }
@@ -48,7 +75,10 @@ public class User extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "uniqueId=" + uniqueId +
+                ", lastUpdated=" + lastUpdated +
+                ", created=" + created +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", accountId='" + accountId + '\'' +
                 ", phone='" + phone + '\'' +

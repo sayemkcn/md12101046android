@@ -1,18 +1,46 @@
 package net.toracode.moviedb.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by sayemkcn on 11/2/16.
  */
 
-public class CustomList extends BaseEntity implements Serializable{
+public class CustomList implements Serializable {
+    private Long uniqueId;
+    private Date lastUpdated;
+    private Date created;
     private String title;
     private String description;
     private String type;
     private List<Movie> movieList;
     private User user;
+
+    public Long getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(Long uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
     public String getTitle() {
         return title;
@@ -57,14 +85,15 @@ public class CustomList extends BaseEntity implements Serializable{
     @Override
     public String toString() {
         return "CustomList{" +
-                "title='" + title + '\'' +
+                "uniqueId=" + uniqueId +
+                ", lastUpdated=" + lastUpdated +
+                ", created=" + created +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", type='" + type + '\'' +
                 ", movieList=" + movieList +
                 ", user=" + user +
                 '}';
     }
-
-
 }
 

@@ -8,7 +8,10 @@ import java.util.List;
  * Created by sayemkcn on 10/17/2016.
  */
 
-public class Movie extends BaseEntity implements Serializable {
+public class Movie implements Serializable {
+    private Long uniqueId;
+    private Date lastUpdated;
+    private Date created;
     private String name;
     private String storyLine;
     private String type;
@@ -26,6 +29,30 @@ public class Movie extends BaseEntity implements Serializable {
     private boolean featured;
     private boolean upcoming;
 
+
+    public Long getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(Long uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
     public String getName() {
         return name;
@@ -158,7 +185,10 @@ public class Movie extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         return "Movie{" +
-                "name='" + name + '\'' +
+                "uniqueId=" + uniqueId +
+                ", lastUpdated=" + lastUpdated +
+                ", created=" + created +
+                ", name='" + name + '\'' +
                 ", storyLine='" + storyLine + '\'' +
                 ", type='" + type + '\'' +
                 ", language='" + language + '\'' +

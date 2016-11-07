@@ -85,7 +85,7 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void run() {
                 try {
-                    Response response = new ResourceProvider(PreferenceActivity.this).fetchPostResponse(url);
+                    Response response = new ResourceProvider(PreferenceActivity.this).fetchGetResponse(url);
                     if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
                         final User user = parseUserObject(response.body().string());
                         runOnUiThread(new Runnable() {
@@ -177,7 +177,7 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
 
     // registers user with account kit account id
     private void registerUser(final AccountKitLoginResult loginResult) {
-        final String url = getResources().getString(R.string.baseUrl) + "user/"
+        final String url = getResources().getString(R.string.baseUrl) + "user/create/"
                 + loginResult.getAccessToken().getAccountId() + "?name=&email=";
         new Thread(new Runnable() {
             @Override
@@ -263,6 +263,7 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
         final SuperToast loadingToast = Commons.getLoadingToast(this);
         loadingToast.show();
         final String url = getResources().getString(R.string.baseUrl) + "user/update/" + AccountKit.getCurrentAccessToken().getAccountId() + "?name=" + name + "&email=" + email;
+        Log.i("REGISTER", url);
         new Thread(new Runnable() {
             @Override
             public void run() {

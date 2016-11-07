@@ -210,6 +210,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getString(R.string.loadingText));
             final String url = getResources().getString(R.string.baseUrl) + "review/create?title=" + title + "&message=" + message + "&rating=" + rating + "&accountId=" + this.accountId + "&movieId=" + this.movieId;
+            Log.i("POST_REVIEW",url);
             new Thread(new Runnable() {
                 @Override
                 public void run() {

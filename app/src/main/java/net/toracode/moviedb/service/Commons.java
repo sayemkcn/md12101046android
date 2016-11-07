@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,12 +25,15 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import org.greenrobot.eventbus.EventBus;
+import net.toracode.moviedb.DetailsActivity;
+import net.toracode.moviedb.OfflineActivity;
+import net.toracode.moviedb.R;
+import net.toracode.moviedb.entity.CategoryEntity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,99 +44,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import net.toracode.moviedb.DetailsActivity;
-import net.toracode.moviedb.OfflineActivity;
-import net.toracode.moviedb.R;
-import net.toracode.moviedb.entity.CategoryEntity;
-import net.toracode.moviedb.events.UserCategoryLoadEvent;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 /**
  * Created by SAyEM on 19-Aug-16.
  */
 public class Commons {
-    public static void loadUserCategoryList(final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    OkHttpClient okHttpClient = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
-                    Response response = okHttpClient.newCall(request).execute();
-
-                    List<CategoryEntity> categoryList = parseJson(response.body().string());
-//                    JSONArray jsonArray = new JSONArray(response.body().string());
-//                    final List<CategoryEntity> categoryList = new ArrayList<>();
-//                    for (int i = 0; i < jsonArray.length(); i++) {
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        CategoryEntity category = new CategoryEntity();
-//                        category.setId(jsonObject.getLong("categoryId"));
-//                        category.setName(jsonObject.getString("categoryName"));
-//                        category.setIconUrl(jsonObject.getString("iconUrl"));
-//                        category.setAccentColorCode(jsonObject.getString("accentColorCode"));
-//                        categoryList.add(category);
-//                    }
-                    if (categoryList != null && categoryList.size() != 0)
-                        EventBus.getDefault().post(new UserCategoryLoadEvent(categoryList));
-                } catch (IOException e) {
-                    Log.e("JSON_IOE", e.toString());
-                }
-            }
-        }).start();
-
-    }
-
-    public static void loadUserCategoryListFromResource(String categoryJson) {
-        final List<CategoryEntity> categoryList = parseJson(categoryJson);
-        if (categoryList != null && categoryList.size() != 0) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    EventBus.getDefault().post(new UserCategoryLoadEvent(categoryList));
-                }
-            }, 100);
-        }
-    }
-
-    private static List<CategoryEntity> parseJson(String response) {
-        try {
-            JSONArray jsonArray = new JSONArray(response);
-            List<CategoryEntity> categoryList = new ArrayList<>();
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                CategoryEntity category = new CategoryEntity();
-                category.setId(jsonObject.getLong("categoryId"));
-                category.setName(jsonObject.getString("categoryName"));
-                category.setIconUrl(jsonObject.getString("iconUrl"));
-                category.setAccentColorCode(jsonObject.getString("accentColorCode"));
-                categoryList.add(category);
-            }
-            return categoryList;
-        } catch (JSONException e) {
-            Log.d("CAT_JSON_EX", e.toString());
-        }
-        return null;
-    }
-
-    public static Map<TimeUnit, Long> computeTimeDiff(Date date1, Date date2) {
-        long diffInMillies = date2.getTime() - date1.getTime();
-        List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
-        Collections.reverse(units);
-        Map<TimeUnit, Long> result = new LinkedHashMap<TimeUnit, Long>();
-        long milliesRest = diffInMillies;
-        for (TimeUnit unit : units) {
-            long diff = unit.convert(milliesRest, TimeUnit.MILLISECONDS);
-            long diffInMilliesForUnit = unit.toMillis(diff);
-            milliesRest = milliesRest - diffInMilliesForUnit;
-            result.put(unit, diff);
-        }
-        return result;
-    }
+//
+//    public static Map<TimeUnit, Long> computeTimeDiff(Date date1, Date date2) {
+//        long diffInMillies = date2.getTime() - date1.getTime();
+//        List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
+//        Collections.reverse(units);
+//        Map<TimeUnit, Long> result = new LinkedHashMap<TimeUnit, Long>();
+//        long milliesRest = diffInMillies;
+//        for (TimeUnit unit : units) {
+//            long diff = unit.convert(milliesRest, TimeUnit.MILLISECONDS);
+//            long diffInMilliesForUnit = unit.toMillis(diff);
+//            milliesRest = milliesRest - diffInMilliesForUnit;
+//            result.put(unit, diff);
+//        }
+//        return result;
+//    }
 
     public static void showDialog(final Activity context, String title, String message) {
         final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(context);
@@ -214,7 +142,7 @@ public class Commons {
             builder.isCancelableOnTouchOutside(false);
             builder.show();
         } catch (WindowManager.BadTokenException e) {
-            Log.i("BadWindowTokenEx","Nifty Dialog bad window token exception on MainFragment");
+            Log.i("BadWindowTokenEx", "Nifty Dialog bad window token exception on MainFragment");
         }
     }
 
@@ -244,6 +172,7 @@ public class Commons {
         sendIntent.setType("text/plain");
         context.startActivity(Intent.createChooser(sendIntent, title));
     }
+
     public static void showDevDialog(final Activity context) {
         new AlertDialog.Builder(context)
                 .setTitle("Dev")
@@ -259,7 +188,7 @@ public class Commons {
                 }).show();
     }
 
-    public static Gson buildGson(){
+    public static Gson buildGson() {
         // Creates the json object which will manage the information received
         GsonBuilder builder = new GsonBuilder();
 

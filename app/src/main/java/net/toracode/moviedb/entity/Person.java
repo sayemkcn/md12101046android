@@ -8,13 +8,40 @@ import java.util.Date;
  * Created by sayemkcn on 10/30/16.
  */
 
-public class Person extends BaseEntity implements Serializable{
+public class Person implements Serializable {
+    private Long uniqueId;
+    private Date lastUpdated;
+    private Date created;
     private String name;
     private String[] designations;
     private Date birthDate;
     private String bio;
     private String[] awards;
     private String[] socialLinks;
+
+    public Long getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(Long uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
     public String getName() {
         return name;
@@ -67,7 +94,10 @@ public class Person extends BaseEntity implements Serializable{
     @Override
     public String toString() {
         return "Person{" +
-                "name='" + name + '\'' +
+                "uniqueId=" + uniqueId +
+                ", lastUpdated=" + lastUpdated +
+                ", created=" + created +
+                ", name='" + name + '\'' +
                 ", designations=" + Arrays.toString(designations) +
                 ", birthDate=" + birthDate +
                 ", bio='" + bio + '\'' +
