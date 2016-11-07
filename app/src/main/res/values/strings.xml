@@ -84,6 +84,7 @@
     <string name="myReviewsText">আমার রিভিউগুলো</string>
     <string name="myListsText">আমার লিস্টগুলো</string>
     <string name="title_activity_my_list">আমার লিস্টগুলো</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
 
 
 </resources>

@@ -15,6 +15,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--<meta-data-->
+            <!--android:name="android.app.searchable"-->
+            <!--android:resource="@xml/searchable" />-->
+
+        <!-- FACEBOOK SDK AND ACCOUNT KIT -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -29,6 +34,7 @@
             android:name="com.facebook.accountkit.ui.AccountKitActivity"
             android:theme="@style/AppLoginTheme"
             tools:replace="android:theme" />
+        <!-- END FACEBOOK -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -60,7 +66,14 @@
         <activity
             android:name=".MyListActivity"
             android:label="@string/title_activity_my_list"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SearchResultsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEARCH" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

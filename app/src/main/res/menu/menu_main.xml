@@ -3,6 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.toracode.moviedb.MainActivity">
     <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="Search"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_share"
         android:icon="@mipmap/ic_action_share"
         android:title="@string/action_share"
@@ -15,8 +24,5 @@
     <item
         android:id="@+id/action_logout"
         android:title="Logout" />
-    <item
-        android:id="@+id/action_settings"
-        android:title="Settings"
-        app:showAsAction="never" />
+
 </menu>

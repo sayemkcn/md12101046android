@@ -1,5 +1,7 @@
 package net.toracode.moviedb;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -337,6 +340,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.action_logout) {
             AccountKit.logOut();
             Commons.showSimpleToast(this, "You're logged out!");
+        }else if (id == R.id.action_search){
+            startActivity(new Intent(this,SearchResultsActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
