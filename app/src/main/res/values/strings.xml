@@ -13,6 +13,11 @@
     <string name="hourBefore"> ঘন্টা পূর্বে</string>
 
     <string-array name="categories">
+        <item>হোম</item>
+        <item>মুভি</item>
+        <item>টিভি সিরিজ</item>
+    </string-array>
+    <string-array name="categories_url_attr">
         <item>featured</item>
         <item>movie</item>
         <item>tvseries</item>

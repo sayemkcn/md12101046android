@@ -87,16 +87,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
-    @BindView(R.id.collapsingBarlayout)
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.appBarImageView)
-    ImageView appBarImageViw;
 
-    private List<CategoryEntity> categoryList;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
-
-    private boolean isUserRegistered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,24 +98,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // init ButterKnife
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
-
-//        // FACEBOOK ACCOUNT KIT
-//        AccessToken accessToken = AccountKit.getCurrentAccessToken();
-//
-//        if (accessToken != null) {
-//            //Handle Returning User
-//            Log.d("ACCOUNT_KIT", "LoggedIn");
-//        } else {
-//            //Handle new or logged out user
-//            this.onLoginPhone();
-//        }
-
-        // load user custom CategoryList
-        if (this.isUserRegistered)
-            Commons.loadUserCategoryList(getResources().getString(R.string.categoryUrl));
-        else
-            Commons.loadUserCategoryListFromResource(getCategoryListFromResource());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -145,46 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // setup tablayout with viewpager
         this.mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Pref.savePreference(MainActivity.this, "page_number", position);
-
-                collapsingToolbarLayout.setTitle(mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).getText());
-//                if (isUserRegistered && categoryList != null) {
-                if (categoryList != null) {
-                    Glide.with(MainActivity.this).load(categoryList.get(mTabLayout.getSelectedTabPosition()).getIconUrl()).placeholder(R.drawable.bdbn_banner).into(appBarImageViw);
-                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(categoryList.get(mTabLayout.getSelectedTabPosition()).getAccentColorCode()));
-                }
-//                } else
-//                    collapsingToolbarLayout.setBackgroundColor(Color.parseColor(colors[mTabLayout.getSelectedTabPosition()]));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-    }
-
-    // *******ACCOUNT KIT FACEBOOK *******//
-    public void onLoginPhone() {
-        final Intent intent = new Intent(this, AccountKitActivity.class);
-        AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
-                new AccountKitConfiguration.AccountKitConfigurationBuilder(
-                        LoginType.PHONE,
-                        AccountKitActivity.ResponseType.TOKEN); // or .ResponseType.TOKEN
-        // ... perform additional configuration ...
-        intent.putExtra(
-                AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-                configurationBuilder.build());
-        startActivityForResult(intent, APP_REQUEST_CODE);
     }
 
     @Override
@@ -256,41 +192,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // **********END FACEBOOK ACCOUNT KIT //
-    private String getCategoryListFromResource() {
-        InputStream is = getResources().openRawResource(R.raw.category_list);
-        Writer writer = new StringWriter();
-        char[] buffer = new char[1024];
-        try {
-            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            int n;
-            while ((n = reader.read(buffer)) != -1) {
-                writer.write(buffer, 0, n);
-            }
-        } catch (IOException e) {
-
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-//        Log.d("HELLO", writer.toString());
-        return writer.toString();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUserCategoryListLoaded(UserCategoryLoadEvent e) {
-        this.mTabLayout.removeAllTabs();
-        this.categoryList = e.getCategoryList();
-        for (int i = 0; i < e.getCategoryList().size(); i++) {
-            TabLayout.Tab tab = this.mTabLayout.newTab();
-            tab.setText(e.getCategoryList().get(i).getName());
-            this.mTabLayout.addTab(tab);
-        }
-        this.changeTabsFont(this.mTabLayout);
-    }
 
     private void changeTabsFont(TabLayout tabLayout) {
         Typeface typeface = Typeface.createFromAsset(this.getAssets(), "fonts/SolaimanLipi.ttf");

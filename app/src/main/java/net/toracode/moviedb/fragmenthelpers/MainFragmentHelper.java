@@ -12,12 +12,10 @@ import android.widget.ProgressBar;
 import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.RecyclerAdapter;
@@ -54,8 +52,6 @@ public class MainFragmentHelper {
     private List<Movie> movieList = new ArrayList<>();
     private SuperToast toast;
 
-    String[] categories;
-
     public MainFragmentHelper(Activity context, View rootView) {
         this.context = context;
         ButterKnife.bind(context);
@@ -65,7 +61,6 @@ public class MainFragmentHelper {
         this.moreButton = (Button) rootView.findViewById(R.id.moreButton);
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
         this.moreButton.setTypeface(typeface);
-        this.categories = context.getResources().getStringArray(R.array.categories);
     }
 
     public void exec(int pageNumber) {
@@ -106,9 +101,7 @@ public class MainFragmentHelper {
     }
 
     private String buildUrl(Activity context, int vpPageNumber, int pageIndex) {
-        // Build request url with filter
-        // get news source url from sharedpref and send them as param
-        String[] categories = context.getResources().getStringArray(R.array.categories);
+        String[] categories = context.getResources().getStringArray(R.array.categories_url_attr);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(context.getResources().getString(R.string.baseUrl))
                 .append("movie/type/")
@@ -117,42 +110,19 @@ public class MainFragmentHelper {
         return stringBuilder.toString();
     }
 
-    private String concatAllSourceIdIfNone(String url, String[] newsSourceParamValues) {
-        if (url.split("=").length < 2) {
-            // concat source id if no source is set yet
-//            for (int i = 0; i < newsSourceParamValues.length; i++) {
-//                url += i + 1 + ",";
-//            }
-            // concat source name if no source is set yet
-            for (int i = 0; i < newsSourceParamValues.length; i++) {
-                url += newsSourceParamValues[i] + ",";
-            }
-        }
-        return url;
-    }
-
     private void onResponse(String response, final int vpPageNumber) {
         try {
             this.movieList = this.parseJson(response);
-//            if (this.newsList.size()>pageSize){
-//                RecyclerAdapter adapter = new RecyclerAdapter(context,this.newsList);
-//                adapter.notifyDataSetChanged();
-//                recyclerView.setAdapter(adapter);
-//            }else {
             this.setUpRecyclerView(context, movieList, vpPageNumber);
-//            }
-
             this.progressBar.setVisibility(View.GONE);
             this.moreButton.setVisibility(View.VISIBLE);
             this.moreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    startIndex += pageSize;
                     pageIndex++;
                     fetchNews(vpPageNumber, pageIndex);
                 }
             });
-//            textView.setText(categoryEntity.toString());
         } catch (JSONException e) {
             Log.d("JSON_EX", e.toString());
         } catch (ParseException e) {
@@ -196,9 +166,6 @@ public class MainFragmentHelper {
                 this.movieList.add(movie);
             }
 
-//            Type listType = new TypeToken<List<Movie>>() {
-//            }.getType();
-//            this.movieList = gson.fromJson(response, listType);
         } catch (Exception e) {
             Log.e("CAN_NOT_PARSE", e.toString());
         }
@@ -206,7 +173,4 @@ public class MainFragmentHelper {
     }
 
 
-    public int getStartIndex(int pageNumber) {
-        return pageNumber * this.pageSize - this.pageSize + 1;
-    }
 }

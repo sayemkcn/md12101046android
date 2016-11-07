@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -48,13 +49,12 @@ public class SearchResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_results);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar()!=null)
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ButterKnife.bind(this);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,8 +76,11 @@ public class SearchResultsActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                if (newText.length() >= 3)
-//                    fetchMatchedData(newText);
+                if (newText.length() > 0) {
+                    String lastChar = newText.substring(newText.length() - 1);
+                    if (lastChar.equals(" "))
+                        fetchMatchedData(newText);
+                }
                 return false;
             }
         });
@@ -185,5 +188,11 @@ public class SearchResultsActivity extends AppCompatActivity {
     public void onBackPressed() {
         this.finish();
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

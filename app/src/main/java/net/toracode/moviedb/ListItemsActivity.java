@@ -166,13 +166,6 @@ public class ListItemsActivity extends AppCompatActivity {
         return movieList;
     }
 
-//    public void remove(List<Movie> movieList,int position) {
-//        if (position < 0 || position >= movieList.size()) {
-//            return;
-//        }
-//        movieList.remove(position);
-//    }
-
     @Override
     protected void onResume() {
         super.onResume();
