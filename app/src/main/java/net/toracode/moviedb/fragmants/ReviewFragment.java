@@ -97,11 +97,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         this.postReviewButton = (Button) getView().findViewById(R.id.postReviewButton);
         this.registerButton = (Button) getView().findViewById(R.id.registerButton);
 
-        this.fetchReviews();
+        // Show review box if user logged in.
+        if (AccountKit.getCurrentAccessToken()!=null){
+            this.registerButton.setVisibility(View.GONE);
+            this.reviewBoxLayout.setVisibility(View.VISIBLE);
+        }
 
+        this.fetchReviews();
         // post review
         this.postReviewButton.setOnClickListener(this);
-
         this.registerButton.setOnClickListener(this);
 
     }
@@ -201,7 +205,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getString(R.string.loadingText));
             final String url = getResources().getString(R.string.baseUrl) + "review/create?title=" + title + "&message=" + message + "&rating=" + rating + "&accountId=" + accountId + "&movieId=" + this.movieId;
-            Log.i("POST_REVIEW", url);
+//            Log.i("POST_REVIEW", url);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -228,14 +232,14 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                reviewTitleEditText.setText("");
-                reviewMessageEditText.setText("");
                 ratingBar.setRating(0f);
                 if (response.code() == ResourceProvider.RESPONSE_CODE_LOCKED) {
                     Commons.showDialog(getActivity(), getResources().getString(R.string.alreadyPostedReviewTitle), getResources().getString(R.string.alreadyPostedReviewMessage));
                 } else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE) {
                     Commons.showSimpleToast(getActivity().getApplicationContext(), getResources().getString(R.string.movieOrUserNotFoundText));
                 } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
+                    reviewTitleEditText.setText("");
+                    reviewMessageEditText.setText("");
                     fetchReviews();
                     Commons.showDialog(getActivity(), getResources().getString(R.string.reviewSuccessTitle), getResources().getString(R.string.reviewSuccessMessage));
                 }
