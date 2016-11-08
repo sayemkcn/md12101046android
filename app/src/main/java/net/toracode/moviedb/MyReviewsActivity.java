@@ -28,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class MyReviewsActivity extends AppCompatActivity {
 
@@ -64,12 +65,14 @@ public class MyReviewsActivity extends AppCompatActivity {
             public void run() {
                 try {
                     final Response response = new ResourceProvider(MyReviewsActivity.this).fetchGetResponse(url);
-                    final String responseBody = response.body().string();
+                    ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
-                                reviewList = parseReviewList(responseBody);
+                                reviewList = parseReviewList(responseBodyString);
                                 setupRecyclerView(reviewList, accountId);
                             }
                         }

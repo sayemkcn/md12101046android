@@ -40,6 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class MyListActivity extends AppCompatActivity {
 
@@ -86,12 +87,14 @@ public class MyListActivity extends AppCompatActivity {
                 public void run() {
                     try {
                         final Response response = new ResourceProvider(MyListActivity.this).fetchGetResponse(url);
-                        final String responseBody = response.body().string();
+                        ResponseBody responseBody = response.body();
+                        final String responseBodyString = responseBody.string();
+                        responseBody.close(); // close connection
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
-                                    List<CustomList> listOfCustomList = parseCustomList(responseBody);
+                                    List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                     setUpCustomListRecyclerView(recyclerView, listOfCustomList);
                                 }
                             }

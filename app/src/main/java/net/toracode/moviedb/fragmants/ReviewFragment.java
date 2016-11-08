@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RatingBar;
 
 import com.facebook.accountkit.AccountKit;
@@ -28,8 +27,6 @@ import com.google.gson.JsonParseException;
 import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.ReviewRecyclerAdapter;
-import net.toracode.moviedb.commons.ItemClickSupport;
-import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Review;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
@@ -44,13 +41,13 @@ import java.util.Date;
 import java.util.List;
 
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class ReviewFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_MOVIE_ID = "param1";
 
     private String movieId;
     private View reviewBoxLayout;
-    private String accountId = null;
 
     private EditText reviewTitleEditText;
     private EditText reviewMessageEditText;
@@ -89,7 +86,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         return inflater.inflate(R.layout.fragment_review, container, false);
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -101,18 +97,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         this.postReviewButton = (Button) getView().findViewById(R.id.postReviewButton);
         this.registerButton = (Button) getView().findViewById(R.id.registerButton);
 
-        // if user logged in then show user the review box and hide register button
-        if (AccountKit.getCurrentAccessToken() != null) {
-            this.reviewBoxLayout.setVisibility(View.VISIBLE);
-            this.registerButton.setVisibility(View.GONE);
-        }
-
-
-        this.accountId = Pref.getPreferenceString(getActivity(), Pref.PREF_ACCOUNT_ID);
-        // hide the review box if user not registered
-        if (accountId == null || accountId.isEmpty()) {
-            this.reviewBoxLayout.setVisibility(View.GONE);
-        }
         this.fetchReviews();
 
         // post review
@@ -140,13 +124,17 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
 
     private void onResponse(Response response) throws IOException {
         if (response != null && response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
-            final List<Review> reviewList = this.parseJson(response.body().string());
+            final ResponseBody responseBody = response.body();
+            final List<Review> reviewList = this.parseJson(responseBody.string());
+            responseBody.close(); // Look! I didn't forget to close the connections!
+            response.close();
             if (getActivity() != null) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getActivity(),reviewList);
-                        adapter.setAccountId(accountId);
+                        ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getActivity(), reviewList);
+                        if (AccountKit.getCurrentAccessToken() != null)
+                            adapter.setAccountId(AccountKit.getCurrentAccessToken().getAccountId());
                         reviewRecyclerView.setAdapter(adapter);
                         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         reviewRecyclerView.setNestedScrollingEnabled(false);
@@ -190,9 +178,12 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.postReviewButton)
-            postReview();
-        else if (id == R.id.registerButton) {
+        if (id == R.id.postReviewButton) {
+            if (AccountKit.getCurrentAccessToken() != null)
+                postReview(AccountKit.getCurrentAccessToken().getAccountId());
+            else
+                this.startActivity(new Intent(getActivity(), PreferenceActivity.class));
+        } else if (id == R.id.registerButton) {
             if (AccountKit.getCurrentAccessToken() != null) {
                 this.registerButton.setVisibility(View.GONE);
                 this.reviewBoxLayout.setVisibility(View.VISIBLE);
@@ -202,15 +193,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void postReview() {
+    private void postReview(String accountId) {
         String title = this.reviewTitleEditText.getText().toString();
         String message = this.reviewMessageEditText.getText().toString();
         float rating = this.ratingBar.getRating();
         if (this.isValid(title, message, rating)) {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getString(R.string.loadingText));
-            final String url = getResources().getString(R.string.baseUrl) + "review/create?title=" + title + "&message=" + message + "&rating=" + rating + "&accountId=" + this.accountId + "&movieId=" + this.movieId;
-            Log.i("POST_REVIEW",url);
+            final String url = getResources().getString(R.string.baseUrl) + "review/create?title=" + title + "&message=" + message + "&rating=" + rating + "&accountId=" + accountId + "&movieId=" + this.movieId;
+            Log.i("POST_REVIEW", url);
             new Thread(new Runnable() {
                 @Override
                 public void run() {

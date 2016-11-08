@@ -38,6 +38,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static net.toracode.moviedb.MainActivity.APP_REQUEST_CODE;
 
@@ -86,8 +87,11 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
             public void run() {
                 try {
                     Response response = new ResourceProvider(PreferenceActivity.this).fetchGetResponse(url);
+                    ResponseBody responseBody = response.body();
+                    String responseBodyString =  responseBody.string();
+                    responseBody.close(); // close the connection.
                     if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
-                        final User user = parseUserObject(response.body().string());
+                        final User user = parseUserObject(responseBodyString);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -188,10 +192,8 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
                         @Override
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
-                                Pref.savePreference(PreferenceActivity.this, Pref.PREF_ACCOUNT_ID, loginResult.getAccessToken().getAccountId());
                                 Commons.showSimpleToast(getApplicationContext(), "Registration successful!!");
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
-                                Pref.savePreference(PreferenceActivity.this, Pref.PREF_ACCOUNT_ID, loginResult.getAccessToken().getAccountId());
                                 Commons.showSimpleToast(getApplicationContext(), "Registration successful!!");
                             }
                         }

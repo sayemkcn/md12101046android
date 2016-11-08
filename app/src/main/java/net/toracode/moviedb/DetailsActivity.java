@@ -49,6 +49,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class DetailsActivity extends AppCompatActivity {
     @BindView(R.id.detailsImageView)
@@ -141,7 +142,9 @@ public class DetailsActivity extends AppCompatActivity {
             public void run() {
                 try {
                     final Response response = new ResourceProvider(DetailsActivity.this).fetchGetResponse(url);
-                    final String responseBody = response.body().string();
+                    final ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close(); // lol. closed the fucking connection.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -151,10 +154,10 @@ public class DetailsActivity extends AppCompatActivity {
                                 startActivity(new Intent(DetailsActivity.this, PreferenceActivity.class));
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_NOT_FOUND) { // if list is empty for the user.
                                 createCustomList("Watchlist", "This is your private watchlist. This list auto generated for you.", "private");
-                                List<CustomList> listOfCustomList = parseCustomList(responseBody);
+                                List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                 showAddToListDialog(listOfCustomList);
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) { // if list is not empty then show a chooser dialog
-                                List<CustomList> listOfCustomList = parseCustomList(responseBody);
+                                List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                 showAddToListDialog(listOfCustomList);
                             }
                         }

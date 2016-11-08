@@ -12,7 +12,7 @@ public class Pref {
     public static final String PREF_KEY_WISH_LIST = "bookmark_list";
     public static final String PREF_KEY_OFFLINE_LIST = "offline_news_list";
 
-    public static final String PREF_ACCOUNT_ID = "fb_account_kit_id";
+//    public static final String PREF_ACCOUNT_ID = "fb_account_kit_id";
 
     public static void savePreference(Context context, String key, boolean value) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);

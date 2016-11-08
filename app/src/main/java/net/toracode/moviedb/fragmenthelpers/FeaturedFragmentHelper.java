@@ -46,6 +46,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by sayemkcn on 8/10/16.
@@ -109,12 +110,14 @@ public class FeaturedFragmentHelper {
                 public void run() {
                     try {
                         final Response response = new ResourceProvider(context).fetchGetResponse(url);
-                        final String responseBody = response.body().string();
+                        final ResponseBody responseBody = response.body();
+                        final String responseBodyString = responseBody.string();
+                        responseBody.close(); // fucking closed the fucking connection.
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
-                                    List<CustomList> listOfCustomList = parseCustomList(responseBody);
+                                    List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                     setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
                                 }
                             }
@@ -179,14 +182,16 @@ public class FeaturedFragmentHelper {
                 final String url = context.getResources().getString(R.string.sliderContentUrl);
                 try {
                     final Response response = new ResourceProvider(context).fetchGetResponse(url);
-                    final String responseBody = response.body().string();
+                    final ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close(); // closed the fucking connection.
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_NO_CONTENT)
                                 sliderLayout.setVisibility(View.GONE);
                             else if (response.code() == ResourceProvider.RESPONSE_CODE_OK)
-                                onResponse(url, responseBody);
+                                onResponse(url, responseBodyString);
                         }
                     });
                 } catch (IOException e) {
@@ -287,7 +292,7 @@ public class FeaturedFragmentHelper {
                 // initialize a SliderLayout
                 textSliderView
                         .description(item.getName())
-                        .image(context.getResources().getString(R.string.baseUrl)+"movie/image/"+item.getUniqueId())
+                        .image(context.getResources().getString(R.string.baseUrl) + "movie/image/" + item.getUniqueId())
                         .setScaleType(BaseSliderView.ScaleType.Fit)
                         .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
                             @Override

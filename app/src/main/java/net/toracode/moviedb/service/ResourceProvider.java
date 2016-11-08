@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -44,7 +45,10 @@ public class ResourceProvider {
                 .url(url)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
-        return response.body().string();
+        ResponseBody responseBody = response.body();
+        String responseBodyString = responseBody.string();
+        responseBody.close(); // fuck yea!
+        return responseBodyString;
 
     }
 

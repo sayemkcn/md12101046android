@@ -31,6 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class ListItemsActivity extends AppCompatActivity {
 
@@ -64,14 +65,16 @@ public class ListItemsActivity extends AppCompatActivity {
             public void run() {
                 try {
                     final Response response = new ResourceProvider(ListItemsActivity.this).fetchGetResponse(url);
-                    final String responseBody = response.body().string();
+                    final ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close(); // closed connection.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_NOT_FOUND)
                                 Commons.showSimpleToast(getApplicationContext(), "List not found!");
                             else if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
-                                List<Movie> movieList = parseMovieList(responseBody);
+                                List<Movie> movieList = parseMovieList(responseBodyString);
                                 loadListItems(movieList);
                             }
                         }
@@ -128,7 +131,9 @@ public class ListItemsActivity extends AppCompatActivity {
             public void run() {
                 try {
                     final Response response = new ResourceProvider(ListItemsActivity.this).fetchPostResponse(url);
-                    final String responseBody = response.body().string();
+                    ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close(); // close connection.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -137,7 +142,7 @@ public class ListItemsActivity extends AppCompatActivity {
                                 Commons.showSimpleToast(getApplicationContext(), "Can not remove item.");
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                 Commons.showSimpleToast(getApplicationContext(), movie.getName() + " is removed from this list.");
-                                List<Movie> updatedMovieList = parseMovieList(responseBody);
+                                List<Movie> updatedMovieList = parseMovieList(responseBodyString);
                                 loadListItems(updatedMovieList);
                             }
                         }

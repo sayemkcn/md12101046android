@@ -1,12 +1,8 @@
 package net.toracode.moviedb;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,36 +20,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
-import com.facebook.accountkit.ui.AccountKitActivity;
-import com.facebook.accountkit.ui.AccountKitConfiguration;
-import com.facebook.accountkit.ui.LoginType;
 
 import net.toracode.moviedb.commons.Pref;
-import net.toracode.moviedb.entity.CategoryEntity;
-import net.toracode.moviedb.events.UserCategoryLoadEvent;
 import net.toracode.moviedb.fragmenthelpers.FeaturedFragmentHelper;
 import net.toracode.moviedb.fragmenthelpers.MainFragmentHelper;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.List;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -174,10 +153,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
-                                Pref.savePreference(MainActivity.this, Pref.PREF_ACCOUNT_ID, loginResult.getAccessToken().getAccountId());
                                 Commons.showSimpleToast(getApplicationContext(), "Registration successful!!");
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
-                                Pref.savePreference(MainActivity.this, Pref.PREF_ACCOUNT_ID, loginResult.getAccessToken().getAccountId());
                                 Commons.showSimpleToast(getApplicationContext(), "Registration successful!!");
                             }
                         }
@@ -241,8 +218,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.action_logout) {
             AccountKit.logOut();
             Commons.showSimpleToast(this, "You're logged out!");
-        }else if (id == R.id.action_search){
-            startActivity(new Intent(this,SearchResultsActivity.class));
+        } else if (id == R.id.action_search) {
+            startActivity(new Intent(this, SearchResultsActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

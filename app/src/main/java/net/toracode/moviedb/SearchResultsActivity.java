@@ -33,6 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
@@ -107,7 +108,9 @@ public class SearchResultsActivity extends AppCompatActivity {
             public void run() {
                 try {
                     final Response response = new ResourceProvider(SearchResultsActivity.this).fetchGetResponse(url);
-                    final String responseBody = response.body().string();
+                    ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close(); //close connection
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -119,7 +122,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
                                 noItemsFoundTextView.setVisibility(View.GONE);
-                                List<Movie> movieList = parseMovieList(responseBody);
+                                List<Movie> movieList = parseMovieList(responseBodyString);
                                 setupRecyclerView(movieList);
                             }
 
