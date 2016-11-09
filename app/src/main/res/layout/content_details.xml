@@ -14,18 +14,31 @@
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <ImageView
-            android:id="@+id/detailsImageView"
+        <FrameLayout
+            android:id="@+id/videoContainerLayout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_height="wrap_content">
+
+            <VideoView
+                android:id="@+id/trailerVideoView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher" />
+
+            <ImageButton
+                android:id="@+id/playButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_play_circle_filled_white_24dp" />
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/detailsImageView"
+            android:layout_below="@+id/videoContainerLayout"
             android:background="@android:color/white"
             android:orientation="vertical"
             android:paddingEnd="@dimen/activity_horizontal_margin"

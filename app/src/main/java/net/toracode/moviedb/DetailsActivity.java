@@ -2,20 +2,29 @@ package net.toracode.moviedb;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -52,8 +61,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class DetailsActivity extends AppCompatActivity {
-    @BindView(R.id.detailsImageView)
-    ImageView detailsImageView;
+    @BindView(R.id.trailerVideoView)
+    VideoView trailerVideoView;
     @BindView(R.id.movieNameTextView)
     TextView movieNameTextView;
     @BindView(R.id.movieTypeTextView)
@@ -64,6 +73,10 @@ public class DetailsActivity extends AppCompatActivity {
     TextView producerTextView;
     @BindView(R.id.ratingTextView)
     TextView ratingTextView;
+    @BindView(R.id.playButton)
+    ImageButton playButton;
+    @BindView(R.id.detailsScrollView)
+    ScrollView detailsScrollView;
 
     @BindView(R.id.contentLayout)
     View contentLayout;
@@ -71,6 +84,9 @@ public class DetailsActivity extends AppCompatActivity {
     ProgressBar progressBar;
     @BindView(R.id.reviewFragmentContainer)
     View reviewFragmentContainer;
+
+    private GestureDetector mGestureDitector;
+    private MediaController mc;
 
     private Movie movie;
 
@@ -84,7 +100,6 @@ public class DetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().hide();
 
         // register eventbus
         ButterKnife.bind(this);
@@ -95,6 +110,12 @@ public class DetailsActivity extends AppCompatActivity {
 
         this.updateViews(this.movie);
 
+        // VIDEO VIEW
+        this.mGestureDitector = new GestureDetector(this, mGestureListener);
+        this.showVideo(movie.getTrailerUrl());
+        this.setListeners();
+
+        // REVIEW FRAGMENT
         getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer, ReviewFragment.newInstance(movie.getUniqueId())).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -105,6 +126,51 @@ public class DetailsActivity extends AppCompatActivity {
                     startActivity(new Intent(DetailsActivity.this, PreferenceActivity.class));
                 else
                     fetchListsAndShowChooserDialog(AccountKit.getCurrentAccessToken().getAccountId());
+            }
+        });
+    }
+
+    private GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            mc.show();
+            if (trailerVideoView.isPlaying()) {
+                trailerVideoView.pause();
+//                playButton.setVisibility(View.VISIBLE);
+            } else {
+                trailerVideoView.start();
+                playButton.setVisibility(View.GONE);
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+    };
+
+    private void setListeners() {
+        this.trailerVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                trailerVideoView.seekTo(100);
+            }
+        });
+        this.trailerVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                mGestureDitector.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
+        this.playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                trailerVideoView.start();
+                playButton.setVisibility(View.GONE);
+            }
+        });
+        this.detailsScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+
+            @Override
+            public void onScrollChanged() {
+                mc.hide();
             }
         });
     }
@@ -129,6 +195,17 @@ public class DetailsActivity extends AppCompatActivity {
                 this.fetchListsAndShowChooserDialog(AccountKit.getCurrentAccessToken().getAccountId());
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showVideo(String url) {
+        Uri uri = Uri.parse(url);
+        this.mc = new MediaController(this);
+//        mc.setAnchorView(this.trailerVideoView);
+        this.trailerVideoView.setMediaController(mc);
+        this.trailerVideoView.setVideoURI(uri);
+        this.trailerVideoView.seekTo(100);
+        this.trailerVideoView.requestFocus();
+
     }
 
     // Fetch lists from the server
