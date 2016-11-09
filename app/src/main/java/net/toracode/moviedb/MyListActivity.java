@@ -205,4 +205,10 @@ public class MyListActivity extends AppCompatActivity {
         }).start();
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 }

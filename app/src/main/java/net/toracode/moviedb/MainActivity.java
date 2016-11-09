@@ -323,4 +323,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return MainActivity.this.categories[position];
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 }

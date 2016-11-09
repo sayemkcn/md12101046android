@@ -282,7 +282,7 @@ public class DetailsActivity extends AppCompatActivity {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_INTERNAL_SERVER_ERROR) {
                                 Commons.showSimpleToast(getApplicationContext(), "Can not create list!");
                             } else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE) {
-                                Commons.showDialog(DetailsActivity.this, "Can not create list!", "1. You must enter a name (length should be at least three letters)\n" +
+                                Commons.showDialog(DetailsActivity.this, "Can not create list!", "1. You must enter a name (length should be at least three characters)\n" +
                                         "2. You must enter a type. Type can be anything you want but if it's \"public\" the list will be shown to all.");
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
                                 String message;
@@ -393,6 +393,12 @@ public class DetailsActivity extends AppCompatActivity {
             // Adds the view to the layout
             layout.addView(image);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
 }

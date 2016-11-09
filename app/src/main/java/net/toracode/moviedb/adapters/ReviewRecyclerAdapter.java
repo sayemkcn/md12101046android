@@ -158,7 +158,7 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
                                     else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE)
                                         Commons.showSimpleToast(context, "Can not edit review.");
                                     else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
-                                        Commons.showSimpleToast(context, "Successfully edited review!");
+                                        Commons.showDialog(context,"Successful!","You\'ve edited your review.");
                                         notifyItemChanged(position);
                                     }
                                 }

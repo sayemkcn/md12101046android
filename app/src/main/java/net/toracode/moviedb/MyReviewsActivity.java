@@ -107,4 +107,9 @@ public class MyReviewsActivity extends AppCompatActivity {
         return reviewList;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 }

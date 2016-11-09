@@ -289,4 +289,10 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
             }
         }).start();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 }
