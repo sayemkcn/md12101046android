@@ -80,6 +80,10 @@ public class DetailsActivity extends AppCompatActivity {
     TextView averageRatingTextView;
     @BindView(R.id.posterImageView)
     ImageView posterImageView;
+    @BindView(R.id.genereTextView)
+    TextView genereTextView;
+    @BindView(R.id.durationTextView)
+    TextView durationTextView;
 
     @BindView(R.id.contentLayout)
     View contentLayout;
@@ -444,6 +448,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void updateViews(Movie movie) {
         this.movieNameTextView.setText(movie.getName());
+        this.genereTextView.setText(movie.getGenere());
+        this.durationTextView.setText(movie.getDuration());
         this.movieTypeTextView.setText(getResources().getString(R.string.categoryTextBangla) + " \n" + movie.getIndustry());
         this.directorNameTextView.setText(getResources().getString(R.string.directorTextBangla) + " \n" + movie.getProductionHouse());
         this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProductionHouse());

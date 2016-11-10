@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:scrollbars="none"
     tools:context="net.toracode.moviedb.DetailsActivity"
     tools:showIn="@layout/activity_details">
 
@@ -23,6 +24,7 @@
                 android:id="@+id/trailerVideoView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"
                 android:src="@mipmap/ic_launcher" />
 
@@ -35,40 +37,73 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/averageRatingTextView"
+            android:id="@+id/movieNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/videoContainerLayout"
             android:background="@color/colorPrimary"
-            android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text="Movie Name"
             android:textColor="@android:color/white"
-            android:textSize="30sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <LinearLayout
-            android:id="@+id/posterLayout"
+        <RelativeLayout
+            android:id="@+id/movieMetaLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/averageRatingTextView"
+            android:layout_below="@+id/movieNameTextView"
+            android:background="@android:color/darker_gray"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin">
 
+            <TextView
+                android:id="@+id/genereTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="Action | Drama"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/durationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="3 hours 50 minutes"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/posterLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/movieMetaLayout"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingTop="5dp">
+
             <ImageView
                 android:id="@+id/posterImageView"
-                android:layout_width="100dp"
-                android:layout_height="120dp"
-                android:padding="5dp"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:background="@drawable/image_view_background"
+                android:elevation="3dp"
                 android:src="@mipmap/ic_launcher" />
 
             <TextView
-                android:id="@+id/movieNameTextView"
+                android:id="@+id/averageRatingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Movie Name"
+                android:gravity="center_vertical"
+                android:text="Average Rating: 4.5"
                 android:textColor="@color/colorTitleText"
                 android:textSize="20sp"
                 android:textStyle="bold" />
