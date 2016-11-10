@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -42,6 +43,13 @@ public class ListItemsActivity extends AppCompatActivity {
 
     private Long listId;
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home)
+            this.finish();
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +169,7 @@ public class ListItemsActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray(responseBody);
             for (int i = 0; i < jsonArray.length(); i++) {
                 Movie movie = gson.fromJson(jsonArray.getJSONObject(i).toString(), Movie.class);
-                movie.setImageUrl(getResources().getString(R.string.baseUrl)+"movie/image/"+movie.getUniqueId());
+                movie.setImageUrl(getResources().getString(R.string.baseUrl) + "movie/image/" + movie.getUniqueId());
                 movieList.add(movie);
             }
         } catch (JSONException e) {

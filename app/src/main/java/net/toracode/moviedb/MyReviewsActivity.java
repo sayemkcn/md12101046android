@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -48,6 +49,8 @@ public class MyReviewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_reviews);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ButterKnife.bind(this);
 
@@ -56,6 +59,14 @@ public class MyReviewsActivity extends AppCompatActivity {
         else
             this.startActivity(new Intent(this, PreferenceActivity.class));
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home)
+            this.finish();
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadReviews(final String accountId) {

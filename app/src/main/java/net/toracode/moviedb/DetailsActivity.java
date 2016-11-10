@@ -124,7 +124,6 @@ public class DetailsActivity extends AppCompatActivity {
         this.updateViews(this.movie);
 
         // VIDEO VIEW
-        this.mGestureDitector = new GestureDetector(this, mGestureListener);
         this.showVideo(movie.getTrailerUrl());
         this.setListeners();
 
@@ -143,33 +142,11 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-    private GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            mc.show();
-            if (trailerVideoView.isPlaying()) {
-                trailerVideoView.pause();
-//                playButton.setVisibility(View.VISIBLE);
-            } else {
-                trailerVideoView.start();
-                playButton.setVisibility(View.GONE);
-            }
-            return super.onSingleTapConfirmed(e);
-        }
-    };
-
     private void setListeners() {
         this.trailerVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 trailerVideoView.seekTo(100);
-            }
-        });
-        this.trailerVideoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                mGestureDitector.onTouchEvent(motionEvent);
-                return true;
             }
         });
         this.playButton.setOnClickListener(new View.OnClickListener() {
