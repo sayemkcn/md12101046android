@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="baseUrl">http://10.42.0.169:8080/api/</string>
+    <string name="baseUrl">http://192.168.1.146:8080/api/</string>
     <string name="categoryUrl">http://blog.toracode.net/bdbn/category/list.json</string>
 
     <string name="singleNewsBaseUrl">http://bdbn.news/newses/</string>
 
-    <string name="sliderContentUrl">http://10.42.0.169:8080/api/movie/upcoming</string>
-    <string name="featuredContentUrl">http://10.42.0.169:8080/api/movie/featured</string>
+    <string name="sliderContentUrl">http://192.168.1.146:8080/api/movie/upcoming</string>
+    <string name="featuredContentUrl">http://192.168.1.146:8080/api/movie/featured</string>
 </resources>

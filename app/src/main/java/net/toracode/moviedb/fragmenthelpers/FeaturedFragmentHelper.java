@@ -195,7 +195,7 @@ public class FeaturedFragmentHelper {
                         }
                     });
                 } catch (IOException e) {
-                    Log.e("IOExSlider", e.getMessage());
+                    Log.e("IOExSlider", e.toString());
                 }
             }
         }).start();

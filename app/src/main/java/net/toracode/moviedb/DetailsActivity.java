@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -77,6 +76,10 @@ public class DetailsActivity extends AppCompatActivity {
     ImageButton playButton;
     @BindView(R.id.detailsScrollView)
     ScrollView detailsScrollView;
+    @BindView(R.id.averageRatingTextView)
+    TextView averageRatingTextView;
+    @BindView(R.id.posterImageView)
+    ImageView posterImageView;
 
     @BindView(R.id.contentLayout)
     View contentLayout;
@@ -445,7 +448,9 @@ public class DetailsActivity extends AppCompatActivity {
         this.directorNameTextView.setText(getResources().getString(R.string.directorTextBangla) + " \n" + movie.getProductionHouse());
         this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProductionHouse());
         this.ratingTextView.setText(String.valueOf(movie.getRated()));
-//        this.createImageView(movie.getThumbnailUrls());
+        String imageUrl = getResources().getString(R.string.baseUrl) + "movie/image/" + movie.getUniqueId();
+        Glide.with(this).load(imageUrl).placeholder(R.mipmap.ic_launcher).centerCrop().crossFade().into(this.posterImageView);
+        this.setAverageRating(this.averageRatingTextView, movie);
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
         this.movieNameTextView.setTypeface(typeface);
@@ -458,19 +463,45 @@ public class DetailsActivity extends AppCompatActivity {
         this.progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void createImageView(String[] imageUrls) {
-        GridLayout layout = (GridLayout) findViewById(R.id.thumbnailView);
-        for (int i = 0; i < imageUrls.length; i++) {
-            ImageView image = new ImageView(this);
-            image.setLayoutParams(new android.view.ViewGroup.LayoutParams(200, 200));
-            image.setMaxHeight(200);
-            image.setMaxWidth(200);
-            Glide.with(this).load(imageUrls[i]).crossFade().into(image);
-
-            // Adds the view to the layout
-            layout.addView(image);
-        }
+    private void setAverageRating(final TextView averageRatingTextView, Movie movie) {
+        final String url = getResources().getString(R.string.baseUrl) + "review/averagerating/movie/" + movie.getUniqueId();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Response response = new ResourceProvider(DetailsActivity.this).fetchGetResponse(url);
+                    final ResponseBody responseBody = response.body();
+                    final String averageRating = responseBody.string();
+                    responseBody.close();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.code() == ResourceProvider.RESPONSE_CODE_NO_CONTENT)
+                                averageRatingTextView.setText(String.valueOf(0f));
+                            else if (response.code() == ResourceProvider.RESPONSE_CODE_OK)
+                                averageRatingTextView.setText(averageRating);
+                        }
+                    });
+                } catch (IOException e) {
+                    Log.e("AVERATE_RATING", e.toString());
+                }
+            }
+        }).start();
     }
+
+//    private void createImageView(String[] imageUrls) {
+//        GridLayout layout = (GridLayout) findViewById(R.id.thumbnailView);
+//        for (int i = 0; i < imageUrls.length; i++) {
+//            ImageView image = new ImageView(this);
+//            image.setLayoutParams(new android.view.ViewGroup.LayoutParams(200, 200));
+//            image.setMaxHeight(200);
+//            image.setMaxWidth(200);
+//            Glide.with(this).load(imageUrls[i]).crossFade().into(image);
+//
+//            // Adds the view to the layout
+//            layout.addView(image);
+//        }
+//    }
 
     @Override
     protected void onResume() {
