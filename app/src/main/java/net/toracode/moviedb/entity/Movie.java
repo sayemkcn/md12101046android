@@ -23,7 +23,7 @@ public class Movie implements Serializable {
     private Date releaseDate;
     private String duration;
     private String budget;
-    private char rated;
+    private String rated;
     private String productionHouse;
     private List<Person> castAndCrewList;
     private boolean featured;
@@ -142,11 +142,11 @@ public class Movie implements Serializable {
         this.budget = budget;
     }
 
-    public char getRated() {
+    public String getRated() {
         return rated;
     }
 
-    public void setRated(char rated) {
+    public void setRated(String rated) {
         this.rated = rated;
     }
 
@@ -199,7 +199,7 @@ public class Movie implements Serializable {
                 ", releaseDate=" + releaseDate +
                 ", duration='" + duration + '\'' +
                 ", budget='" + budget + '\'' +
-                ", rated=" + rated +
+                ", rated='" + rated + '\'' +
                 ", productionHouse='" + productionHouse + '\'' +
                 ", castAndCrewList=" + castAndCrewList +
                 ", featured=" + featured +

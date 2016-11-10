@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -50,6 +51,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,26 +66,30 @@ public class DetailsActivity extends AppCompatActivity {
     VideoView trailerVideoView;
     @BindView(R.id.movieNameTextView)
     TextView movieNameTextView;
-    @BindView(R.id.movieTypeTextView)
-    TextView movieTypeTextView;
-    @BindView(R.id.directorNameTextView)
-    TextView directorNameTextView;
     @BindView(R.id.producerNameTextView)
     TextView producerTextView;
-    @BindView(R.id.ratingTextView)
-    TextView ratingTextView;
+    @BindView(R.id.filmRatingTextView)
+    TextView filmRatingTextView;
     @BindView(R.id.playButton)
     ImageButton playButton;
     @BindView(R.id.detailsScrollView)
     ScrollView detailsScrollView;
-    @BindView(R.id.averageRatingTextView)
-    TextView averageRatingTextView;
+    @BindView(R.id.averageRatingBar)
+    RatingBar averageRatingBar;
     @BindView(R.id.posterImageView)
     ImageView posterImageView;
     @BindView(R.id.genereTextView)
     TextView genereTextView;
     @BindView(R.id.durationTextView)
     TextView durationTextView;
+    @BindView(R.id.releaseDateTextView)
+    TextView releaseDateTextView;
+    @BindView(R.id.storyLineTextView)
+    TextView storyLineTextView;
+    @BindView(R.id.industryTextView)
+    TextView movieIndustryTextView;
+    @BindView(R.id.movieLanguageTextView)
+    TextView movieLanguageTextView;
 
     @BindView(R.id.contentLayout)
     View contentLayout;
@@ -450,26 +456,29 @@ public class DetailsActivity extends AppCompatActivity {
         this.movieNameTextView.setText(movie.getName());
         this.genereTextView.setText(movie.getGenere());
         this.durationTextView.setText(movie.getDuration());
-        this.movieTypeTextView.setText(getResources().getString(R.string.categoryTextBangla) + " \n" + movie.getIndustry());
-        this.directorNameTextView.setText(getResources().getString(R.string.directorTextBangla) + " \n" + movie.getProductionHouse());
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+        if (movie.getReleaseDate() != null)
+            this.releaseDateTextView.setText(getResources().getString(R.string.releaseDateTextBangla) + ": " + sdf.format(movie.getReleaseDate()));
+        this.storyLineTextView.setText(movie.getStoryLine());
         this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProductionHouse());
-        this.ratingTextView.setText(String.valueOf(movie.getRated()));
+        this.filmRatingTextView.setText(String.valueOf(movie.getRated()));
         String imageUrl = getResources().getString(R.string.baseUrl) + "movie/image/" + movie.getUniqueId();
         Glide.with(this).load(imageUrl).placeholder(R.mipmap.ic_launcher).centerCrop().crossFade().into(this.posterImageView);
-        this.setAverageRating(this.averageRatingTextView, movie);
+        this.setAverageRating(this.averageRatingBar, movie);
+        this.movieIndustryTextView.setText("Movie Industry: " + movie.getIndustry());
+        this.movieLanguageTextView.setText("Language: " + movie.getLanguage());
+        Log.d("LANGUAGE", movie.getLanguage());
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
         this.movieNameTextView.setTypeface(typeface);
-        this.movieTypeTextView.setTypeface(typeface);
-        this.directorNameTextView.setTypeface(typeface);
         this.producerTextView.setTypeface(typeface);
-        this.ratingTextView.setTypeface(typeface);
+        this.filmRatingTextView.setTypeface(typeface);
 
         this.contentLayout.setVisibility(View.VISIBLE);
         this.progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void setAverageRating(final TextView averageRatingTextView, Movie movie) {
+    private void setAverageRating(final RatingBar averageRatingBar, Movie movie) {
         final String url = getResources().getString(R.string.baseUrl) + "review/averagerating/movie/" + movie.getUniqueId();
         new Thread(new Runnable() {
             @Override
@@ -483,9 +492,9 @@ public class DetailsActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_NO_CONTENT)
-                                averageRatingTextView.setText(String.valueOf(0f));
+                                averageRatingBar.setRating(0f);
                             else if (response.code() == ResourceProvider.RESPONSE_CODE_OK)
-                                averageRatingTextView.setText(averageRating);
+                                averageRatingBar.setRating(Float.parseFloat(averageRating));
                         }
                     });
                 } catch (IOException e) {
