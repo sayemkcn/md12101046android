@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -102,31 +101,31 @@ public class FeaturedFragmentHelper {
     }
 
     private void fetchPublicLists() {
-            final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=0";
-            Log.d("URL_PUB",url);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final Response response = new ResourceProvider(context).fetchGetResponse(url);
-                        final ResponseBody responseBody = response.body();
-                        final String responseBodyString = responseBody.string();
-                        responseBody.close(); // fucking closed the fucking connection.
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
-                                    List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
-                                    setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
-                                }
+        final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=0";
+        Log.d("URL_PUB", url);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Response response = new ResourceProvider(context).fetchGetResponse(url);
+                    final ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close(); // fucking closed the fucking connection.
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
+                                List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
+                                setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
                             }
-                        });
+                        }
+                    });
 
-                    } catch (IOException e) {
-                        Log.e("GET_LISTS", e.toString());
-                    }
+                } catch (IOException e) {
+                    Log.e("GET_LISTS", e.toString());
                 }
-            }).start();
+            }
+        }).start();
     }
 
     private List<CustomList> parseCustomList(String jsonArrayString) {
@@ -272,13 +271,22 @@ public class FeaturedFragmentHelper {
     }
 
     private List<Movie> getOfflineItemList() {
+        List<Movie> movieList = new ArrayList<>();
         String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_OFFLINE_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
-            Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
-            }.getType());
+            try {
+                JSONArray jsonArray = new JSONArray(newsListJson);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Gson gson = new Gson();
+                    Movie movie = gson.fromJson(jsonArray.getJSONObject(i).toString(), Movie.class);
+                    movie.setImageUrl(context.getResources().getString(R.string.baseUrl) + "movie/image/" + movie.getUniqueId());
+                    movieList.add(movie);
+                }
+            } catch (JSONException e) {
+                Log.e("PARSE_OFFLINE_LIST", e.toString());
+            }
         }
-        return null;
+        return movieList;
     }
 
 
