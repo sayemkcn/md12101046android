@@ -160,7 +160,7 @@
                 android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/featuredMyListRecyclerView"
+                android:id="@+id/featuredPublicListsRecyclerView"
                 android:layout_width="match_parent"
                 android:paddingBottom="50dp"
                 android:layout_height="wrap_content"

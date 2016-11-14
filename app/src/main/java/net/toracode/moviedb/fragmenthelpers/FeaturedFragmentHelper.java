@@ -56,7 +56,7 @@ public class FeaturedFragmentHelper {
     private static int VP_PAGE_NUMBER = 0;
     private RecyclerView featuredOfflineRecyclerView;
     private RecyclerView featuredMyListRecyclerView;
-    private RecyclerView featuredFeaturedRecyclerView;
+    private RecyclerView featuredPublicListRecyclerView;
     private TextView noItemsTextOffline;
     private SliderLayout sliderLayout;
 
@@ -68,8 +68,8 @@ public class FeaturedFragmentHelper {
         this.context = context;
         ButterKnife.bind(context);
         this.featuredOfflineRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredOfflineRecyclerView);
-        this.featuredMyListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredMyListRecyclerView);
-        this.featuredFeaturedRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredFeaturedRecyclerView);
+        this.featuredMyListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredPublicListsRecyclerView);
+        this.featuredPublicListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredFeaturedRecyclerView);
         this.noItemsTextOffline = (TextView) rootView.findViewById(R.id.offline_no_items_text);
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
         // Slider Layout
@@ -98,13 +98,12 @@ public class FeaturedFragmentHelper {
         this.fetchOfflineItems();
         this.fetchSliderItems();
         this.fetchFeaturedItems();
-        this.fetchMyLists();
+        this.fetchPublicLists();
     }
 
-    private void fetchMyLists() {
-        if (AccountKit.getCurrentAccessToken() != null) {
-            String accountId = AccountKit.getCurrentAccessToken().getAccountId();
-            final String url = context.getResources().getString(R.string.baseUrl) + "list?accountId=" + accountId;
+    private void fetchPublicLists() {
+            final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=0";
+            Log.d("URL_PUB",url);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -116,7 +115,7 @@ public class FeaturedFragmentHelper {
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
+                                if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                     List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                     setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
                                 }
@@ -128,7 +127,6 @@ public class FeaturedFragmentHelper {
                     }
                 }
             }).start();
-        }
     }
 
     private List<CustomList> parseCustomList(String jsonArrayString) {
@@ -220,10 +218,10 @@ public class FeaturedFragmentHelper {
 
     private void updateFeaturedItems(List<Movie> movieList) {
         // WORK HERE
-        this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context, movieList));
-        this.featuredFeaturedRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        this.featuredPublicListRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context, movieList));
+        this.featuredPublicListRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         this.featuredNewsLayout.setVisibility(View.VISIBLE);
-        this.featuredFeaturedRecyclerView.setNestedScrollingEnabled(false);
+        this.featuredPublicListRecyclerView.setNestedScrollingEnabled(false);
     }
 
 
