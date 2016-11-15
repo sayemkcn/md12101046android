@@ -90,6 +90,7 @@
     <string name="myListsText">আমার লিস্টগুলো</string>
     <string name="title_activity_my_list">আমার লিস্টগুলো</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="title_activity_list_fragments">ListFragmentsActivity</string>
 
 
 </resources>

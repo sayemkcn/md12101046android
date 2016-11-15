@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.accountkit.AccountKit;
 
+import net.toracode.moviedb.ListFragmentsActivity;
 import net.toracode.moviedb.ListItemsActivity;
 import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
@@ -132,6 +134,12 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                 }
             });
 
+            commentButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    commentButtonClicked(listOfCustomList.get(getAdapterPosition()).getUniqueId());
+                }
+            });
 
             // ITEM ON LONG CLICK
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -154,6 +162,16 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
             });
 
         }
+    }
+
+    private void commentButtonClicked(Long listId) {
+        Bundle bundle = new Bundle();
+        bundle.putString("ref", "CustomListAdapter");
+        bundle.putLong("listId", listId);
+        Intent intent = new Intent(context, ListFragmentsActivity.class);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 
@@ -271,7 +289,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
     }
 
     // post edited list to server
-    private void submitCustomList(CustomList list, String accountId,final String name, String desc, String type) {
+    private void submitCustomList(CustomList list, String accountId, final String name, String desc, String type) {
         if (AccountKit.getCurrentAccessToken() == null) {
             context.startActivity(new Intent(context, PreferenceActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             return;
