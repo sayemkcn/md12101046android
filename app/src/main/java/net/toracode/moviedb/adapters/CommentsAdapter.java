@@ -3,6 +3,7 @@ package net.toracode.moviedb.adapters;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +100,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
                 @Override
                 public void onClick(View view) {
                     if (AccountKit.getCurrentAccessToken() != null)
-                        editButtonClicked(commentList.get(getAdapterPosition()));
+                        editButtonClicked(commentList.get(getAdapterPosition()), getAdapterPosition());
                 }
             });
             deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +114,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
         }
     }
 
+    // -----DELETE BUTTON ACTION-------- //
     private void deleteButtonClicked(final Comment comment, final int adapterPosition) {
         new MaterialDialog.Builder(context)
                 .title("DELETE")
@@ -141,7 +143,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
                             if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                 remove(adapterPosition);
                                 Commons.showSimpleToast(context, "Comment deleted!");
-                            } else
+                            } else if (response.code() == ResourceProvider.RESPONSE_CODE_FORBIDDEN)
+                                Commons.showSimpleToast(context, "You can\'t delete this comment. It\'s not your comment.");
+                            else
                                 Commons.showSimpleToast(context, "Can not delete comment!");
                         }
                     });
@@ -152,8 +156,49 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             }
         }).start();
     }
+    // -----END DELETE BUTTON ACTION-------- //
 
-    private void editButtonClicked(Comment comment) {
+    // -------EDIT BUTTON ACTION------ //
+    private void editButtonClicked(final Comment comment, final int adapterPosition) {
+        new MaterialDialog.Builder(context)
+                .title("Edit Comment")
+                .inputRange(1, 255)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input("", comment.getCommentBody(), new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        comment.setCommentBody(input.toString());
+                        submitEditedComment(comment, adapterPosition);
+                    }
+                })
+                .positiveText("Submit")
+                .negativeText("Cancel")
+                .show();
+    }
+
+    private void submitEditedComment(Comment comment, final int adapterPosition) {
+        final String url = context.getResources().getString(R.string.baseUrl) + "comment/edit/" + comment.getUniqueId() + "?commentBody=" + comment.getCommentBody() + "&accountId=" + AccountKit.getCurrentAccessToken().getAccountId();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Response response = new ResourceProvider(context).fetchPostResponse(url);
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.code() == ResourceProvider.RESPONSE_ACCEPTED) {
+                                notifyItemChanged(adapterPosition);
+                                Commons.showSimpleToast(context, "Successful!");
+                            } else
+                                Commons.showSimpleToast(context, "Can not edit comment!");
+                        }
+                    });
+
+                } catch (IOException e) {
+                    Log.e("DELETE_COMMENT", e.toString());
+                }
+            }
+        }).start();
     }
 
 
