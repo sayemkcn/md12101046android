@@ -21,11 +21,11 @@
         android:textStyle="bold" />
 
     <TextView
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
         android:id="@+id/commentBodyTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:text="Ya I saw that movview. It wasn't that much great bu I can tell you that your time won't be wasted."
         android:textColor="@android:color/white" />
 
@@ -35,9 +35,39 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:text="On Jun,24 2016"
-        android:textColorHint="@android:color/white"
         android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
         android:textSize="10sp" />
+
+    <LinearLayout
+        android:id="@+id/actionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@mipmap/ic_edit_white_24dp"
+            android:text="Edit"
+            android:textColor="@android:color/white"
+            android:textSize="8sp" />
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@android:drawable/ic_menu_delete"
+            android:text="Delete"
+            android:textColor="@android:color/white"
+            android:textSize="8sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
