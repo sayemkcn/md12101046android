@@ -17,6 +17,7 @@ public class CustomList implements Serializable {
     private String type;
     private List<Movie> movieList;
     private User user;
+    private List<User> followerList;
 
     public Long getUniqueId() {
         return uniqueId;
@@ -82,6 +83,14 @@ public class CustomList implements Serializable {
         this.user = user;
     }
 
+    public List<User> getFollowerList() {
+        return followerList;
+    }
+
+    public void setFollowerList(List<User> followerList) {
+        this.followerList = followerList;
+    }
+
     @Override
     public String toString() {
         return "CustomList{" +
@@ -93,6 +102,7 @@ public class CustomList implements Serializable {
                 ", type='" + type + '\'' +
                 ", movieList=" + movieList +
                 ", user=" + user +
+                ", followerList=" + followerList +
                 '}';
     }
 }

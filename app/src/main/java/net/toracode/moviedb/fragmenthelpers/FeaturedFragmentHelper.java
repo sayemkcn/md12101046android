@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -56,7 +55,7 @@ public class FeaturedFragmentHelper {
     private static int VP_PAGE_NUMBER = 0;
     private RecyclerView featuredOfflineRecyclerView;
     private RecyclerView featuredMyListRecyclerView;
-    private RecyclerView featuredFeaturedRecyclerView;
+    private RecyclerView featuredPublicListRecyclerView;
     private TextView noItemsTextOffline;
     private SliderLayout sliderLayout;
 
@@ -68,8 +67,8 @@ public class FeaturedFragmentHelper {
         this.context = context;
         ButterKnife.bind(context);
         this.featuredOfflineRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredOfflineRecyclerView);
-        this.featuredMyListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredMyListRecyclerView);
-        this.featuredFeaturedRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredFeaturedRecyclerView);
+        this.featuredMyListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredPublicListsRecyclerView);
+        this.featuredPublicListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredFeaturedRecyclerView);
         this.noItemsTextOffline = (TextView) rootView.findViewById(R.id.offline_no_items_text);
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
         // Slider Layout
@@ -98,37 +97,35 @@ public class FeaturedFragmentHelper {
         this.fetchOfflineItems();
         this.fetchSliderItems();
         this.fetchFeaturedItems();
-        this.fetchMyLists();
+        this.fetchPublicLists();
     }
 
-    private void fetchMyLists() {
-        if (AccountKit.getCurrentAccessToken() != null) {
-            String accountId = AccountKit.getCurrentAccessToken().getAccountId();
-            final String url = context.getResources().getString(R.string.baseUrl) + "list?accountId=" + accountId;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final Response response = new ResourceProvider(context).fetchGetResponse(url);
-                        final ResponseBody responseBody = response.body();
-                        final String responseBodyString = responseBody.string();
-                        responseBody.close(); // fucking closed the fucking connection.
-                        context.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
-                                    List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
-                                    setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
-                                }
+    private void fetchPublicLists() {
+        final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=0";
+        Log.d("URL_PUB", url);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final Response response = new ResourceProvider(context).fetchGetResponse(url);
+                    final ResponseBody responseBody = response.body();
+                    final String responseBodyString = responseBody.string();
+                    responseBody.close(); // fucking closed the fucking connection.
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
+                                List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
+                                setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
                             }
-                        });
+                        }
+                    });
 
-                    } catch (IOException e) {
-                        Log.e("GET_LISTS", e.toString());
-                    }
+                } catch (IOException e) {
+                    Log.e("GET_LISTS", e.toString());
                 }
-            }).start();
-        }
+            }
+        }).start();
     }
 
     private List<CustomList> parseCustomList(String jsonArrayString) {
@@ -220,10 +217,10 @@ public class FeaturedFragmentHelper {
 
     private void updateFeaturedItems(List<Movie> movieList) {
         // WORK HERE
-        this.featuredFeaturedRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context, movieList));
-        this.featuredFeaturedRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        this.featuredPublicListRecyclerView.setAdapter(new FeaturedRecyclerAdapter(context, movieList));
+        this.featuredPublicListRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         this.featuredNewsLayout.setVisibility(View.VISIBLE);
-        this.featuredFeaturedRecyclerView.setNestedScrollingEnabled(false);
+        this.featuredPublicListRecyclerView.setNestedScrollingEnabled(false);
     }
 
 
@@ -274,13 +271,22 @@ public class FeaturedFragmentHelper {
     }
 
     private List<Movie> getOfflineItemList() {
+        List<Movie> movieList = new ArrayList<>();
         String newsListJson = Pref.getPreferenceString(context, Pref.PREF_KEY_OFFLINE_LIST);
         if (newsListJson != null && !newsListJson.equals("")) {
-            Gson gson = new Gson();
-            return gson.fromJson(newsListJson, new TypeToken<List<Movie>>() {
-            }.getType());
+            try {
+                JSONArray jsonArray = new JSONArray(newsListJson);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Gson gson = new Gson();
+                    Movie movie = gson.fromJson(jsonArray.getJSONObject(i).toString(), Movie.class);
+                    movie.setImageUrl(context.getResources().getString(R.string.baseUrl) + "movie/image/" + movie.getUniqueId());
+                    movieList.add(movie);
+                }
+            } catch (JSONException e) {
+                Log.e("PARSE_OFFLINE_LIST", e.toString());
+            }
         }
-        return null;
+        return movieList;
     }
 
 
