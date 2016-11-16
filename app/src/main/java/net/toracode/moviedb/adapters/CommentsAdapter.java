@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -58,7 +58,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
         if (AccountKit.getCurrentAccessToken() != null) {
             if (comment.getUser().getAccountId().equals(AccountKit.getCurrentAccessToken().getAccountId())) {
                 myViewHolder.actionLayout.setVisibility(View.VISIBLE);
-            }else
+            } else
                 myViewHolder.actionLayout.setVisibility(View.GONE);
         }
     }
@@ -81,8 +81,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
         TextView commentBodyTextView;
         TextView dateTimeTextView;
         View actionLayout;
-        Button editButton;
-        Button deleteButton;
+        ImageButton editButton;
+        ImageButton deleteButton;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -90,8 +90,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             commentBodyTextView = (TextView) itemView.findViewById(R.id.commentBodyTextView);
             dateTimeTextView = (TextView) itemView.findViewById(R.id.dateTimeTextView);
             actionLayout = itemView.findViewById(R.id.actionLayout);
-            editButton = (Button) itemView.findViewById(R.id.editButton);
-            deleteButton = (Button) itemView.findViewById(R.id.deleteButton);
+            editButton = (ImageButton) itemView.findViewById(R.id.editButton);
+            deleteButton = (ImageButton) itemView.findViewById(R.id.deleteButton);
 
 //            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
 //            nameTextView.setTypeface(typeface);

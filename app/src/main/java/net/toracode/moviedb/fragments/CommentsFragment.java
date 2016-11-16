@@ -136,6 +136,10 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void postComment() {
+        if (!Commons.isNetworkAvailable(getActivity())) {
+            Commons.showSimpleToast(getActivity().getApplicationContext(), "Please connect to the internet first!");
+            return;
+        }
         String comment = this.commentBoxEditText.getText().toString();
         if (comment.isEmpty()) {
             this.commentBoxEditText.setError("Please write something!");

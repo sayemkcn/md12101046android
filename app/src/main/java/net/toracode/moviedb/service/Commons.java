@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -29,27 +31,15 @@ import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.OfflineActivity;
 import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
-import net.toracode.moviedb.entity.CategoryEntity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by SAyEM on 19-Aug-16.
  */
 public class Commons {
-//
+    //
 //    public static Map<TimeUnit, Long> computeTimeDiff(Date date1, Date date2) {
 //        long diffInMillies = date2.getTime() - date1.getTime();
 //        List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
@@ -64,6 +54,12 @@ public class Commons {
 //        }
 //        return result;
 //    }
+    public static boolean isNetworkAvailable(Activity context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     public static void showDialog(final Activity context, String title, String message) {
         final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(context);
