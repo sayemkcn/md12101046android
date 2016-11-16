@@ -42,9 +42,18 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/dateTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="May 31, 2016 "
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+
+        <TextView
             android:id="@+id/descriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Description of the List"
             android:textSize="12sp" />
 

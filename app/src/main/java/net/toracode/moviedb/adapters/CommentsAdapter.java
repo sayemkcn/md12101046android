@@ -49,11 +49,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
         Comment comment = this.commentList.get(position);
         myViewHolder.nameTextView.setText(comment.getUser().getName());
         myViewHolder.commentBodyTextView.setText(comment.getCommentBody());
-        SimpleDateFormat sdf = new SimpleDateFormat(" hh:mm:ss a 'on' MMM dd, yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a 'on' MMM dd, yyyy");
         if (comment.getLastUpdated() != null)
-            myViewHolder.dateTimeTextView.setText(sdf.format(comment.getLastUpdated()));
+            myViewHolder.dateTimeTextView.setText("Last updated on " + sdf.format(comment.getLastUpdated()));
         else
-            myViewHolder.dateTimeTextView.setText(sdf.format(comment.getCreated()));
+            myViewHolder.dateTimeTextView.setText("Created at " + sdf.format(comment.getCreated()));
 
         if (AccountKit.getCurrentAccessToken() != null) {
             if (comment.getUser().getAccountId().equals(AccountKit.getCurrentAccessToken().getAccountId())) {
