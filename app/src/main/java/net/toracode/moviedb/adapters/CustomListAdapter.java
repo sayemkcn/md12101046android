@@ -166,7 +166,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
 
     private void commentButtonClicked(Long listId) {
         Bundle bundle = new Bundle();
-        bundle.putString("ref", "CustomListAdapter");
+        bundle.putString("ref", "CustomListAdapterCommentButton");
         bundle.putLong("listId", listId);
         Intent intent = new Intent(context, ListFragmentsActivity.class);
         intent.putExtras(bundle);

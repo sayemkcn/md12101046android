@@ -7,10 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -50,7 +52,7 @@ import okhttp3.ResponseBody;
 /**
  * Created by sayemkcn on 8/10/16.
  */
-public class FeaturedFragmentHelper {
+public class FeaturedFragmentHelper implements View.OnClickListener {
     private Activity context;
     private static int VP_PAGE_NUMBER = 0;
     private RecyclerView featuredOfflineRecyclerView;
@@ -58,9 +60,11 @@ public class FeaturedFragmentHelper {
     private RecyclerView featuredPublicListRecyclerView;
     private TextView noItemsTextOffline;
     private SliderLayout sliderLayout;
+    private Button loadMoreButton;
 
     private View featuredNewsLayout;
-//    private ProgressBar progressBar;
+    //    private ProgressBar progressBar;
+    private int listPage = 0;
 
 
     public FeaturedFragmentHelper(Activity context, View rootView) {
@@ -79,6 +83,7 @@ public class FeaturedFragmentHelper {
         this.sliderLayout.setDuration(4000);
 
         this.featuredNewsLayout = rootView.findViewById(R.id.featuredNewsLayout);
+        this.loadMoreButton = (Button) rootView.findViewById(R.id.loadMoreButton);
 
         // set typeface to title textviews
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
@@ -98,10 +103,13 @@ public class FeaturedFragmentHelper {
         this.fetchSliderItems();
         this.fetchFeaturedItems();
         this.fetchPublicLists();
+        this.loadMoreButton.setOnClickListener(this);
     }
 
     private void fetchPublicLists() {
-        final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=0";
+        final SuperToast loadingToast = Commons.getLoadingToast(context);
+        loadingToast.show();
+        final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=" + listPage;
         Log.d("URL_PUB", url);
         new Thread(new Runnable() {
             @Override
@@ -114,6 +122,7 @@ public class FeaturedFragmentHelper {
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            if (loadingToast.isShowing()) loadingToast.dismiss();
                             if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                 List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                 setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
@@ -264,9 +273,11 @@ public class FeaturedFragmentHelper {
 
     private void setUpCustomListRecyclerView(RecyclerView recyclerView, List<CustomList> listOfCustomList) {
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setAdapter(new CustomListAdapter(this.context, listOfCustomList));
+        CustomListAdapter adapter = new CustomListAdapter(this.context,listOfCustomList);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
         recyclerView.setNestedScrollingEnabled(false);
+        adapter.notifyDataSetChanged();
 //        this.recyclerView.setVisibility(View.VISIBLE);
     }
 
@@ -319,4 +330,12 @@ public class FeaturedFragmentHelper {
         this.sliderLayout.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.loadMoreButton) {
+            this.listPage++;
+            this.fetchPublicLists();
+        }
+    }
 }

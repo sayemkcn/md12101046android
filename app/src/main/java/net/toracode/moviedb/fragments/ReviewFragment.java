@@ -1,4 +1,4 @@
-package net.toracode.moviedb.fragmants;
+package net.toracode.moviedb.fragments;
 
 
 import android.app.ProgressDialog;

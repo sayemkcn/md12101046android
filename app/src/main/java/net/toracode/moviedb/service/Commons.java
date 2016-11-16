@@ -27,6 +27,7 @@ import com.google.gson.JsonParseException;
 
 import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.OfflineActivity;
+import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.entity.CategoryEntity;
 
@@ -88,7 +89,7 @@ public class Commons {
             public void onClick(View view) {
                 if (builder.isShowing())
                     builder.cancel();
-                if (!(context instanceof DetailsActivity))
+                if (context instanceof PreferenceActivity)
                     context.finish();
             }
         });

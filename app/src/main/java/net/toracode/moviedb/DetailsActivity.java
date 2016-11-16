@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
@@ -42,7 +41,7 @@ import com.google.gson.reflect.TypeToken;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.CustomList;
 import net.toracode.moviedb.entity.Movie;
-import net.toracode.moviedb.fragmants.ReviewFragment;
+import net.toracode.moviedb.fragments.ReviewFragment;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
