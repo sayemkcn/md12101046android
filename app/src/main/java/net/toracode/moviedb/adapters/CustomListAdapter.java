@@ -69,8 +69,6 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
             if (list.getUser().getAccountId().equals(accountId)) {
                 myViewHolder.followButton.setText("Edit");
                 myViewHolder.followButton.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_create_black_18dp, 0, 0, 0);
-                myViewHolder.followButton.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
-//                myViewHolder.followButton.setEnabled(false);
             } else {
                 checkFollowing(myViewHolder.followButton, list.getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
             }
@@ -222,7 +220,6 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                             if (response.code() == ResourceProvider.RESPONSE_ACCEPTED) {
                                 button.setText(UNFOLLOW_BUTTON_TEXT);
                                 button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
-                                button.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
                             } else {
                                 Toast.makeText(context, "Can not follow list", Toast.LENGTH_SHORT).show();
                             }
@@ -248,7 +245,6 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                             if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
                                 followButton.setText(UNFOLLOW_BUTTON_TEXT);
                                 followButton.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
-                                followButton.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
                             }
                         }
                     });
