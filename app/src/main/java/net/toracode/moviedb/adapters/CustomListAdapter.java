@@ -58,7 +58,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
         CustomList list = this.listOfCustomList.get(position);
-        myViewHolder.titleTextView.setText((position + 1) + ". " + list.getTitle());
+        myViewHolder.titleTextView.setText(list.getTitle());
         myViewHolder.typeTextView.setText(list.getType());
         myViewHolder.descriptionTextView.setText(list.getDescription());
 
@@ -85,7 +85,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
         TextView titleTextView;
         TextView typeTextView;
         TextView descriptionTextView;
-        Button likeButton;
+//        Button likeButton;
         Button commentButton;
         Button followButton;
 
@@ -94,7 +94,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
             titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             typeTextView = (TextView) itemView.findViewById(R.id.typeTextView);
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
-            likeButton = (Button) itemView.findViewById(R.id.likeButton);
+//            likeButton = (Button) itemView.findViewById(R.id.likeButton);
             commentButton = (Button) itemView.findViewById(R.id.commentButton);
             followButton = (Button) itemView.findViewById(R.id.followButton);
 
