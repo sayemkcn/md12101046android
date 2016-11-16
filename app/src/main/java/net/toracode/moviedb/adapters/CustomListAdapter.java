@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,12 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.accountkit.AccountKit;
 
 import net.toracode.moviedb.ListFragmentsActivity;
@@ -27,7 +23,6 @@ import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.commons.CustomListOperations;
 import net.toracode.moviedb.entity.CustomList;
-import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import java.io.IOException;
@@ -68,6 +63,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
             String accountId = AccountKit.getCurrentAccessToken().getAccountId();
             if (list.getUser().getAccountId().equals(accountId)) {
                 myViewHolder.followButton.setText("Edit");
+                myViewHolder.followButton.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_create_black_18dp, 0, 0, 0);
                 myViewHolder.followButton.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
 //                myViewHolder.followButton.setEnabled(false);
             } else {
@@ -192,6 +188,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_ACCEPTED) {
                                 button.setText(FOLLOW_BUTTON_TEXT);
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_border_black_18dp, 0, 0, 0);
                                 button.setTextColor(context.getResources().getColor(android.R.color.black));
                             } else {
                                 Toast.makeText(context, "Can not unfollow list", Toast.LENGTH_SHORT).show();
@@ -219,6 +216,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_ACCEPTED) {
                                 button.setText(UNFOLLOW_BUTTON_TEXT);
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
                                 button.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
                             } else {
                                 Toast.makeText(context, "Can not follow list", Toast.LENGTH_SHORT).show();
@@ -244,6 +242,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                         public void run() {
                             if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
                                 followButton.setText(UNFOLLOW_BUTTON_TEXT);
+                                followButton.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
                                 followButton.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
                             }
                         }
