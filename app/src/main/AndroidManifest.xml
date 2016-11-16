@@ -70,7 +70,7 @@
         <activity
             android:name=".ListFragmentsActivity"
             android:label="@string/title_activity_list_fragments"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

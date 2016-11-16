@@ -58,7 +58,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
         if (AccountKit.getCurrentAccessToken() != null) {
             if (comment.getUser().getAccountId().equals(AccountKit.getCurrentAccessToken().getAccountId())) {
                 myViewHolder.actionLayout.setVisibility(View.VISIBLE);
-            }
+            }else
+                myViewHolder.actionLayout.setVisibility(View.GONE);
         }
     }
 
