@@ -1,4 +1,4 @@
-package net.toracode.moviedb.fragmants;
+package net.toracode.moviedb.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -136,6 +136,10 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void postComment() {
+        if (!Commons.isNetworkAvailable(getActivity())) {
+            Commons.showSimpleToast(getActivity().getApplicationContext(), "Please connect to the internet first!");
+            return;
+        }
         String comment = this.commentBoxEditText.getText().toString();
         if (comment.isEmpty()) {
             this.commentBoxEditText.setError("Please write something!");

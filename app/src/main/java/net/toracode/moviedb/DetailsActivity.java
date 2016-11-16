@@ -13,10 +13,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -39,10 +37,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
+import net.toracode.moviedb.commons.CustomListOperations;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.CustomList;
 import net.toracode.moviedb.entity.Movie;
-import net.toracode.moviedb.fragmants.ReviewFragment;
+import net.toracode.moviedb.fragments.ReviewFragment;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
@@ -220,7 +219,7 @@ public class DetailsActivity extends AppCompatActivity {
                                 Commons.showSimpleToast(getApplicationContext(), "You\'re not logged in. Please login to continue.");
                                 startActivity(new Intent(DetailsActivity.this, PreferenceActivity.class));
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_NOT_FOUND) { // if list is empty for the user.
-                                createCustomList("Watchlist", "This is your private watchlist. This list auto generated for you.", "private");
+                                new CustomListOperations(DetailsActivity.this).createCustomList("Watchlist", "This is your private watchlist. This list auto generated for you.", "private");
                                 List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                 showAddToListDialog(listOfCustomList);
                             } else if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) { // if list is not empty then show a chooser dialog
@@ -263,7 +262,7 @@ public class DetailsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
-                        showNewListDialog();
+                        new CustomListOperations(DetailsActivity.this).showNewListDialog();
                     }
                 })
                 .canceledOnTouchOutside(false)
@@ -304,73 +303,73 @@ public class DetailsActivity extends AppCompatActivity {
         return listTitles;
     }
 
-    // create a custom list dialog.
-    private void showNewListDialog() {
-        new MaterialDialog.Builder(this)
-                .title("Create new list")
-                .customView(R.layout.create_custom_list, true)
-                .positiveText("Create")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        View view = dialog.getCustomView();
-                        EditText nameEditText = (EditText) view.findViewById(R.id.listName);
-                        EditText descEditText = (EditText) view.findViewById(R.id.listDescription);
-                        EditText typeEditText = (EditText) view.findViewById(R.id.listType);
-                        String name = nameEditText.getText().toString();
-                        String desc = descEditText.getText().toString();
-                        String type = typeEditText.getText().toString();
+//    // create a custom list dialog.
+//    private void showNewListDialog() {
+//        new MaterialDialog.Builder(this)
+//                .title("Create new list")
+//                .customView(R.layout.create_custom_list, true)
+//                .positiveText("Create")
+//                .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        View view = dialog.getCustomView();
+//                        EditText nameEditText = (EditText) view.findViewById(R.id.listName);
+//                        EditText descEditText = (EditText) view.findViewById(R.id.listDescription);
+//                        EditText typeEditText = (EditText) view.findViewById(R.id.listType);
+//                        String name = nameEditText.getText().toString();
+//                        String desc = descEditText.getText().toString();
+//                        String type = typeEditText.getText().toString();
+////
+//                        createCustomList(name, desc, type);
+//                    }
+//                })
+//                .negativeText("Cancel")
+//                .canceledOnTouchOutside(false)
+//                .show();
 //
-                        createCustomList(name, desc, type);
-                    }
-                })
-                .negativeText("Cancel")
-                .canceledOnTouchOutside(false)
-                .show();
+//    }
 
-    }
-
-    private void createCustomList(final String name, String desc, String type) {
-        if (AccountKit.getCurrentAccessToken() == null) {
-            this.startActivity(new Intent(this, PreferenceActivity.class));
-            return;
-        }
-
-        final String accountId = AccountKit.getCurrentAccessToken().getAccountId();
-        final String url = getResources().getString(R.string.baseUrl) + "list/create?accountId=" + accountId + "&title=" + name + "&description=" + desc + "&type=" + type;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final Response response = new ResourceProvider(DetailsActivity.this).fetchPostResponse(url);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (response.code() == ResourceProvider.RESPONSE_CODE_INTERNAL_SERVER_ERROR) {
-                                Commons.showSimpleToast(getApplicationContext(), "Can not create list!");
-                            } else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE) {
-                                Commons.showDialog(DetailsActivity.this, "Can not create list!", "1. You must enter a name (length should be at least three characters)\n" +
-                                        "2. You must enter a type. Type can be anything you want but if it's \"public\" the list will be shown to all.");
-                            } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
-                                String message;
-                                if (name.toLowerCase().equals("watchlist")) {
-                                    message = "We have created an watchlist for you. You can create new list of your own by clicking new list button on the dialog.";
-                                } else {
-                                    message = "Your list has been created successfully.";
-                                }
-                                Commons.showDialog(DetailsActivity.this, "Successful!", message);
-                                fetchListsAndShowChooserDialog(accountId);
-                            }
-                        }
-                    });
-
-                } catch (IOException e) {
-                    Log.e("CREATE_CUSTOM_LIST", e.toString());
-                }
-            }
-        }).start();
-
-    }
+//    private void createCustomList(final String name, String desc, String type) {
+//        if (AccountKit.getCurrentAccessToken() == null) {
+//            this.startActivity(new Intent(this, PreferenceActivity.class));
+//            return;
+//        }
+//
+//        final String accountId = AccountKit.getCurrentAccessToken().getAccountId();
+//        final String url = getResources().getString(R.string.baseUrl) + "list/create?accountId=" + accountId + "&title=" + name + "&description=" + desc + "&type=" + type;
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    final Response response = new ResourceProvider(DetailsActivity.this).fetchPostResponse(url);
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (response.code() == ResourceProvider.RESPONSE_CODE_INTERNAL_SERVER_ERROR) {
+//                                Commons.showSimpleToast(getApplicationContext(), "Can not create list!");
+//                            } else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE) {
+//                                Commons.showDialog(DetailsActivity.this, "Can not create list!", "1. You must enter a name (length should be at least three characters)\n" +
+//                                        "2. You must enter a type. Type can be anything you want but if it's \"public\" the list will be shown to all.");
+//                            } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
+//                                String message;
+//                                if (name.toLowerCase().equals("watchlist")) {
+//                                    message = "We have created an watchlist for you. You can create new list of your own by clicking new list button on the dialog.";
+//                                } else {
+//                                    message = "Your list has been created successfully.";
+//                                }
+//                                Commons.showDialog(DetailsActivity.this, "Successful!", message);
+//                                fetchListsAndShowChooserDialog(accountId);
+//                            }
+//                        }
+//                    });
+//
+//                } catch (IOException e) {
+//                    Log.e("CREATE_CUSTOM_LIST", e.toString());
+//                }
+//            }
+//        }).start();
+//
+//    }
 
     private List<CustomList> parseCustomList(String jsonArrayString) {
         // Creates the json object which will manage the information received

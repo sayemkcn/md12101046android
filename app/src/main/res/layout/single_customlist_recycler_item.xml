@@ -49,35 +49,39 @@
             android:textSize="12sp" />
 
         <LinearLayout
-            android:weightSum="3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="2">
 
+            <!--<Button-->
+            <!--android:layout_weight="1"-->
+            <!--android:textSize="10sp"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:id="@+id/likeButton"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Like" />-->
             <Button
-                android:layout_weight="1"
-                android:textSize="10sp"
-                android:background="@android:color/transparent"
-                android:id="@+id/likeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Like" />
-            <Button
-                android:textSize="10sp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:id="@+id/commentButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Comment" />
-            <Button
-                android:textSize="10sp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
                 android:id="@+id/followButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Follow" />
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@mipmap/ic_favorite_border_black_18dp"
+                android:text="Follow"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/commentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@mipmap/ic_comment_black_18dp"
+                android:text="Comment"
+                android:textSize="10sp" />
+
         </LinearLayout>
     </LinearLayout>
 

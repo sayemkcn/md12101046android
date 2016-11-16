@@ -230,9 +230,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_my_list) {
-            if (AccountKit.getCurrentAccessToken() != null)
-                startActivity(new Intent(this, MyListActivity.class));
-            else
+            if (AccountKit.getCurrentAccessToken() != null) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isPublic", false);
+                bundle.putString("ref", "MyList");
+                startActivity(new Intent(this, ListFragmentsActivity.class).putExtras(bundle));
+            } else
                 startActivity(new Intent(this, PreferenceActivity.class));
         } else if (id == R.id.nav_my_reviews) {
             if (AccountKit.getCurrentAccessToken() != null)
