@@ -28,6 +28,11 @@
         <item>#4D4D4D</item>
     </string-array>
 
+    <string-array name="list_types">
+        <item>Private</item>
+        <item>Public</item>
+    </string-array>
+
     <string name="releaseDateTextBangla">রিলিজ ডেটঃ </string>
     <string name="directorTextBangla">পরিচালকঃ </string>
     <string name="castTextBangla">অভিনেতা/অভিনেত্রীঃ </string>

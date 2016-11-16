@@ -19,10 +19,13 @@
         android:gravity="center"
         android:hint="Description" />
 
-    <EditText
+    <Spinner
         android:id="@+id/listType"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:entries="@array/list_types"
         android:gravity="center"
         android:hint="Type" />
 
