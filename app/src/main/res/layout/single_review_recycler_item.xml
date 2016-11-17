@@ -12,7 +12,8 @@
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginStart="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
-    card:cardBackgroundColor="@android:color/white"
+    card:cardBackgroundColor="@android:color/black"
+    android:alpha=".7"
     card:cardCornerRadius="2dp"
     card:cardElevation="3dp"
     card:contentPadding="10dp">
@@ -53,8 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="01 Apr 2.16"
-                android:textSize="10sp" />
-
+                android:textColor="@android:color/white"
+                android:textSize="8sp" />
 
         </RelativeLayout>
 
@@ -64,7 +65,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="Review Title"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -73,6 +74,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="Review Message"
+            android:textColor="@android:color/white"
             android:textStyle="italic" />
 
         <ImageButton
