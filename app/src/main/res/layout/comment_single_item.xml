@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:layout_marginBottom="5dp"
+    android:alpha=".7"
+    android:background="@android:color/black"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin">
 
@@ -57,15 +59,6 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/commentBodyTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:text="Ya I saw that movview. It wasn't that much great bu I can tell you that your time won't be wasted."
-        android:textColor="@android:color/white" />
-
-    <TextView
         android:id="@+id/dateTimeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,8 +66,16 @@
         android:text="On Jun,24 2016"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
+    <TextView
+        android:id="@+id/commentBodyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="Ya I saw that movview. It wasn't that much great bu I can tell you that your time won't be wasted."
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -91,7 +91,7 @@ public class MainFragmentHelper {
                             public void run() {
                                 if (toast.isShowing()) toast.dismiss();
                                 Commons.showNetworkUnavailableDialog(context, "Connection unavailable!",
-                                        "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!\nWant to read your saved news items?");
+                                        "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!\nOpen saved movies?");
                             }
                         });
                     }

@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="@string/featured_my_list_text"
+                    android:text="@string/featured_recent_list_text"
                     android:textColor="@android:color/black" />
             </android.support.v7.widget.CardView>
 

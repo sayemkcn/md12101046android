@@ -26,7 +26,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
-import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.User;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
@@ -88,7 +87,7 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
                 try {
                     Response response = new ResourceProvider(PreferenceActivity.this).fetchGetResponse(url);
                     ResponseBody responseBody = response.body();
-                    String responseBodyString =  responseBody.string();
+                    String responseBodyString = responseBody.string();
                     responseBody.close(); // close the connection.
                     if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
                         final User user = parseUserObject(responseBodyString);
@@ -222,6 +221,10 @@ public class PreferenceActivity extends AppCompatActivity implements View.OnClic
             if (AccountKit.getCurrentAccessToken() == null) {
                 this.onLoginPhone();
             } else {
+                if (!Commons.isNetworkAvailable(this)) {
+                    Commons.showSimpleToast(this, "Can not connect to the internet..");
+                    return;
+                }
                 this.postEditedData();
                 this.updatePhoneNumber();
             }
