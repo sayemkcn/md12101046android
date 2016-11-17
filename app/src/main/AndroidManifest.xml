@@ -57,10 +57,6 @@
             android:label="@string/title_activity_list_items"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MyReviewsActivity"
-            android:label="@string/title_activity_my_reviews"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".SearchResultsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

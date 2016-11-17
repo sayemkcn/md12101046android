@@ -127,7 +127,11 @@ public class DetailsActivity extends AppCompatActivity {
         this.setListeners();
 
         // REVIEW FRAGMENT
-        getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer, ReviewFragment.newInstance(movie.getUniqueId())).commit();
+        ReviewFragment reviewFragment = new ReviewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong("movieId", movie.getUniqueId());
+        reviewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.reviewFragmentContainer, reviewFragment).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

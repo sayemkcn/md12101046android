@@ -44,9 +44,11 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class ReviewFragment extends Fragment implements View.OnClickListener {
-    private static final String ARG_MOVIE_ID = "param1";
+    private static final String ARG_MOVIE_ID = "movieId";
+    private static final String ARG_ACCOUNT_ID = "accountId";
 
-    private String movieId;
+    private Long movieId;
+    private String accountId;
     private View reviewBoxLayout;
 
     private EditText reviewTitleEditText;
@@ -63,19 +65,12 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public static ReviewFragment newInstance(Long movieId) {
-        ReviewFragment fragment = new ReviewFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_MOVIE_ID, String.valueOf(movieId));
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            movieId = getArguments().getString(ARG_MOVIE_ID);
+            this.movieId = getArguments().getLong(ARG_MOVIE_ID);
+            this.accountId = getArguments().getString(ARG_ACCOUNT_ID);
         }
     }
 
@@ -98,21 +93,19 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         this.registerButton = (Button) getView().findViewById(R.id.registerButton);
 
         // Show review box if user logged in.
-        if (AccountKit.getCurrentAccessToken()!=null){
+        if (AccountKit.getCurrentAccessToken() != null) {
             this.registerButton.setVisibility(View.GONE);
             this.reviewBoxLayout.setVisibility(View.VISIBLE);
         }
 
-        this.fetchReviews();
+        this.fetchReviews(this.buildUrl());
         // post review
         this.postReviewButton.setOnClickListener(this);
         this.registerButton.setOnClickListener(this);
 
     }
 
-    private void fetchReviews() {
-        final String url = this.buildUrl();
-//        Log.d("URL_REVIEW", url);
+    private void fetchReviews(final String url) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -127,7 +120,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     }
 
     private void onResponse(Response response) throws IOException {
-        if (response != null && response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
+        if (response != null && (response.code() == ResourceProvider.RESPONSE_CODE_FOUND || response.code() == ResourceProvider.RESPONSE_CODE_OK)) {
             final ResponseBody responseBody = response.body();
             final List<Review> reviewList = this.parseJson(responseBody.string());
             responseBody.close(); // Look! I didn't forget to close the connections!
@@ -173,8 +166,18 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     }
 
     private String buildUrl() {
+        Log.i("MOV ACC", this.movieId + "  " + this.accountId);
+
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getResources().getString(R.string.baseUrl) + "review/movie/" + this.movieId);
+        stringBuilder.append(getResources().getString(R.string.baseUrl));
+        if (this.movieId != null && this.accountId == null) {
+            // url for reviews for a movie
+            stringBuilder.append("review/movie/" + this.movieId);
+        } else if (this.accountId != null && (this.movieId == null || this.movieId == 0)) {
+            // my reviews url
+            stringBuilder.append("review/user/" + accountId);
+            this.reviewBoxLayout.setVisibility(View.GONE);
+        }
         stringBuilder.append("?page=" + this.page + "&size=" + this.size);
         return stringBuilder.toString();
     }
@@ -240,7 +243,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
                     reviewTitleEditText.setText("");
                     reviewMessageEditText.setText("");
-                    fetchReviews();
+                    fetchReviews(buildUrl());
                     Commons.showDialog(getActivity(), getResources().getString(R.string.reviewSuccessTitle), getResources().getString(R.string.reviewSuccessMessage));
                 }
             }

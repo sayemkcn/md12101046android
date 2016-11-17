@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_my_list) {
-            if (AccountKit.getCurrentAccessToken() != null) {
+            if (AccountKit.getCurrentAccessToken() != null) { // if user logged in
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isPublic", false);
                 bundle.putString("ref", "MyList");
@@ -238,9 +238,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else
                 startActivity(new Intent(this, PreferenceActivity.class));
         } else if (id == R.id.nav_my_reviews) {
-            if (AccountKit.getCurrentAccessToken() != null)
-                startActivity(new Intent(this, MyReviewsActivity.class));
-            else
+            if (AccountKit.getCurrentAccessToken() != null) { // if user logged in
+                Intent intent = new Intent(this, ListFragmentsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ref", "MyReviews");
+                bundle.putString("accountId", AccountKit.getCurrentAccessToken().getAccountId());
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } else
                 startActivity(new Intent(this, PreferenceActivity.class));
         } else if (id == R.id.nav_offline_news) {
             startActivity(new Intent(this, OfflineActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
