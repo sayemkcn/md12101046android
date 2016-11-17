@@ -107,8 +107,6 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
     }
 
     private void fetchPublicLists() {
-        final SuperToast loadingToast = Commons.getLoadingToast(context);
-        loadingToast.show();
         final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=" + listPage;
         Log.d("URL_PUB", url);
         new Thread(new Runnable() {
@@ -122,7 +120,6 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (loadingToast.isShowing()) loadingToast.dismiss();
                             if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                 List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                 setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
@@ -329,6 +326,7 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
         // set visibility
         this.sliderLayout.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     public void onClick(View view) {

@@ -26,6 +26,7 @@ import android.widget.VideoView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.bumptech.glide.Glide;
 import com.facebook.accountkit.AccountKit;
 import com.github.johnpersano.supertoasts.library.SuperToast;
