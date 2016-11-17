@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,52 +16,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <!--<LinearLayout-->
-        <!--android:visibility="gone"-->
-        <!--android:id="@+id/reviewBoxLayout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="20dp"-->
-        <!--android:orientation="vertical">-->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="3dp">
 
-        <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/postReviewText" />-->
+            <Button
+                android:id="@+id/loadMoreButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="@string/btn_see_more" />
+        </android.support.v7.widget.CardView>
 
-        <!--<EditText-->
-        <!--android:id="@+id/reviewTitle"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:hint="Review Title"-->
-        <!--android:shadowColor="@color/colorAccent"-->
-        <!--android:textColor="@android:color/black"-->
-        <!--android:textSize="14sp" />-->
-
-        <!--<EditText-->
-        <!--android:id="@+id/reviewMessage"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:hint="Review Message"-->
-        <!--android:textSize="12sp" />-->
-
-        <!--<RatingBar-->
-        <!--android:id="@+id/ratingBar"-->
-        <!--style="@style/Widget.AppCompat.RatingBar.Indicator"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:isIndicator="false"-->
-        <!--android:text="Rating" />-->
-
-        <!--<Button-->
-        <!--android:id="@+id/postReviewButton"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Post Review" />-->
-        <!--</LinearLayout>-->
         <include
             android:id="@+id/reviewBoxLayout"
             layout="@layout/review_box_layout"

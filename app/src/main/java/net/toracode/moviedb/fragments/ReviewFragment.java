@@ -44,9 +44,11 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class ReviewFragment extends Fragment implements View.OnClickListener {
-    private static final String ARG_MOVIE_ID = "param1";
+    private static final String ARG_MOVIE_ID = "movieId";
+    private static final String ARG_ACCOUNT_ID = "accountId";
 
-    private String movieId;
+    private Long movieId;
+    private String accountId;
     private View reviewBoxLayout;
 
     private EditText reviewTitleEditText;
@@ -54,28 +56,24 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private RatingBar ratingBar;
     private Button postReviewButton;
     private Button registerButton;
+    private Button loadMoreButton;
 
     private RecyclerView reviewRecyclerView;
     private int page = 0;
     private int size = 10;
 
+    List<Review> reviewList = new ArrayList<>();
+
     public ReviewFragment() {
         // Required empty public constructor
-    }
-
-    public static ReviewFragment newInstance(Long movieId) {
-        ReviewFragment fragment = new ReviewFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_MOVIE_ID, String.valueOf(movieId));
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            movieId = getArguments().getString(ARG_MOVIE_ID);
+            this.movieId = getArguments().getLong(ARG_MOVIE_ID);
+            this.accountId = getArguments().getString(ARG_ACCOUNT_ID);
         }
     }
 
@@ -96,23 +94,23 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         this.ratingBar = (RatingBar) getView().findViewById(R.id.ratingBar);
         this.postReviewButton = (Button) getView().findViewById(R.id.postReviewButton);
         this.registerButton = (Button) getView().findViewById(R.id.registerButton);
+        this.loadMoreButton = (Button) getView().findViewById(R.id.loadMoreButton);
 
         // Show review box if user logged in.
-        if (AccountKit.getCurrentAccessToken()!=null){
+        if (AccountKit.getCurrentAccessToken() != null) {
             this.registerButton.setVisibility(View.GONE);
             this.reviewBoxLayout.setVisibility(View.VISIBLE);
         }
 
-        this.fetchReviews();
+        this.fetchReviews(this.buildUrl());
         // post review
         this.postReviewButton.setOnClickListener(this);
         this.registerButton.setOnClickListener(this);
+        this.loadMoreButton.setOnClickListener(this);
 
     }
 
-    private void fetchReviews() {
-        final String url = this.buildUrl();
-//        Log.d("URL_REVIEW", url);
+    private void fetchReviews(final String url) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -127,15 +125,23 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     }
 
     private void onResponse(Response response) throws IOException {
-        if (response != null && response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
+        if (response != null && (response.code() == ResourceProvider.RESPONSE_CODE_FOUND || response.code() == ResourceProvider.RESPONSE_CODE_OK)) {
             final ResponseBody responseBody = response.body();
-            final List<Review> reviewList = this.parseJson(responseBody.string());
+            final String responseBodyString = responseBody.string();
             responseBody.close(); // Look! I didn't forget to close the connections!
+            final List<Review> reviewList = this.parseJson(responseBodyString);
             response.close();
             if (getActivity() != null) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // if response empty.
+                        if (responseBodyString.length() < 10) {
+                            if (getActivity() != null && loadMoreButton.getVisibility() == View.VISIBLE) {
+                                Commons.showDialog(getActivity(), "No reviews!", "Looks like you have  no other reviews left!");
+                                loadMoreButton.setVisibility(View.GONE);
+                            }
+                        }
                         ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getActivity(), reviewList);
                         if (AccountKit.getCurrentAccessToken() != null)
                             adapter.setAccountId(AccountKit.getCurrentAccessToken().getAccountId());
@@ -149,7 +155,6 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     }
 
     private List<Review> parseJson(String responseString) {
-        List<Review> reviewList = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(responseString);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -164,7 +169,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 });
                 Gson gson = builder.create();
                 Review review = gson.fromJson(jsonArray.getJSONObject(i).toString(), Review.class);
-                reviewList.add(review);
+                this.reviewList.add(review);
             }
         } catch (JSONException e) {
             Log.e("EX", e.toString());
@@ -172,9 +177,23 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         return reviewList;
     }
 
+    // build url according to the fragment argumanets.
     private String buildUrl() {
+        Log.i("MOV ACC", this.movieId + "  " + this.accountId);
+
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getResources().getString(R.string.baseUrl) + "review/movie/" + this.movieId);
+        stringBuilder.append(getResources().getString(R.string.baseUrl));
+        if (this.movieId != null && this.accountId == null) {
+            // url for reviews for a movie
+            stringBuilder.append("review/movie/" + this.movieId);
+            // hide load more button from review fragment on movie details
+            this.loadMoreButton.setVisibility(View.GONE);
+            this.size = 20;
+        } else if (this.accountId != null && (this.movieId == null || this.movieId == 0)) {
+            // my reviews url
+            stringBuilder.append("review/user/" + accountId);
+            this.reviewBoxLayout.setVisibility(View.GONE);
+        }
         stringBuilder.append("?page=" + this.page + "&size=" + this.size);
         return stringBuilder.toString();
     }
@@ -194,6 +213,9 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 return;
             }
             this.startActivity(new Intent(getActivity(), PreferenceActivity.class));
+        } else if (id == R.id.loadMoreButton) {
+            this.page++;
+            this.fetchReviews(this.buildUrl());
         }
     }
 
@@ -240,7 +262,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                 } else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
                     reviewTitleEditText.setText("");
                     reviewMessageEditText.setText("");
-                    fetchReviews();
+                    fetchReviews(buildUrl());
                     Commons.showDialog(getActivity(), getResources().getString(R.string.reviewSuccessTitle), getResources().getString(R.string.reviewSuccessMessage));
                 }
             }

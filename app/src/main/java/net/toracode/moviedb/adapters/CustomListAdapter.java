@@ -26,6 +26,7 @@ import net.toracode.moviedb.entity.CustomList;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import okhttp3.Response;
@@ -57,15 +58,17 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
         myViewHolder.titleTextView.setText(list.getTitle());
         myViewHolder.typeTextView.setText(list.getType());
         myViewHolder.descriptionTextView.setText(list.getDescription());
-
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a 'on' MMM dd, yyyy");
+        if (list.getLastUpdated() != null)
+            myViewHolder.dateTimeTextView.setText("Last updated on " + sdf.format(list.getLastUpdated()));
+        else
+            myViewHolder.dateTimeTextView.setText("Created at " + sdf.format(list.getCreated()));
         // initialize like/ follow button state
         if (AccountKit.getCurrentAccessToken() != null) {
             String accountId = AccountKit.getCurrentAccessToken().getAccountId();
             if (list.getUser().getAccountId().equals(accountId)) {
                 myViewHolder.followButton.setText("Edit");
                 myViewHolder.followButton.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_create_black_18dp, 0, 0, 0);
-                myViewHolder.followButton.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
-//                myViewHolder.followButton.setEnabled(false);
             } else {
                 checkFollowing(myViewHolder.followButton, list.getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
             }
@@ -82,7 +85,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
         TextView titleTextView;
         TextView typeTextView;
         TextView descriptionTextView;
-        //        Button likeButton;
+        TextView dateTimeTextView;
         Button commentButton;
         Button followButton;
 
@@ -91,7 +94,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
             titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             typeTextView = (TextView) itemView.findViewById(R.id.typeTextView);
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
-//            likeButton = (Button) itemView.findViewById(R.id.likeButton);
+            dateTimeTextView = (TextView) itemView.findViewById(R.id.dateTimeTextView);
             commentButton = (Button) itemView.findViewById(R.id.commentButton);
             followButton = (Button) itemView.findViewById(R.id.followButton);
 
@@ -217,7 +220,6 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                             if (response.code() == ResourceProvider.RESPONSE_ACCEPTED) {
                                 button.setText(UNFOLLOW_BUTTON_TEXT);
                                 button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
-                                button.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
                             } else {
                                 Toast.makeText(context, "Can not follow list", Toast.LENGTH_SHORT).show();
                             }
@@ -243,7 +245,6 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                             if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
                                 followButton.setText(UNFOLLOW_BUTTON_TEXT);
                                 followButton.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
-                                followButton.setTextColor(context.getResources().getColor(android.R.color.holo_blue_bright));
                             }
                         }
                     });

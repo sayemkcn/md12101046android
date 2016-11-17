@@ -1,38 +1,26 @@
 package net.toracode.moviedb;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.accountkit.AccountKit;
 
 import net.toracode.moviedb.commons.CustomListOperations;
 import net.toracode.moviedb.fragments.CommentsFragment;
 import net.toracode.moviedb.fragments.CustomListFragment;
-import net.toracode.moviedb.service.Commons;
-import net.toracode.moviedb.service.ResourceProvider;
-
-import java.io.IOException;
-
-import okhttp3.Response;
+import net.toracode.moviedb.fragments.ReviewFragment;
 
 
 /*
 Expects a bundle with a string attribute 'ref'. Bundle can have more attributes that will be passed to the fragment
  */
-public class ListFragmentsActivity extends AppCompatActivity implements View.OnClickListener{
+public class ListFragmentsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String REF_CUSTOMLIST_ADAPER_COMMENT_BUTTON = "CustomListAdapterCommentButton";
     private final String REF_MY_LIST = "MyList";
+    private final String REF_MY_REVIEWS = "MyReviews";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +51,20 @@ public class ListFragmentsActivity extends AppCompatActivity implements View.OnC
                     this.setupCustomListFragment(bundle);  // Replaces Custom List Fragment
                     fab.setVisibility(View.VISIBLE);
                     break;
+                case REF_MY_REVIEWS:
+                    if (getSupportActionBar() != null)
+                        getSupportActionBar().setTitle("My Reviews");
+                    this.setupReviewsFragment(bundle);  // Replaces Review fragment
+                    break;
             }
 
         }
+    }
+
+    private void setupReviewsFragment(Bundle bundle) {
+        ReviewFragment reviewFragment = new ReviewFragment();
+        reviewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, reviewFragment, "ReviewFragment").commit();
     }
 
     private void setupCustomListFragment(Bundle bundle) {
@@ -92,7 +91,13 @@ public class ListFragmentsActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id==R.id.fab)
+        if (id == R.id.fab)
             new CustomListOperations(this).showNewListDialog();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }
