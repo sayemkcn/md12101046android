@@ -12,7 +12,6 @@
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginStart="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
-    card:cardBackgroundColor="@android:color/white"
     card:cardCornerRadius="2dp"
     card:cardElevation="3dp">
 
@@ -25,13 +24,14 @@
             android:id="@+id/imageView"
             android:layout_width="100dp"
             android:layout_height="120dp"
-            android:padding="5dp"
             android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:alpha=".7"
+            android:background="@android:color/black"
             android:orientation="vertical"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
@@ -57,9 +57,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Movie Industry"
-                    android:textColor="@color/colorRatingText"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/textColor"
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:layout_width="1dp"
@@ -72,9 +71,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Movie Genere"
-                    android:textColor="@color/colorRatingText"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/textColor"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <TextView
@@ -82,13 +80,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Release date"
+                android:textColor="@color/textColor"
                 android:textSize="10dp" />
 
             <TextView
-                android:id="@+id/castsTextView"
+                android:id="@+id/storyLineTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cast List"
+                android:textColor="@color/textColor"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 

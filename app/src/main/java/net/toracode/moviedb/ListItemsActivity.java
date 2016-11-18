@@ -71,9 +71,10 @@ public class ListItemsActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                ResponseBody responseBody = null;
                 try {
                     final Response response = new ResourceProvider(ListItemsActivity.this).fetchGetResponse(url);
-                    final ResponseBody responseBody = response.body();
+                    responseBody = response.body();
                     final String responseBodyString = responseBody.string();
                     responseBody.close(); // closed connection.
                     runOnUiThread(new Runnable() {
@@ -89,6 +90,9 @@ public class ListItemsActivity extends AppCompatActivity {
                     });
                 } catch (IOException e) {
                     Log.e("CUSTOM_LIST_BY_ID", e.toString());
+                } finally {
+                    if (responseBody != null)
+                        responseBody.close();
                 }
             }
         }).start();
@@ -137,11 +141,11 @@ public class ListItemsActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                ResponseBody responseBody = null;
                 try {
                     final Response response = new ResourceProvider(ListItemsActivity.this).fetchPostResponse(url);
-                    ResponseBody responseBody = response.body();
+                    responseBody = response.body();
                     final String responseBodyString = responseBody.string();
-                    responseBody.close(); // close connection.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -157,6 +161,9 @@ public class ListItemsActivity extends AppCompatActivity {
                     });
                 } catch (IOException e) {
                     Log.e("REMOVE_FROM_LIST", e.toString());
+                } finally {
+                    if (responseBody != null)
+                        responseBody.close();
                 }
             }
         }).start();
