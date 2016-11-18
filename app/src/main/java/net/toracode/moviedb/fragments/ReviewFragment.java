@@ -253,11 +253,11 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (progressDialog.isShowing())
-                                    progressDialog.cancel();
+                                if (progressDialog.isShowing()) progressDialog.cancel();
                             }
                         });
                     } catch (IOException e) {
+                        if (progressDialog.isShowing()) progressDialog.cancel();
                         Log.e("POST_REVIEW", e.toString());
                     }
                 }

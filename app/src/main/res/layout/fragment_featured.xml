@@ -171,6 +171,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:text="Load More"
+                android:visibility="invisible"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:textColor="@android:color/white" />
         </LinearLayout>

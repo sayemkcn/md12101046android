@@ -3,7 +3,6 @@ package net.toracode.moviedb.adapters;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import net.toracode.moviedb.OfflineActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Movie;
-import net.toracode.moviedb.entity.Person;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -63,7 +61,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         myViewHolder.industryTextView.setText(movie.getIndustry());
         myViewHolder.genereTextView.setText(movie.getGenere());
-        myViewHolder.storyLineTextView.setText(movie.getStoryLine());
+
+        if (movie.getStoryLine().length() > 100)
+            myViewHolder.storyLineTextView.setText(movie.getStoryLine().substring(0, 99)+"..");
+        else
+            myViewHolder.storyLineTextView.setText(movie.getStoryLine());
     }
 
     @Override

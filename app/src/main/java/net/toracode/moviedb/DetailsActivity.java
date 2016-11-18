@@ -159,9 +159,10 @@ public class DetailsActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Response response = null;
                 ResponseBody responseBody = null;
                 try {
-                    Response response = new ResourceProvider(DetailsActivity.this).fetchGetResponse(url);
+                    response = new ResourceProvider(DetailsActivity.this).fetchGetResponse(url);
                     responseBody = response.body();
                     String responseBodyString = responseBody.string();
                     if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
@@ -176,7 +177,10 @@ public class DetailsActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     Log.e("FETCH_CAST_LIST", e.toString());
                 } finally {
-                    responseBody.close();
+                    if (responseBody != null)
+                        responseBody.close();
+                    if (response != null)
+                        response.close();
                 }
             }
         }).start();
@@ -436,7 +440,7 @@ public class DetailsActivity extends AppCompatActivity {
         this.setAverageRating(this.averageRatingBar, movie);
         this.movieIndustryTextView.setText("Movie Industry: " + movie.getIndustry());
         this.movieLanguageTextView.setText("Language: " + movie.getLanguage());
-        Log.d("LANGUAGE", movie.getLanguage());
+        Log.d("MOVIE_ID", movie.getUniqueId()+"");
 
 //        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
 //        this.movieNameTextView.setTypeface(typeface);

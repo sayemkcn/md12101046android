@@ -8,7 +8,7 @@
     <color name="textColor">@android:color/white</color>
     <color name="colorRatingText">#512DA8</color>
 
-    <color name="drawer_background_color">@color/colorPrimaryDark</color>
+    <color name="drawer_background_color">@android:color/white</color>
 
     <color name="loadToastBackgroundColor">#009688</color>
     <color name="loadProgressColor">#FF4081</color>

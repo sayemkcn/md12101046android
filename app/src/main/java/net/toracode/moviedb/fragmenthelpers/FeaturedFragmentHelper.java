@@ -1,6 +1,7 @@
 package net.toracode.moviedb.fragmenthelpers;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.github.johnpersano.supertoasts.library.SuperToast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -107,6 +107,9 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
     }
 
     private void fetchPublicLists() {
+//        final ProgressDialog progressDialog = new ProgressDialog(context);
+//        progressDialog.setMessage(context.getResources().getString(R.string.loadingText));
+//        progressDialog.show();
         final String url = context.getResources().getString(R.string.baseUrl) + "list/public?page=" + listPage;
         Log.d("URL_PUB", url);
         new Thread(new Runnable() {
@@ -120,9 +123,13 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+//                            if (progressDialog.isShowing()) progressDialog.cancel();
                             if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                 List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
+                                loadMoreButton.setVisibility(View.VISIBLE);
                                 setUpCustomListRecyclerView(featuredMyListRecyclerView, listOfCustomList);
+                            } else if (response.code() == ResourceProvider.RESPONSE_CODE_NO_CONTENT) {
+                                loadMoreButton.setVisibility(View.INVISIBLE);
                             }
                         }
                     });
@@ -270,7 +277,7 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
 
     private void setUpCustomListRecyclerView(RecyclerView recyclerView, List<CustomList> listOfCustomList) {
         recyclerView.setNestedScrollingEnabled(false);
-        CustomListAdapter adapter = new CustomListAdapter(this.context,listOfCustomList);
+        CustomListAdapter adapter = new CustomListAdapter(this.context, listOfCustomList);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
         recyclerView.setNestedScrollingEnabled(false);

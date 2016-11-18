@@ -1,5 +1,6 @@
 package net.toracode.moviedb.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -105,10 +106,8 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setupRecyclerView(List<Comment> commentList) {
-        if (commentList != null || !commentList.isEmpty()) {
-            this.noCommentTextView.setVisibility(View.GONE);
-            this.commentsRecyclerView.setVisibility(View.VISIBLE);
-        }
+        this.noCommentTextView.setVisibility(View.GONE);
+        this.commentsRecyclerView.setVisibility(View.VISIBLE);
         Collections.reverse(commentList);
         this.commentsRecyclerView.setAdapter(new CommentsAdapter(getActivity(), commentList));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -153,6 +152,12 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
             this.commentBoxEditText.setError("Please write something!");
             return;
         }
+        // show progressfialog
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.loadingText));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         final String url = getResources().getString(R.string.baseUrl) + "comment/create?commentBody="
                 + this.commentBoxEditText.getText().toString()
                 + "&listId=" + this.listId
@@ -166,6 +171,7 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                if (progressDialog.isShowing()) progressDialog.cancel();
                                 if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
                                     fetchComments(listId);
                                     commentBoxEditText.setText("");
@@ -175,6 +181,7 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
                         });
                     }
                 } catch (IOException e) {
+                    if (progressDialog.isShowing()) progressDialog.cancel();
                     Log.e("POST_COMMENT", e.toString());
                 }
             }
