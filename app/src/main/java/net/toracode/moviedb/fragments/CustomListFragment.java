@@ -2,7 +2,6 @@ package net.toracode.moviedb.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,10 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.ProgressBar;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,7 +24,6 @@ import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.CustomListAdapter;
 import net.toracode.moviedb.entity.CustomList;
-import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import org.json.JSONArray;
@@ -52,6 +48,7 @@ public class CustomListFragment extends Fragment {
 
     private int page = 0;
     private RecyclerView customListRecyclerView;
+    private ProgressBar progressBar;
 
     private boolean isPublic = false;
 
@@ -75,6 +72,7 @@ public class CustomListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         this.customListRecyclerView = (RecyclerView) getView().findViewById(R.id.customListRecyclerView);
+        this.progressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
 
         // if private and not logged in.
         if (!isPublic && AccountKit.getCurrentAccessToken() == null) {
@@ -115,6 +113,8 @@ public class CustomListFragment extends Fragment {
                                 if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
                                     List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                     setUpCustomListRecyclerView(customListRecyclerView, listOfCustomList);
+                                    progressBar.setVisibility(View.GONE);
+                                    customListRecyclerView.setVisibility(View.VISIBLE);
                                 }
                             }
                         });

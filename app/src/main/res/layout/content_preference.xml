@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@color/colorPrimaryDark" />
+        android:src="@drawable/bground" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,31 +25,31 @@
         android:padding="50dp">
 
         <EditText
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
             android:id="@+id/nameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:hint="Your Name" />
+            android:hint="Your Name"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
 
         <EditText
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:hint="Your Email" />
+            android:hint="Your Email"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
 
         <Button
-            android:textColor="@android:color/white"
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimaryDark"
-            android:text="Submit" />
+            android:text="Submit"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </FrameLayout>

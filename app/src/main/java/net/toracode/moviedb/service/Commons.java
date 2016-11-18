@@ -31,6 +31,7 @@ import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.OfflineActivity;
 import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
+import net.toracode.moviedb.commons.Pref;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class Commons {
                         builder.cancel();
                     if (!(context instanceof DetailsActivity)) {
                         context.finish();
-                        context.startActivity(new Intent(context, OfflineActivity.class));
+                        context.startActivity(new Intent(context, OfflineActivity.class).putExtra("key", Pref.PREF_KEY_OFFLINE_LIST));
                     }
 
                 }

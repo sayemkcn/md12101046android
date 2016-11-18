@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -37,10 +39,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
+import net.toracode.moviedb.adapters.PersonsRecyclerAdapter;
 import net.toracode.moviedb.commons.CustomListOperations;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.CustomList;
 import net.toracode.moviedb.entity.Movie;
+import net.toracode.moviedb.entity.Person;
 import net.toracode.moviedb.fragments.ReviewFragment;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
@@ -89,6 +93,8 @@ public class DetailsActivity extends AppCompatActivity {
     TextView movieIndustryTextView;
     @BindView(R.id.movieLanguageTextView)
     TextView movieLanguageTextView;
+    @BindView(R.id.castAndCrewRecyclerView)
+    RecyclerView castAndCrewRecyclerView;
 
     @BindView(R.id.contentLayout)
     View contentLayout;
@@ -122,6 +128,9 @@ public class DetailsActivity extends AppCompatActivity {
 
         this.updateViews(this.movie);
 
+        // load cast and crew list
+        this.loadCastAndCrews(this.movie.getUniqueId());
+
         // VIDEO VIEW
         this.showVideo(movie.getTrailerUrl());
         this.setListeners();
@@ -143,6 +152,58 @@ public class DetailsActivity extends AppCompatActivity {
                     fetchListsAndShowChooserDialog(AccountKit.getCurrentAccessToken().getAccountId());
             }
         });
+    }
+
+    private void loadCastAndCrews(Long movieId) {
+        final String url = getResources().getString(R.string.baseUrl) + "person/movie/" + movieId;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Response response = null;
+                ResponseBody responseBody = null;
+                try {
+                    response = new ResourceProvider(DetailsActivity.this).fetchGetResponse(url);
+                    responseBody = response.body();
+                    String responseBodyString = responseBody.string();
+                    if (response.code() == ResourceProvider.RESPONSE_CODE_OK) {
+                        final List<Person> personList = parsePersonList(responseBodyString);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setupRecyclerView(personList);
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    Log.e("FETCH_CAST_LIST", e.toString());
+                } finally {
+                    if (responseBody != null)
+                        responseBody.close();
+                    if (response != null)
+                        response.close();
+                }
+            }
+        }).start();
+    }
+
+    private List<Person> parsePersonList(String responseBodyString) {
+        List<Person> personList = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(responseBodyString);
+            Gson gson = Commons.buildGson();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Person person = gson.fromJson(jsonArray.getJSONObject(i).toString(), Person.class);
+                personList.add(person);
+            }
+        } catch (JSONException e) {
+            Log.e("PARSE_CAST_LIST", e.toString());
+        }
+        return personList;
+    }
+
+    private void setupRecyclerView(List<Person> personList) {
+        castAndCrewRecyclerView.setAdapter(new PersonsRecyclerAdapter(this, personList));
+        castAndCrewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
 
     private void setListeners() {
@@ -372,19 +433,19 @@ public class DetailsActivity extends AppCompatActivity {
         if (movie.getReleaseDate() != null)
             this.releaseDateTextView.setText(getResources().getString(R.string.releaseDateTextBangla) + ": " + sdf.format(movie.getReleaseDate()));
         this.storyLineTextView.setText(movie.getStoryLine());
-        this.producerTextView.setText(getResources().getString(R.string.producerTextBangla) + " \n" + movie.getProductionHouse());
+        this.producerTextView.setText(getResources().getString(R.string.studioTextBangla) + " \n" + movie.getProductionHouse());
         this.filmRatingTextView.setText(String.valueOf(movie.getRated()));
         String imageUrl = getResources().getString(R.string.baseUrl) + "movie/image/" + movie.getUniqueId();
         Glide.with(this).load(imageUrl).placeholder(R.mipmap.ic_launcher).centerCrop().crossFade().into(this.posterImageView);
         this.setAverageRating(this.averageRatingBar, movie);
         this.movieIndustryTextView.setText("Movie Industry: " + movie.getIndustry());
         this.movieLanguageTextView.setText("Language: " + movie.getLanguage());
-        Log.d("LANGUAGE", movie.getLanguage());
+        Log.d("MOVIE_ID", movie.getUniqueId()+"");
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
-        this.movieNameTextView.setTypeface(typeface);
-        this.producerTextView.setTypeface(typeface);
-        this.filmRatingTextView.setTypeface(typeface);
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
+//        this.movieNameTextView.setTypeface(typeface);
+//        this.producerTextView.setTypeface(typeface);
+//        this.filmRatingTextView.setTypeface(typeface);
 
         this.contentLayout.setVisibility(View.VISIBLE);
         this.progressBar.setVisibility(View.INVISIBLE);

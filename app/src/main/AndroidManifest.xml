@@ -48,6 +48,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".OfflineActivity"
+            android:label="@string/offlineMoviesText"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PreferenceActivity"

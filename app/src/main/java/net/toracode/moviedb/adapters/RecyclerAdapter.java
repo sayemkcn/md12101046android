@@ -3,7 +3,6 @@ package net.toracode.moviedb.adapters;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import net.toracode.moviedb.OfflineActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.entity.Movie;
-import net.toracode.moviedb.entity.Person;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -63,7 +61,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         myViewHolder.industryTextView.setText(movie.getIndustry());
         myViewHolder.genereTextView.setText(movie.getGenere());
-        myViewHolder.castsTextView.setText(context.getResources().getString(R.string.castTextBangla) + " " + this.getCommaSeperatedCastsString(movie.getCastAndCrewList()));
+
+        if (movie.getStoryLine().length() > 100)
+            myViewHolder.storyLineTextView.setText(movie.getStoryLine().substring(0, 99)+"..");
+        else
+            myViewHolder.storyLineTextView.setText(movie.getStoryLine());
     }
 
     @Override
@@ -85,24 +87,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         TextView releaseDateTextView;
         TextView industryTextView;
         TextView genereTextView;
-        TextView castsTextView;
-        TextView filmRatingTextView;
+        TextView storyLineTextView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             industryTextView = (TextView) itemView.findViewById(R.id.industryTextView);
-            castsTextView = (TextView) itemView.findViewById(R.id.castsTextView);
+            storyLineTextView = (TextView) itemView.findViewById(R.id.storyLineTextView);
             releaseDateTextView = (TextView) itemView.findViewById(R.id.releaseDateTextView);
             genereTextView = (TextView) itemView.findViewById(R.id.genereTextView);
 
-            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
-            titleTextView.setTypeface(typeface);
-            industryTextView.setTypeface(typeface);
-            castsTextView.setTypeface(typeface);
-            releaseDateTextView.setTypeface(typeface);
-            genereTextView.setTypeface(typeface);
+//            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
+//            titleTextView.setTypeface(typeface);
+//            industryTextView.setTypeface(typeface);
+//            storyLineTextView.setTypeface(typeface);
+//            releaseDateTextView.setTypeface(typeface);
+//            genereTextView.setTypeface(typeface);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -151,16 +152,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         this.remove(position);
     }
 
-    private String getCommaSeperatedCastsString(List<Person> personList) {
-        StringBuilder casts = new StringBuilder();
-        for (int i = 0; personList != null && i < personList.size(); i++) {
-            Person cast = personList.get(i);
-            casts.append(cast.getName());
-            int indexNumber = i + 1;
-            if (indexNumber != personList.size()) {
-                casts.append(",");
-            }
-        }
-        return casts.toString();
-    }
+
 }

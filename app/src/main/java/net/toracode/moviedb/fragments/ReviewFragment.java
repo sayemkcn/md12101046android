@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
 import com.facebook.accountkit.AccountKit;
@@ -24,6 +25,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
+import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.ReviewRecyclerAdapter;
@@ -57,6 +59,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     private Button postReviewButton;
     private Button registerButton;
     private Button loadMoreButton;
+    private ProgressBar progressBar;
 
     private RecyclerView reviewRecyclerView;
     private int page = 0;
@@ -95,6 +98,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         this.postReviewButton = (Button) getView().findViewById(R.id.postReviewButton);
         this.registerButton = (Button) getView().findViewById(R.id.registerButton);
         this.loadMoreButton = (Button) getView().findViewById(R.id.loadMoreButton);
+        this.progressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
 
         // Show review box if user logged in.
         if (AccountKit.getCurrentAccessToken() != null) {
@@ -125,6 +129,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
     }
 
     private void onResponse(Response response) throws IOException {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.GONE);
+                    reviewRecyclerView.setVisibility(View.VISIBLE);
+                }
+            });
+
         if (response != null && (response.code() == ResourceProvider.RESPONSE_CODE_FOUND || response.code() == ResourceProvider.RESPONSE_CODE_OK)) {
             final ResponseBody responseBody = response.body();
             final String responseBodyString = responseBody.string();
@@ -141,13 +154,15 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                                 Commons.showDialog(getActivity(), "No reviews!", "Looks like you have  no other reviews left!");
                                 loadMoreButton.setVisibility(View.GONE);
                             }
-                        }
+                        } else if (!(getActivity() instanceof DetailsActivity))
+                            loadMoreButton.setVisibility(View.VISIBLE);
                         ReviewRecyclerAdapter adapter = new ReviewRecyclerAdapter(getActivity(), reviewList);
                         if (AccountKit.getCurrentAccessToken() != null)
                             adapter.setAccountId(AccountKit.getCurrentAccessToken().getAccountId());
                         reviewRecyclerView.setAdapter(adapter);
                         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         reviewRecyclerView.setNestedScrollingEnabled(false);
+                        reviewRecyclerView.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -226,6 +241,7 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
         if (this.isValid(title, message, rating)) {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage(getResources().getString(R.string.loadingText));
+            progressDialog.show();
             final String url = getResources().getString(R.string.baseUrl) + "review/create?title=" + title + "&message=" + message + "&rating=" + rating + "&accountId=" + accountId + "&movieId=" + this.movieId;
 //            Log.i("POST_REVIEW", url);
             new Thread(new Runnable() {
@@ -237,11 +253,11 @@ public class ReviewFragment extends Fragment implements View.OnClickListener {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (progressDialog.isShowing())
-                                    progressDialog.cancel();
+                                if (progressDialog.isShowing()) progressDialog.cancel();
                             }
                         });
                     } catch (IOException e) {
+                        if (progressDialog.isShowing()) progressDialog.cancel();
                         Log.e("POST_REVIEW", e.toString());
                     }
                 }

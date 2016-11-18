@@ -1,5 +1,6 @@
 package net.toracode.moviedb.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
@@ -42,6 +44,7 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView commentsRecyclerView;
     private EditText commentBoxEditText;
+    private TextView noCommentTextView;
 
     private Long listId;
 
@@ -65,6 +68,8 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         this.commentsRecyclerView = (RecyclerView) getView().findViewById(R.id.commentsRecyclerView);
         this.commentBoxEditText = (EditText) getView().findViewById(R.id.commentBoxEditText);
+        this.noCommentTextView = (TextView) getView().findViewById(R.id.noCommentTextView);
+
         Button postCommentButton = (Button) getView().findViewById(R.id.postCommentButton);
 
         postCommentButton.setOnClickListener(this);
@@ -101,6 +106,8 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setupRecyclerView(List<Comment> commentList) {
+        this.noCommentTextView.setVisibility(View.GONE);
+        this.commentsRecyclerView.setVisibility(View.VISIBLE);
         Collections.reverse(commentList);
         this.commentsRecyclerView.setAdapter(new CommentsAdapter(getActivity(), commentList));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -145,6 +152,12 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
             this.commentBoxEditText.setError("Please write something!");
             return;
         }
+        // show progressfialog
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.loadingText));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         final String url = getResources().getString(R.string.baseUrl) + "comment/create?commentBody="
                 + this.commentBoxEditText.getText().toString()
                 + "&listId=" + this.listId
@@ -158,6 +171,7 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                if (progressDialog.isShowing()) progressDialog.cancel();
                                 if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
                                     fetchComments(listId);
                                     commentBoxEditText.setText("");
@@ -167,6 +181,7 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
                         });
                     }
                 } catch (IOException e) {
+                    if (progressDialog.isShowing()) progressDialog.cancel();
                     Log.e("POST_COMMENT", e.toString());
                 }
             }

@@ -37,7 +37,7 @@
     <string name="directorTextBangla">পরিচালকঃ </string>
     <string name="castTextBangla">অভিনেতা/অভিনেত্রীঃ </string>
     <string name="categoryTextBangla">ক্যাটেগরিঃ</string>
-    <string name="producerTextBangla">প্রযোজকঃ</string>
+    <string name="studioTextBangla">স্টুডিও:</string>
 
     <string name="title_activity_preference">Preference</string>
     <string name="title_activity_details"></string>
@@ -50,8 +50,9 @@
     <string name="title_activity_offline_news"></string>
     <string name="action_change_font_size">Change Font Size</string>
 
-    <string name="featured_saved_text">সর্বশেষ সংরক্ষিত মুভি</string>
+    <string name="featured_saved_text">আপনার সংরক্ষনকৃত মুভি</string>
     <string name="featured_my_list_text">আমার লিস্টগুলো</string>
+    <string name="featured_recent_list_text">সাম্প্রতিক লিস্টগুলো</string>
 
     <string name="slider_headLine_bangla">থিয়েটারে চলছে</string>
     <string name="featured_featured_text">ফিচারড মুভি</string>
