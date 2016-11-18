@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
@@ -42,6 +43,7 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView commentsRecyclerView;
     private EditText commentBoxEditText;
+    private TextView noCommentTextView;
 
     private Long listId;
 
@@ -65,6 +67,8 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         this.commentsRecyclerView = (RecyclerView) getView().findViewById(R.id.commentsRecyclerView);
         this.commentBoxEditText = (EditText) getView().findViewById(R.id.commentBoxEditText);
+        this.noCommentTextView = (TextView) getView().findViewById(R.id.noCommentTextView);
+
         Button postCommentButton = (Button) getView().findViewById(R.id.postCommentButton);
 
         postCommentButton.setOnClickListener(this);
@@ -101,6 +105,10 @@ public class CommentsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setupRecyclerView(List<Comment> commentList) {
+        if (commentList != null || !commentList.isEmpty()) {
+            this.noCommentTextView.setVisibility(View.GONE);
+            this.commentsRecyclerView.setVisibility(View.VISIBLE);
+        }
         Collections.reverse(commentList);
         this.commentsRecyclerView.setAdapter(new CommentsAdapter(getActivity(), commentList));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

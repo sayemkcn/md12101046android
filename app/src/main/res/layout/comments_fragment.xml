@@ -4,19 +4,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/noCommentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/commentBoxLayout"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="100dp"
+        android:alpha=".7"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:text="No comment yet.."
+        android:textColor="@color/textColor" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/commentsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/commentBoxLayout" />
+        android:layout_above="@+id/commentBoxLayout"
+        android:visibility="gone" />
 
     <LinearLayout
-        android:background="@android:color/black"
         android:id="@+id/commentBoxLayout"
-        android:alpha=".7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:alpha=".7"
+        android:background="@android:color/black"
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
