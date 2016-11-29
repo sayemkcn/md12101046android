@@ -1,5 +1,6 @@
 package net.toracode.moviedb;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -132,7 +133,8 @@ public class DetailsActivity extends AppCompatActivity {
         this.loadCastAndCrews(this.movie.getUniqueId());
 
         // VIDEO VIEW
-        this.showVideo(movie.getTrailerUrl());
+        if (!movie.getTrailerUrl().contains("youtube.com")) // else open youtube app to play trailer on play button click.
+            this.showVideo(movie.getTrailerUrl());
         this.setListeners();
 
         // REVIEW FRAGMENT
@@ -152,6 +154,20 @@ public class DetailsActivity extends AppCompatActivity {
                     fetchListsAndShowChooserDialog(AccountKit.getCurrentAccessToken().getAccountId());
             }
         });
+    }
+
+    private void openYoutubeIntent(String url) {
+        try {
+            String[] id = url.split("v=");
+            if (id.length >= 2) {
+                Log.i("YOUTUBE_VID_ID", id[1]);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + id[1]));
+                startActivity(intent);
+            }
+        }catch (ActivityNotFoundException e){
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        }
     }
 
     private void loadCastAndCrews(Long movieId) {
@@ -216,15 +232,20 @@ public class DetailsActivity extends AppCompatActivity {
         this.playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                trailerVideoView.start();
-                playButton.setVisibility(View.GONE);
+                if (movie.getTrailerUrl().contains("youtube.com"))
+                    openYoutubeIntent(movie.getTrailerUrl());
+                else {
+                    trailerVideoView.start();
+                    playButton.setVisibility(View.GONE);
+                }
             }
         });
         this.detailsScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
 
             @Override
             public void onScrollChanged() {
-                mc.hide();
+                if (mc != null)
+                    mc.hide();
             }
         });
     }
@@ -440,7 +461,7 @@ public class DetailsActivity extends AppCompatActivity {
         this.setAverageRating(this.averageRatingBar, movie);
         this.movieIndustryTextView.setText("Movie Industry: " + movie.getIndustry());
         this.movieLanguageTextView.setText("Language: " + movie.getLanguage());
-        Log.d("MOVIE_ID", movie.getUniqueId()+"");
+        Log.d("MOVIE_ID", movie.getUniqueId() + "");
 
 //        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
 //        this.movieNameTextView.setTypeface(typeface);
