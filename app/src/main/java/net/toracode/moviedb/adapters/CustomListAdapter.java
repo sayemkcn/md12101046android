@@ -121,15 +121,21 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
             followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Button button = (Button) view;
                     if (AccountKit.getCurrentAccessToken() == null) {
                         context.startActivity(new Intent(context, PreferenceActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         return;
                     }
-                    if (((Button) view).getText().toString().toLowerCase().equals(FOLLOW_BUTTON_TEXT.toLowerCase()))
-                        followList((Button) view, listOfCustomList.get(getAdapterPosition()).getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
-                    else if (((Button) view).getText().toString().toLowerCase().equals(UNFOLLOW_BUTTON_TEXT.toLowerCase()))
-                        unFollowList((Button) view, listOfCustomList.get(getAdapterPosition()).getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
-                    else
+                    if (button.getText().toString().toLowerCase().equals(FOLLOW_BUTTON_TEXT.toLowerCase())) {
+                        button.setText(UNFOLLOW_BUTTON_TEXT);
+                        button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
+                        followList(button, listOfCustomList.get(getAdapterPosition()).getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
+                    } else if (button.getText().toString().toLowerCase().equals(UNFOLLOW_BUTTON_TEXT.toLowerCase())) {
+                        button.setText(FOLLOW_BUTTON_TEXT);
+                        button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_border_black_18dp, 0, 0, 0);
+                        button.setTextColor(context.getResources().getColor(android.R.color.black));
+                        unFollowList(button, listOfCustomList.get(getAdapterPosition()).getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
+                    } else
                         new CustomListOperations(context).showEditListDialog((Button) view, listOfCustomList.get(getAdapterPosition()), AccountKit.getCurrentAccessToken().getAccountId());
                 }
             });
@@ -189,16 +195,23 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (response.code() == ResourceProvider.RESPONSE_ACCEPTED) {
-                                button.setText(FOLLOW_BUTTON_TEXT);
-                                button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_border_black_18dp, 0, 0, 0);
+                            if (response.code() != ResourceProvider.RESPONSE_ACCEPTED) {
+                                button.setText(UNFOLLOW_BUTTON_TEXT);
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
                                 button.setTextColor(context.getResources().getColor(android.R.color.black));
-                            } else {
                                 Toast.makeText(context, "Can not unfollow list", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 } catch (IOException e) {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            button.setText(UNFOLLOW_BUTTON_TEXT);
+                            button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
+                            button.setTextColor(context.getResources().getColor(android.R.color.black));
+                        }
+                    });
                     Log.e("UNFOLLOW_LIST", e.toString());
                 }
             }
@@ -217,15 +230,22 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (response.code() == ResourceProvider.RESPONSE_ACCEPTED) {
-                                button.setText(UNFOLLOW_BUTTON_TEXT);
-                                button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
-                            } else {
+                            if (response.code() != ResourceProvider.RESPONSE_ACCEPTED) {
+                                button.setText(FOLLOW_BUTTON_TEXT);
+                                button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_border_black_18dp, 0, 0, 0);
                                 Toast.makeText(context, "Can not follow list", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 } catch (IOException e) {
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            button.setText(FOLLOW_BUTTON_TEXT);
+                            button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_border_black_18dp, 0, 0, 0);
+                            Toast.makeText(context, "Can not follow list", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     Log.e("FOLLOW_LIST", e.toString());
                 }
             }
