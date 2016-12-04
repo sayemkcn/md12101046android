@@ -1,9 +1,9 @@
 package net.toracode.moviedb.fragmenthelpers;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +22,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import net.toracode.moviedb.DetailsActivity;
+import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.CustomListAdapter;
 import net.toracode.moviedb.adapters.FeaturedRecyclerAdapter;
@@ -31,6 +32,7 @@ import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.commons.SliderChildAnimator;
 import net.toracode.moviedb.entity.CustomList;
 import net.toracode.moviedb.entity.Movie;
+import net.toracode.moviedb.security.Auth;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
 
@@ -61,6 +63,8 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
     private TextView noItemsTextOffline;
     private SliderLayout sliderLayout;
     private Button loadMoreButton;
+    private CardView loginCardView;
+    private TextView loginTextView;
 
     private View featuredNewsLayout;
     //    private ProgressBar progressBar;
@@ -74,7 +78,10 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
         this.featuredMyListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredPublicListsRecyclerView);
         this.featuredPublicListRecyclerView = (RecyclerView) rootView.findViewById(R.id.featuredFeaturedRecyclerView);
         this.noItemsTextOffline = (TextView) rootView.findViewById(R.id.offline_no_items_text);
+        this.loginCardView = (CardView) rootView.findViewById(R.id.loginCardView);
+        this.loginTextView = (TextView) rootView.findViewById(R.id.loginTextView);
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
+
         // Slider Layout
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
         this.sliderLayout.setPresetTransformer(SliderLayout.Transformer.CubeIn);
@@ -97,7 +104,13 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
 
     public void exec(int pageNumber) {
         this.VP_PAGE_NUMBER = pageNumber;
-        Log.d("SECTION_NUMBER", String.valueOf(pageNumber));
+//        Log.d("SECTION_NUMBER", String.valueOf(pageNumber));
+
+        // Display login card if not authenticared
+        if (!Auth.isLoggedIn()) {
+            this.loginCardView.setVisibility(View.VISIBLE);
+            this.loginTextView.setOnClickListener(this);
+        }
 
         this.fetchOfflineItems();
         this.fetchSliderItems();
@@ -341,6 +354,12 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
         if (id == R.id.loadMoreButton) {
             this.listPage++;
             this.fetchPublicLists();
+        } else if (id == R.id.loginTextView) {
+            if (Auth.isLoggedIn()) {
+                this.loginCardView.setVisibility(View.GONE);
+                return;
+            }
+            context.startActivity(new Intent(context, PreferenceActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
     }
 }
