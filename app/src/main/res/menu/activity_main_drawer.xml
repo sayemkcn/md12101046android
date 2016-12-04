@@ -12,6 +12,10 @@
             android:icon="@mipmap/ic_bookmark_white_24dp"
             android:title="@string/myListsText" />
         <item
+            android:id="@+id/nav_my_following_list"
+            android:icon="@mipmap/ic_bookmark_white_24dp"
+            android:title="@string/myFollowingListsText" />
+        <item
             android:id="@+id/nav_my_reviews"
             android:icon="@mipmap/ic_bookmark_white_24dp"
             android:title="@string/myReviewsText" />

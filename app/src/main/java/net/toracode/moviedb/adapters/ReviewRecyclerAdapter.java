@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,6 +28,7 @@ import net.toracode.moviedb.service.ResourceProvider;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Response;
 
@@ -34,6 +37,7 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
     private List<Review> reviewList;
     private Activity context;
     private String accountId = null;
+    private int lastPosition = -1;
 
     public ReviewRecyclerAdapter(Activity context, List<Review> reviewList) {
         this.inflater = LayoutInflater.from(context);
@@ -70,6 +74,8 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         if (!review.getUser().getAccountId().equals(accountId)) {
             myViewHolder.editButton.setVisibility(View.GONE);
         }
+
+        this.setAnimation(myViewHolder.itemView,position);
     }
 
     @Override
@@ -158,7 +164,7 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
                                     else if (response.code() == ResourceProvider.RESPONSE_NOT_ACCEPTABLE)
                                         Commons.showSimpleToast(context, "Can not edit review.");
                                     else if (response.code() == ResourceProvider.RESPONSE_CODE_CREATED) {
-                                        Commons.showDialog(context,"Successful!","You\'ve edited your review.");
+                                        Commons.showDialog(context, "Successful!", "You\'ve edited your review.");
                                         notifyItemChanged(position);
                                     }
                                 }
@@ -173,5 +179,12 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         });
     }
 
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(2001));//to make duration random number between [0,501)
+        viewToAnimate.startAnimation(anim);
+        lastPosition = position;
+    }
 
 }

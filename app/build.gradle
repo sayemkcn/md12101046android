@@ -63,7 +63,7 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.0.2'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
-
+    compile 'jp.wasabeef:recyclerview-animators:2.2.5'
 //    compile 'com.google.apis:google-api-services-youtube:v3-rev179-1.22.0'
 }
 

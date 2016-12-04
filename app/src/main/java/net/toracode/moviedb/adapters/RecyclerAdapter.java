@@ -8,6 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,12 +27,14 @@ import net.toracode.moviedb.entity.Movie;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Random;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
     private List<Movie> movieList;
     private Activity context;
     private String prefKey = null;
+    private int lastPosition = -1;
 
     public RecyclerAdapter(Activity context, List<Movie> movieList) {
         this.inflater = LayoutInflater.from(context);
@@ -50,6 +55,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
+
+//        if (position % 2 == 0) {
+//            myViewHolder.itemView.setBackground(context.getResources().getDrawable(R.drawable.background));
+//            myViewHolder.contentLayout.setBackground(context.getResources().getDrawable(R.drawable.background_reverse));
+//        } else {
+//            myViewHolder.itemView.setBackground(context.getResources().getDrawable(R.drawable.background_reverse));
+//            myViewHolder.contentLayout.setBackground(context.getResources().getDrawable(R.drawable.background));
+//        }
+
         Movie movie = this.movieList.get(position);
         Glide.with(context).load(movie.getImageUrl()).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
@@ -63,9 +77,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         myViewHolder.genereTextView.setText(movie.getGenere());
 
         if (movie.getStoryLine().length() > 100)
-            myViewHolder.storyLineTextView.setText(movie.getStoryLine().substring(0, 99)+"..");
+            myViewHolder.storyLineTextView.setText(movie.getStoryLine().substring(0, 99) + "..");
         else
             myViewHolder.storyLineTextView.setText(movie.getStoryLine());
+
+        this.setAnimation(myViewHolder.itemView,position);
     }
 
     @Override
@@ -88,6 +104,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         TextView industryTextView;
         TextView genereTextView;
         TextView storyLineTextView;
+        View contentLayout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -97,7 +114,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             storyLineTextView = (TextView) itemView.findViewById(R.id.storyLineTextView);
             releaseDateTextView = (TextView) itemView.findViewById(R.id.releaseDateTextView);
             genereTextView = (TextView) itemView.findViewById(R.id.genereTextView);
-
+            contentLayout = itemView.findViewById(R.id.contentLayout);
 //            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/SolaimanLipi.ttf");
 //            titleTextView.setTypeface(typeface);
 //            industryTextView.setTypeface(typeface);
@@ -150,6 +167,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             Pref.savePreference(context, preferenceKey, movieListJson);
         }
         this.remove(position);
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(2001));//to make duration random number between [0,501)
+        viewToAnimate.startAnimation(anim);
+        lastPosition = position;
     }
 
 

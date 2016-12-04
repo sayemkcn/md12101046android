@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
+import java.util.Random;
 
 import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.R;
@@ -23,6 +26,7 @@ public class FeaturedRecyclerAdapter extends RecyclerView.Adapter<FeaturedRecycl
     private LayoutInflater inflater;
     private List<Movie> movieList;
     private Activity context;
+    private int lastPosition = -1;
 
     public FeaturedRecyclerAdapter(Activity context, List<Movie> movieList) {
         this.inflater = LayoutInflater.from(context);
@@ -44,6 +48,8 @@ public class FeaturedRecyclerAdapter extends RecyclerView.Adapter<FeaturedRecycl
         Glide.with(context).load(imageUrl).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.titleTextView.setText(movie.getName());
         myViewHolder.directorTextView.setText(movie.getProductionHouse());
+
+        this.setAnimation(myViewHolder.itemView,position);
     }
 
     @Override
@@ -76,5 +82,11 @@ public class FeaturedRecyclerAdapter extends RecyclerView.Adapter<FeaturedRecycl
 
         }
     }
-
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(2001));//to make duration random number between [0,501)
+        viewToAnimate.startAnimation(anim);
+        lastPosition = position;
+    }
 }

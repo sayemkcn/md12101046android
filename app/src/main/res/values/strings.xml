@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SMDB</string>
+    <string name="app_name">Movie Buzz</string>
     <string name="app_slogan">হ্যাঁ ভাই, বাংলা নতুন মুভির খবরাখবর জানুন..</string>
     <string name="app_base_url">https://play.google.com/store/apps/details?id=</string>
     <string name="shareAppText">সব ধরনের মুভির খবরাখবর বিস্তারিত জানুন সম্পূর্ন বাংলাতে..</string>
@@ -94,6 +94,10 @@
     <string name="title_activity_my_reviews">আমার রিভিউগুলো</string>
     <string name="myReviewsText">আমার রিভিউগুলো</string>
     <string name="myListsText">আমার লিস্টগুলো</string>
+    <string name="myFollowingListsText">অনুসারিত লিস্ট</string>
+
+    <string name="noListFoundMessage">আপনি এখনো কোন লিস্ট অনুসরণ করেন নি। </string>
+
     <string name="title_activity_my_list">আমার লিস্টগুলো</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
     <string name="title_activity_list_fragments">ListFragmentsActivity</string>

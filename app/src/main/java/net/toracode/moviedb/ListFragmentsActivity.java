@@ -20,6 +20,7 @@ public class ListFragmentsActivity extends AppCompatActivity implements View.OnC
 
     private final String REF_CUSTOMLIST_ADAPER_COMMENT_BUTTON = "CustomListAdapterCommentButton";
     private final String REF_MY_LIST = "MyList";
+    private final String REF_MY_FOLLOWING_LIST = "MyFollowingList";
     private final String REF_MY_REVIEWS = "MyReviews";
 
     @Override
@@ -50,6 +51,13 @@ public class ListFragmentsActivity extends AppCompatActivity implements View.OnC
                     }
                     this.setupCustomListFragment(bundle);  // Replaces Custom List Fragment
                     fab.setVisibility(View.VISIBLE);
+                    break;
+                case REF_MY_FOLLOWING_LIST:
+                    if (getSupportActionBar() != null) {
+                        if (bundle.getBoolean("isFollowing"))
+                            getSupportActionBar().setTitle("My Following List");
+                    }
+                    this.setupCustomListFragment(bundle);  // Replaces Custom List Fragment
                     break;
                 case REF_MY_REVIEWS:
                     if (getSupportActionBar() != null)

@@ -28,10 +28,9 @@ import com.facebook.accountkit.AccountKitLoginResult;
 import net.toracode.moviedb.commons.Pref;
 import net.toracode.moviedb.fragmenthelpers.FeaturedFragmentHelper;
 import net.toracode.moviedb.fragmenthelpers.MainFragmentHelper;
+import net.toracode.moviedb.security.Auth;
 import net.toracode.moviedb.service.Commons;
 import net.toracode.moviedb.service.ResourceProvider;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -229,13 +228,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_home) {
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.nav_my_list) {
-            if (AccountKit.getCurrentAccessToken() != null) { // if user logged in
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("isPublic", false);
-                bundle.putString("ref", "MyList");
-                startActivity(new Intent(this, ListFragmentsActivity.class).putExtras(bundle));
-            } else
+            if (!Auth.isLoggedIn()) { // if user logged in
                 startActivity(new Intent(this, PreferenceActivity.class));
+                return false;
+            }
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isPublic", false);
+            bundle.putString("ref", "MyList");
+            startActivity(new Intent(this, ListFragmentsActivity.class).putExtras(bundle));
+        } else if (id == R.id.nav_my_following_list) {
+            if (!Auth.isLoggedIn()) {
+                startActivity(new Intent(this, PreferenceActivity.class));
+                return false;
+            }
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isPublic", false);
+            bundle.putBoolean("isFollowing", true);
+            bundle.putString("ref", "MyFollowingList");
+            startActivity(new Intent(this, ListFragmentsActivity.class).putExtras(bundle));
         } else if (id == R.id.nav_my_reviews) {
             if (AccountKit.getCurrentAccessToken() != null) { // if user logged in
                 Intent intent = new Intent(this, ListFragmentsActivity.class);

@@ -12,8 +12,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha=".8"
-        android:background="@drawable/bground" />
+        android:alpha=".4"
+        android:background="@drawable/background" />
 
     <RelativeLayout
         android:id="@+id/fragmentContainer"

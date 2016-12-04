@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.facebook.accountkit.AccountKit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -24,6 +24,7 @@ import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.adapters.CustomListAdapter;
 import net.toracode.moviedb.entity.CustomList;
+import net.toracode.moviedb.security.Auth;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import org.json.JSONArray;
@@ -49,14 +50,17 @@ public class CustomListFragment extends Fragment {
     private int page = 0;
     private RecyclerView customListRecyclerView;
     private ProgressBar progressBar;
+    private TextView noContentView;
 
     private boolean isPublic = false;
+    private boolean isFollowing = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             this.isPublic = getArguments().getBoolean("isPublic");
+            this.isFollowing = getArguments().getBoolean("isFollowing");
         }
 
     }
@@ -73,27 +77,25 @@ public class CustomListFragment extends Fragment {
 
         this.customListRecyclerView = (RecyclerView) getView().findViewById(R.id.customListRecyclerView);
         this.progressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
+        this.noContentView = (TextView) getView().findViewById(R.id.noContentTextView);
 
         // if private and not logged in.
-        if (!isPublic && AccountKit.getCurrentAccessToken() == null) {
+        if (!isPublic && !Auth.isLoggedIn()) {
             getActivity().startActivity(new Intent(getActivity(), PreferenceActivity.class));
-            return;
+        } else { // build the url and fetch data
+            String url = this.buildUrl(this.isPublic, this.isFollowing);
+            this.fetchCustomLists(url);
         }
-        // build the url
-        String url = this.buildUrl(this.isPublic);
-        this.fetchCustomLists(url);
     }
 
-    private String buildUrl(boolean isPublic) {
+    private String buildUrl(boolean isPublic, boolean isFollowing) {
         String url = null;
-        if (!isPublic) {
-            if (AccountKit.getCurrentAccessToken() != null) {
-                String accountId = AccountKit.getCurrentAccessToken().getAccountId();
-                url = getResources().getString(R.string.baseUrl) + "list?accountId=" + accountId;
-            }
-        } else {
+        if (isPublic)
             url = getResources().getString(R.string.baseUrl) + "list/public?page=" + this.page;
-        }
+        else if (isFollowing)
+            url = getResources().getString(R.string.baseUrl) + "list/following?accountId=" + Auth.getAccountId();
+        else
+            url = getResources().getString(R.string.baseUrl) + "list?accountId=" + Auth.getAccountId();
         return url;
     }
 
@@ -115,6 +117,9 @@ public class CustomListFragment extends Fragment {
                                     setUpCustomListRecyclerView(customListRecyclerView, listOfCustomList);
                                     progressBar.setVisibility(View.GONE);
                                     customListRecyclerView.setVisibility(View.VISIBLE);
+                                } else {
+                                    progressBar.setVisibility(View.GONE);
+                                    noContentView.setVisibility(View.VISIBLE);
                                 }
                             }
                         });

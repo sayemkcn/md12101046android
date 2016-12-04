@@ -16,6 +16,20 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
+    <TextView
+        android:id="@+id/noContentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="30dp"
+        android:alpha=".7"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="@string/noListFoundMessage"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/customListRecyclerView"
         android:layout_width="match_parent"

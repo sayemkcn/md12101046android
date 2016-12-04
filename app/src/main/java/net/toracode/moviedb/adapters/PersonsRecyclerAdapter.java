@@ -1,30 +1,31 @@
 package net.toracode.moviedb.adapters;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import net.toracode.moviedb.DetailsActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.entity.Person;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Random;
 
 public class PersonsRecyclerAdapter extends RecyclerView.Adapter<PersonsRecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;
     private List<Person> personList;
     private Activity context;
+    private int lastPosition = -1;
 
     public PersonsRecyclerAdapter(Activity context, List<Person> personList) {
         this.inflater = LayoutInflater.from(context);
@@ -46,6 +47,8 @@ public class PersonsRecyclerAdapter extends RecyclerView.Adapter<PersonsRecycler
         Glide.with(context).load(imageUrl).centerCrop().placeholder(R.mipmap.ic_launcher).diskCacheStrategy(DiskCacheStrategy.ALL).into(myViewHolder.imageView);
         myViewHolder.nameTextView.setText(person.getName());
         myViewHolder.designationsTextView.setText(StringUtils.join(person.getDesignations(), ","));
+
+        this.setAnimation(myViewHolder.itemView,position);
     }
 
     @Override
@@ -68,8 +71,14 @@ public class PersonsRecyclerAdapter extends RecyclerView.Adapter<PersonsRecycler
 //            nameTextView.setTypeface(typeface);
 //            designationsTextView.setTypeface(typeface);
 
-
         }
     }
 
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(2001));//to make duration random number between [0,501)
+        viewToAnimate.startAnimation(anim);
+        lastPosition = position;
+    }
 }

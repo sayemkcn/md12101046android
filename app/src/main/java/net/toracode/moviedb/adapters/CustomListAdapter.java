@@ -11,11 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.accountkit.AccountKit;
 
 import net.toracode.moviedb.ListFragmentsActivity;
 import net.toracode.moviedb.ListItemsActivity;
@@ -23,11 +23,13 @@ import net.toracode.moviedb.PreferenceActivity;
 import net.toracode.moviedb.R;
 import net.toracode.moviedb.commons.CustomListOperations;
 import net.toracode.moviedb.entity.CustomList;
+import net.toracode.moviedb.security.Auth;
 import net.toracode.moviedb.service.ResourceProvider;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Response;
 
@@ -35,6 +37,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
     private LayoutInflater inflater;
     private List<CustomList> listOfCustomList;
     private Activity context;
+    private int lastPosition = -1;
 
     private static final String FOLLOW_BUTTON_TEXT = "Follow";
     private static final String UNFOLLOW_BUTTON_TEXT = "Unfollow";
@@ -64,15 +67,17 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
         else
             myViewHolder.dateTimeTextView.setText("Created at " + sdf.format(list.getCreated()));
         // initialize like/ follow button state
-        if (AccountKit.getCurrentAccessToken() != null) {
-            String accountId = AccountKit.getCurrentAccessToken().getAccountId();
+        if (Auth.isLoggedIn()) {
+            String accountId = Auth.getAccountId();
             if (list.getUser().getAccountId().equals(accountId)) {
                 myViewHolder.followButton.setText("Edit");
                 myViewHolder.followButton.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_create_black_18dp, 0, 0, 0);
             } else {
-                checkFollowing(myViewHolder.followButton, list.getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
+                checkFollowing(myViewHolder.followButton, list.getUniqueId(), Auth.getAccountId());
             }
         }
+
+        this.setAnimation(myViewHolder.itemView,position);
 
     }
 
@@ -122,21 +127,21 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                 @Override
                 public void onClick(View view) {
                     Button button = (Button) view;
-                    if (AccountKit.getCurrentAccessToken() == null) {
+                    if (!Auth.isLoggedIn()) {
                         context.startActivity(new Intent(context, PreferenceActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         return;
                     }
                     if (button.getText().toString().toLowerCase().equals(FOLLOW_BUTTON_TEXT.toLowerCase())) {
                         button.setText(UNFOLLOW_BUTTON_TEXT);
                         button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_black_18dp, 0, 0, 0);
-                        followList(button, listOfCustomList.get(getAdapterPosition()).getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
+                        followList(button, listOfCustomList.get(getAdapterPosition()).getUniqueId(), Auth.getAccountId());
                     } else if (button.getText().toString().toLowerCase().equals(UNFOLLOW_BUTTON_TEXT.toLowerCase())) {
                         button.setText(FOLLOW_BUTTON_TEXT);
                         button.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_favorite_border_black_18dp, 0, 0, 0);
                         button.setTextColor(context.getResources().getColor(android.R.color.black));
-                        unFollowList(button, listOfCustomList.get(getAdapterPosition()).getUniqueId(), AccountKit.getCurrentAccessToken().getAccountId());
+                        unFollowList(button, listOfCustomList.get(getAdapterPosition()).getUniqueId(), Auth.getAccountId());
                     } else
-                        new CustomListOperations(context).showEditListDialog((Button) view, listOfCustomList.get(getAdapterPosition()), AccountKit.getCurrentAccessToken().getAccountId());
+                        new CustomListOperations(context).showEditListDialog((Button) view, listOfCustomList.get(getAdapterPosition()), Auth.getAccountId());
                 }
             });
 
@@ -273,6 +278,14 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
                 }
             }
         }).start();
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(2001));//to make duration random number between [0,501)
+        viewToAnimate.startAnimation(anim);
+        lastPosition = position;
     }
 
 }

@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ import net.toracode.moviedb.service.ResourceProvider;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Response;
 
@@ -30,6 +33,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
     private LayoutInflater inflater;
     private List<Comment> commentList;
     private Activity context;
+    private int lastPosition = -1;
 
     public CommentsAdapter(Activity context, List<Comment> commentList) {
         this.inflater = LayoutInflater.from(context);
@@ -61,6 +65,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             } else
                 myViewHolder.actionLayout.setVisibility(View.GONE);
         }
+
+        this.setAnimation(myViewHolder.itemView,position);
     }
 
     @Override
@@ -202,5 +208,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
         }).start();
     }
 
-
+    private void setAnimation(View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(new Random().nextInt(2001));//to make duration random number between [0,501)
+        viewToAnimate.startAnimation(anim);
+        lastPosition = position;
+    }
 }
