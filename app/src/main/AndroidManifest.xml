@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="net.toracode.moviedb">
+    package="net.toracode.moviebuzz">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".MovieDatabaseApplication"
+        android:name="net.toracode.moviebuzz.MovieDatabaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,7 +33,7 @@
             tools:replace="android:theme" />
         <!-- END FACEBOOK -->
         <activity
-            android:name=".MainActivity"
+            android:name="net.toracode.moviebuzz.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -43,25 +43,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailsActivity"
+            android:name="net.toracode.moviebuzz.DetailsActivity"
             android:label="@string/title_activity_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OfflineActivity"
+            android:name="net.toracode.moviebuzz.OfflineActivity"
             android:label="@string/offlineMoviesText"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PreferenceActivity"
+            android:name="net.toracode.moviebuzz.PreferenceActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ListItemsActivity"
+            android:name="net.toracode.moviebuzz.ListItemsActivity"
             android:label="@string/title_activity_list_items"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SearchResultsActivity"
+            android:name="net.toracode.moviebuzz.SearchResultsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ListFragmentsActivity"
+            android:name="net.toracode.moviebuzz.ListFragmentsActivity"
             android:label="@string/title_activity_list_fragments"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>

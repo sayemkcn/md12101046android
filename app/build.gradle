@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "net.toracode.moviedb"
+        applicationId "net.toracode.moviebuzz"
         minSdkVersion 16
         targetSdkVersion 24
         versionCode 1

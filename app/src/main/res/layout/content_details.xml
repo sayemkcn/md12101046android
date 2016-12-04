@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:scrollbars="none"
-    tools:context="net.toracode.moviedb.DetailsActivity"
+    tools:context="net.toracode.moviebuzz.DetailsActivity"
     tools:showIn="@layout/activity_details">
 
     <RelativeLayout
