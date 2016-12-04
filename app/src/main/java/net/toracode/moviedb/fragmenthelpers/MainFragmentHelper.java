@@ -36,8 +36,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Created by sayemkcn on 8/10/16.

@@ -4,6 +4,7 @@ package net.toracode.moviedb.commons;
 import android.view.View;
 
 import com.daimajia.androidanimations.library.attention.StandUpAnimator;
+import com.daimajia.androidanimations.library.bouncing_entrances.BounceInAnimator;
 import com.daimajia.slider.library.Animations.BaseAnimationInterface;
 
 /**
@@ -45,8 +46,8 @@ public class SliderChildAnimator implements BaseAnimationInterface {
 //                    descriptionLayout, "y", -descriptionLayout.getHeight(),
 //                    0).setDuration(500);
 //            animator.start();
-//            new BounceInAnimator().animate(descriptionLayout);
-            new StandUpAnimator().animate(descriptionLayout);
+            new BounceInAnimator().animate(descriptionLayout);
+//            new StandUpAnimator().animate(descriptionLayout);
         }
 //        Log.e(TAG, "onCurrentItemDisappear called");
     }

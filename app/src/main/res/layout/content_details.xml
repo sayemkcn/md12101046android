@@ -27,11 +27,11 @@
                 android:background="@android:color/black">
 
                 <VideoView
-                    android:background="@android:color/black"
                     android:id="@+id/trailerVideoView"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_gravity="center_horizontal"
+                    android:background="@android:color/black"
                     android:scaleType="fitXY"
                     android:src="@mipmap/ic_launcher" />
 
@@ -47,7 +47,6 @@
                 android:id="@+id/movieNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/videoContainerLayout"
                 android:background="@color/colorPrimary"
                 android:padding="@dimen/activity_horizontal_margin"
                 android:text="Movie Name"
@@ -59,8 +58,8 @@
                 android:id="@+id/movieMetaLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/movieNameTextView"
-                android:background="@android:color/darker_gray"
+                android:alpha=".7"
+                android:background="@color/colorAccent"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -211,7 +210,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:background="@android:color/darker_gray"
+                android:alpha=".7"
+                android:background="@color/colorAccent"
                 android:gravity="center_horizontal"
                 android:padding="5dp"
                 android:text="Cast and Crews"

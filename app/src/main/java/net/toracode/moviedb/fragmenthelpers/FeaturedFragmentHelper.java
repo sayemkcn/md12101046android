@@ -77,7 +77,7 @@ public class FeaturedFragmentHelper implements View.OnClickListener {
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
         // Slider Layout
         this.sliderLayout = (SliderLayout) rootView.findViewById(R.id.sliderLayout);
-        this.sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        this.sliderLayout.setPresetTransformer(SliderLayout.Transformer.CubeIn);
         this.sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         this.sliderLayout.setCustomAnimation(new SliderChildAnimator());
         this.sliderLayout.setDuration(4000);

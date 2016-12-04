@@ -30,8 +30,7 @@
                 android:id="@+id/moreButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha=".7"
-                android:background="@android:color/black"
+                android:background="@color/colorAccent"
                 android:text="@string/btn_see_more"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
