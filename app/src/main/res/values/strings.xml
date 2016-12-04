@@ -110,5 +110,7 @@
     <string name="title_activity_search_results">SearchResultsActivity</string>
     <string name="title_activity_list_fragments">ListFragmentsActivity</string>
 
-
+    <string name="internetUnavailableMessage">
+        আপনার ইন্টারনেট কানেকশনে কোন সমস্যা নেই বলে যদি বিশ্বাস করে থাকেন তবে অনুগ্রহ করে ১০-১৫ সেকেন্ড পরে আবার চেষ্টা করুন। আশা করছি হতাশ হবেন না। ধন্যবাদ।
+    </string>
 </resources>

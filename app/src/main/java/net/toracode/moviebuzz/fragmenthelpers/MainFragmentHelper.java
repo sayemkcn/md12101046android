@@ -76,7 +76,7 @@ public class MainFragmentHelper {
                 synchronized (this) {
                     try {
                         final String url = buildUrl(context, vpPageNumber, pageIndex);
-                        Log.i("URL_LOL",url);
+                        Log.i("URL_LOL", url);
                         final String response = new ResourceProvider(context).fetchData(url);
                         context.runOnUiThread(new Runnable() {
                             @Override
@@ -90,8 +90,7 @@ public class MainFragmentHelper {
                             @Override
                             public void run() {
                                 if (toast.isShowing()) toast.dismiss();
-                                Commons.showNetworkUnavailableDialog(context, "Connection unavailable!",
-                                        "Looks like your internet connection is too slow or there\'s no internet at all! Please connect to the internet first!\nOpen saved movies?");
+                                Commons.showNetworkUnavailableDialog(context, "Connection Problem!", context.getResources().getString(R.string.internetUnavailableMessage));
                             }
                         });
                     }
