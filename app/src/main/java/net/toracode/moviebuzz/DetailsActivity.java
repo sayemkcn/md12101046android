@@ -123,7 +123,8 @@ public class DetailsActivity extends AppCompatActivity {
         // register eventbus
         ButterKnife.bind(this);
 
-        this.typeface = typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
+        this.typeface = Typeface.createFromAsset(getAssets(), "fonts/SolaimanLipi.ttf");
+        this.storyLineTextView.setTypeface(typeface);
 
         this.movie = (Movie) getIntent().getExtras().getSerializable("movie");
 

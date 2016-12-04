@@ -42,7 +42,7 @@ import butterknife.ButterKnife;
 public class MainFragmentHelper {
     private Activity context;
     private RecyclerView recyclerView;
-    private static int VP_PAGE_NUMBER = 0;
+    //    private static int VP_PAGE_NUMBER = 0;
     private ProgressBar progressBar;
 
     private Button moreButton;
@@ -64,8 +64,7 @@ public class MainFragmentHelper {
     }
 
     public void exec(int pageNumber) {
-        this.VP_PAGE_NUMBER = pageNumber;
-        this.fetchNews(VP_PAGE_NUMBER, this.pageIndex);
+        this.fetchNews(pageNumber, this.pageIndex);
     }
 
 
@@ -77,6 +76,7 @@ public class MainFragmentHelper {
                 synchronized (this) {
                     try {
                         final String url = buildUrl(context, vpPageNumber, pageIndex);
+                        Log.i("URL_LOL",url);
                         final String response = new ResourceProvider(context).fetchData(url);
                         context.runOnUiThread(new Runnable() {
                             @Override
@@ -102,12 +102,14 @@ public class MainFragmentHelper {
 
     private String buildUrl(Activity context, int vpPageNumber, int pageIndex) {
         String[] categories = context.getResources().getStringArray(R.array.categories_url_attr);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(context.getResources().getString(R.string.baseUrl))
-                .append("movie/type/")
-                .append(categories[vpPageNumber])
-                .append("?page=" + pageIndex + "&size=" + pageSize);
-        return stringBuilder.toString();
+        if (vpPageNumber <= 2)
+            return context.getResources().getString(R.string.baseUrl) +
+                    "movie/type/" +
+                    categories[vpPageNumber] +
+                    "?page=" + pageIndex + "&size=" + pageSize;
+        return context.getResources().getString(R.string.baseUrl) + "movie/industry/" +
+                categories[vpPageNumber] +
+                "?page=" + pageIndex + "&size=" + pageSize;
     }
 
     private void onResponse(String response, final int vpPageNumber) {
@@ -159,10 +161,10 @@ public class MainFragmentHelper {
 
             Gson gson = builder.create();
             JSONArray jsonArray = new JSONArray(response);
-            for (int i=0;i<jsonArray.length();i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Movie movie = gson.fromJson(jsonObject.toString(),Movie.class);
-                movie.setImageUrl(context.getResources().getString(R.string.baseUrl)+"movie/image/"+movie.getUniqueId());
+                Movie movie = gson.fromJson(jsonObject.toString(), Movie.class);
+                movie.setImageUrl(context.getResources().getString(R.string.baseUrl) + "movie/image/" + movie.getUniqueId());
                 this.movieList.add(movie);
             }
 

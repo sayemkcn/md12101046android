@@ -16,11 +16,19 @@
         <item>হোম</item>
         <item>মুভি</item>
         <item>টিভি সিরিজ</item>
+        <item>হলিউড</item>
+        <item>বাংলা মুভি</item>
+        <item>ইন্ডিয়ান বাংলা</item>
+        <item>বলিউড</item>
     </string-array>
     <string-array name="categories_url_attr">
         <item>featured</item>
         <item>movie</item>
         <item>tvseries</item>
+        <item>Hollywood</item>
+        <item>Dhallywood</item>
+        <item>Tallywood</item>
+        <item>Bollywood</item>
     </string-array>
     <string-array name="colors">
         <item>#23FFFF</item>
@@ -50,7 +58,7 @@
     <string name="title_activity_offline_news"></string>
     <string name="action_change_font_size">Change Font Size</string>
 
-    <string name="featured_saved_text">আপনার সংরক্ষনকৃত মুভি</string>
+    <string name="featured_saved_text">অফলাইন মুভি</string>
     <string name="featured_my_list_text">আমার লিস্টগুলো</string>
     <string name="featured_recent_list_text">সাম্প্রতিক লিস্টগুলো</string>
 

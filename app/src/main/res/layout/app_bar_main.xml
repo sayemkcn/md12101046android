@@ -29,7 +29,7 @@
             android:layout_gravity="bottom"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:tabGravity="fill"
-            app:tabMode="fixed" />
+            app:tabMode="scrollable" />
 
     </android.support.design.widget.AppBarLayout>
 
