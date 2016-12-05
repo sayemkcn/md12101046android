@@ -112,7 +112,7 @@ public class CustomListFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND) {
+                                if (response.code() == ResourceProvider.RESPONSE_CODE_FOUND || response.code() == ResourceProvider.RESPONSE_CODE_OK) {
                                     List<CustomList> listOfCustomList = parseCustomList(responseBodyString);
                                     setUpCustomListRecyclerView(customListRecyclerView, listOfCustomList);
                                     progressBar.setVisibility(View.GONE);
