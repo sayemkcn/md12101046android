@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="net.toracode.moviedb.PreferenceActivity"
+    tools:context="net.toracode.moviebuzz.PreferenceActivity"
     tools:showIn="@layout/activity_preference">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/bground" />
+        android:src="@drawable/background" />
 
     <LinearLayout
         android:layout_width="match_parent"

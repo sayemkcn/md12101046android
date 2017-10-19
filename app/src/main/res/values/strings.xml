@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SMDB</string>
+    <string name="app_name">MovieBuzz</string>
     <string name="app_slogan">হ্যাঁ ভাই, বাংলা নতুন মুভির খবরাখবর জানুন..</string>
     <string name="app_base_url">https://play.google.com/store/apps/details?id=</string>
     <string name="shareAppText">সব ধরনের মুভির খবরাখবর বিস্তারিত জানুন সম্পূর্ন বাংলাতে..</string>
@@ -16,11 +16,19 @@
         <item>হোম</item>
         <item>মুভি</item>
         <item>টিভি সিরিজ</item>
+        <item>হলিউড</item>
+        <item>বাংলা মুভি</item>
+        <item>ইন্ডিয়ান বাংলা</item>
+        <item>বলিউড</item>
     </string-array>
     <string-array name="categories_url_attr">
         <item>featured</item>
         <item>movie</item>
         <item>tvseries</item>
+        <item>Hollywood</item>
+        <item>Dhallywood</item>
+        <item>Tallywood</item>
+        <item>Bollywood</item>
     </string-array>
     <string-array name="colors">
         <item>#23FFFF</item>
@@ -50,7 +58,7 @@
     <string name="title_activity_offline_news"></string>
     <string name="action_change_font_size">Change Font Size</string>
 
-    <string name="featured_saved_text">আপনার সংরক্ষনকৃত মুভি</string>
+    <string name="featured_saved_text">অফলাইন মুভি</string>
     <string name="featured_my_list_text">আমার লিস্টগুলো</string>
     <string name="featured_recent_list_text">সাম্প্রতিক লিস্টগুলো</string>
 
@@ -94,9 +102,15 @@
     <string name="title_activity_my_reviews">আমার রিভিউগুলো</string>
     <string name="myReviewsText">আমার রিভিউগুলো</string>
     <string name="myListsText">আমার লিস্টগুলো</string>
+    <string name="myFollowingListsText">অনুসারিত লিস্ট</string>
+
+    <string name="noListFoundMessage">আপনি এখনো কোন লিস্ট অনুসরণ করেন নি। </string>
+
     <string name="title_activity_my_list">আমার লিস্টগুলো</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
     <string name="title_activity_list_fragments">ListFragmentsActivity</string>
 
-
+    <string name="internetUnavailableMessage">
+        আপনার ইন্টারনেট কানেকশনে কোন সমস্যা নেই বলে যদি বিশ্বাস করে থাকেন তবে অনুগ্রহ করে ১০-১৫ সেকেন্ড পরে আবার চেষ্টা করুন। আশা করছি হতাশ হবেন না। ধন্যবাদ।
+    </string>
 </resources>
